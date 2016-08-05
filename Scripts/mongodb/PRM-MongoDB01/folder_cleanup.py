@@ -1,8 +1,8 @@
 """
-## CODE OWNERS: Ben Wyatt
+## CODE OWNERS: Ben Wyatt, Steve Gredell
 
 ### OBJECTIVE:
-  Clean up outdated backup files from PRM-MongoDB02
+  Clean up outdated backup files from PRM-MongoDB01
 
 ### DEVELOPER NOTES:
 
@@ -10,7 +10,7 @@
 import re
 import time
 import shutil
-from pathlib import Path
+from indypy.file_utils import IndyPyPath
 
 # number of seconds in a day * number of days of folders to keep
 NUMDAYS = 86400*15
@@ -28,8 +28,8 @@ FOLDER_PATTERN = "^20[0-9]{2}y-[0-9]{2}m-[0-9]{2}d@[0-9]+h-[0-9]{2}mPT$"
 
 # Recurse over the indicated directory
 # Remove folders that match the regex and age
-for folder in Path(CHECK_DIRECTORY).glob('20*/'):
-    if NOW-NUMDAYS > folder.stat().st_mtime and re.match(FOLDER_PATTERN, folder.stem):
+for folder in IndyPyPath(CHECK_DIRECTORY).collect_files_regex(FOLDER_PATTERN):
+    if NOW-NUMDAYS > folder.stat().st_mtime:
         try:
             print("Moving", folder)
             shutil.move(folder, TARGET_DIRECTORY)
