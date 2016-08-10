@@ -16,7 +16,7 @@ NUMDAYS = 86400*15
 NOW = time.time()
 
 # Path to the folder to be cleaned up
-CHECK_DIRECTORY = r"C:\PRM-CDR_Archive"
+CHECK_DIRECTORY = r"\\PRM-MongoDB01\PRM-CDR_Archive"
 TARGET_DIRECTORY = r"\\indy-backup\PRM-MONGODB\PRM-MongoDB01"
 
 print("Copying folders from", CHECK_DIRECTORY, "to", TARGET_DIRECTORY)
