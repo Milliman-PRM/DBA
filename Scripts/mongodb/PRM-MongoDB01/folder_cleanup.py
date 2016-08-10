@@ -31,7 +31,7 @@ for folder in Path(CHECK_DIRECTORY).glob('20*/'):
     if NOW-NUMDAYS > folder.stat().st_mtime and re.match(FOLDER_PATTERN, folder.stem):
         try:
             print("Moving", folder)
-            shutil.move(folder, TARGET_DIRECTORY)
+            shutil.move(str(folder), TARGET_DIRECTORY)
         except shutil.Error as err:
             print(err)
         else:
