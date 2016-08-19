@@ -33,7 +33,7 @@ def execute_dump(
     path_to_pgdumpall = "L:/Hotware/Postgresql/pg_dumpall.exe"
 
     # Clone the DBA repo here
-    subprocess.call([path_to_git, "clone", repo_url])
+    #subprocess.call([path_to_git, "clone", repo_url])
 
     # Run pg_dumpall to dump
     subprocess.check_call([path_to_pgdumpall, "--host", target_server, "--port", "5432",
