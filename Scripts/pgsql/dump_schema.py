@@ -11,7 +11,6 @@
 import sys
 import os
 import subprocess
-#from pathlib import Path
 
 def build_repo_url(
         base_url,
@@ -34,8 +33,6 @@ def execute_dump(
 
     path_to_git = "L:/Hotware/git/PortableGit_2.5.3.windows.1.github.0/cmd/git.exe"
     path_to_pgdumpall = "L:/Hotware/Postgresql/pg_dumpall.exe"
-
-    print "clone repo here"
 
     # Clone the DBA repo here
     subprocess.call([path_to_git, "clone", repo_url])
