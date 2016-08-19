@@ -18,10 +18,7 @@ def build_repo_url(
         auth_token
 ):
     """ Build a repo URL that includes an auth token for clone/push operations """
-    full_url = base_url
-    full_url = full_url.replace("://", "://" + auth_token + "@")
-
-    return full_url
+    return base_url.replace("://", "://" + auth_token + "@")
 
 def execute_dump(
         pgsql_username,
