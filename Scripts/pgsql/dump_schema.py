@@ -7,10 +7,11 @@
 
 ### DEVELOPER NOTES:
 """
-#import re
+import re
 import sys
 import os
 import subprocess
+import fileinput
 
 def build_repo_url(
         base_url,
@@ -43,7 +44,21 @@ def execute_dump(
                      "--verbose", "--file", target_file, "--no-tablespaces",
                      "--schema-only"])
 
-    # Remove lines from the file
+    """
+    Remove lines from the file if they match this expression
+
+    This allows us to make sure timestamps aren't flagged as
+        changes by git
+
+    Expression is as specific as possible to ensure only exact matches get
+        stripped out of the file
+    """ # pylint: disable=pointless-string-statement
+    timestamp_expression = r"^-- ((Started)|(Completed)) on 20[0-9]{2}-", \
+    "[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+
+    for line in fileinput.input(target_file, inplace=True):
+        if not re.search(timestamp_expression, line):
+            print line,
 
     # Check for changes
     process_output = subprocess.check_output([path_to_git, "status", "--porcelain"])
