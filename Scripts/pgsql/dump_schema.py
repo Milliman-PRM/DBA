@@ -60,6 +60,9 @@ def execute_dump(
         if not re.search(timestamp_expression, line):
             print line,
 
+    # Change to the repo directory to issue git commands
+    os.chdir(os.path.relpath("DBA"))
+
     # Check for changes
     process_output = subprocess.check_output([path_to_git, "status", "--porcelain"])
     print process_output
