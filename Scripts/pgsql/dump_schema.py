@@ -65,6 +65,7 @@ def execute_dump(
     print process_output
 
     # Commit and push back to master if any changes are found
+    if len(process_output.strip()) > 0:
         commit_message = "Updated schema documentation for " + target_server
         subprocess.check_call([path_to_git, "add", "*"])
         subprocess.check_call([path_to_git, "commit", "-am", str(commit_message)])
