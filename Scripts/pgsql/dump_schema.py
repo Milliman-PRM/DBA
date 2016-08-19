@@ -36,10 +36,10 @@ def execute_dump(
     subprocess.call([path_to_git, "clone", repo_url])
 
     # Run pg_dumpall to dump
-    subprocess.call([path_to_pgdumpall, "--host", target_server, "--port", "5432",
-                     "--username", pgsql_username, "--password", pgsql_password,
-                     "--verbose", "--file", target_file, "--no-tablespaces",
-                     "--schema-only"])
+    subprocess.check_call([path_to_pgdumpall, "--host", target_server, "--port", "5432",
+                           "--username", pgsql_username, "--password", pgsql_password,
+                           "--verbose", "--file", target_file, "--no-tablespaces",
+                           "--schema-only"])
 
     """
     Remove lines from the file if they match this expression
@@ -65,11 +65,10 @@ def execute_dump(
     print process_output
 
     # Commit and push back to master if any changes are found
-    if len(process_output.strip()) > 1:
         commit_message = "Updated schema documentation for " + target_server
-        subprocess.call([path_to_git, "add", "*"])
-        subprocess.call([path_to_git, "commit", "-am", str(commit_message)])
-        subprocess.call([path_to_git, "push", "--repo=" + repo_url])
+        subprocess.check_call([path_to_git, "add", "*"])
+        subprocess.check_call([path_to_git, "commit", "-am", str(commit_message)])
+        subprocess.check_call([path_to_git, "push", "--repo=" + repo_url])
     else:
         print "No changes found"
 
