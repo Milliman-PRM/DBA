@@ -32,13 +32,16 @@ def execute_dump(
 ):
     """ Utilize pg_dumpall to maintain database documentation in a git repo """
 
+    path_to_git = "L:/Hotware/git/PortableGit_2.5.3.windows.1.github.0/cmd/git.exe"
+    path_to_pgdumpall = "L:/Hotware/Postgresql/pg_dumpall.exe"
+
     print "clone repo here"
 
     # Clone the DBA repo here
-    subprocess.call(["git", "clone", repo_url])
+    subprocess.call([path_to_git, "clone", repo_url])
 
     # Run pg_dumpall to dump
-    subprocess.call(["pg_dumpall", "--host", target_server, "--port", "5432",
+    subprocess.call([path_to_pgdumpall, "--host", target_server, "--port", "5432",
                      "--username", pgsql_username, "--password", pgsql_password,
                      "--verbose", "--file", target_file, "--no-tablespaces",
                      "--schema-only"])
@@ -52,9 +55,9 @@ def execute_dump(
     # Commit and push back to master if any changes are found
     if len(process_output.strip()) > 1:
         commit_message = "Updated schema documentation for " + target_server
-        subprocess.call(["git", "add", "*"])
-        subprocess.call(["git", "commit", "-am", str(commit_message)])
-        subprocess.call(["git", "push", "--repo=" + repo_url])
+        subprocess.call([path_to_git, "add", "*"])
+        subprocess.call([path_to_git, "commit", "-am", str(commit_message)])
+        subprocess.call([path_to_git, "push", "--repo=" + repo_url])
     else:
         print "No changes found"
 
