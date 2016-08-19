@@ -49,7 +49,7 @@ def execute_dump(
     # Remove lines from the file
 
     # Check for changes
-    process_output = subprocess.check_output(["git", "status", "--porcelain"])
+    process_output = subprocess.check_output([path_to_git, "status", "--porcelain"])
     print process_output
 
     # Commit and push back to master if any changes are found
