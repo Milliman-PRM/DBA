@@ -76,7 +76,7 @@ def execute_dump(
     # Clean up folder, if necessary
 
 if __name__ == '__main__':
-    # Script args: hostname, github url, github auth token, path to target file
+    # Script args: hostname, github url, path to target file
 
     assert len(sys.argv) == 4, 'Unexpected number of arguments passed.'
 
