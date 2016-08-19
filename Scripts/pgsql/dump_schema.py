@@ -54,7 +54,7 @@ def execute_dump(
     "[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
 
     for line in fileinput.input(target_file, inplace=True):
-        if not re.search(timestamp_expression, line):
+        if not re.match(timestamp_expression, line):
             print line,
 
     # Change to the repo directory to issue git commands
