@@ -89,6 +89,7 @@ def execute_dump(
             print "No changes found"
 
     except subprocess.CalledProcessError as err:
+        send_notification(err)
         print err
         raise
 
