@@ -49,7 +49,7 @@ def execute_dump(
             commit_message = "Updated schema documentation for " + target_server
             subprocess.check_call([path_to_git, "add", "*"])
             subprocess.check_call([path_to_git, "commit", "-am", str(commit_message)])
-            subprocess.check_call([path_to_git, "push", "--repo=" + repo_url, "master:master", "--verbose", "--force"])
+            subprocess.check_call([path_to_git, "push", "--repo=" + repo_url, "HEAD", "--verbose", "--force"])
         else:
             print "No changes found"
 
