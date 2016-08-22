@@ -13,6 +13,10 @@ SET standard_conforming_strings = on;
 
 CREATE ROLE "INDY_Jenkins_All";
 ALTER ROLE "INDY_Jenkins_All" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "Indy_ClientTeam_0032BOH";
+ALTER ROLE "Indy_ClientTeam_0032BOH" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "Indy_PostgreSQl";
+ALTER ROLE "Indy_PostgreSQl" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0007FMC";
 ALTER ROLE "Indy_ePHI_0007FMC" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0032ABG";
@@ -154,11 +158,9 @@ ALTER ROLE "Indy_ePHI_NY_QVW" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB N
 CREATE ROLE "Indy_ePHI_VT_QVW";
 ALTER ROLE "Indy_ePHI_VT_QVW" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "aaron.burgess";
-ALTER ROLE "aaron.burgess" WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION NOBYPASSRLS;
+ALTER ROLE "aaron.burgess" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "afsheen.khan";
 ALTER ROLE "afsheen.khan" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
-CREATE ROLE "alex.pegg";
-ALTER ROLE "alex.pegg" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "andy.barnes";
 ALTER ROLE "andy.barnes" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "ben.wyatt";
@@ -169,16 +171,14 @@ CREATE ROLE "brandon.patterson";
 ALTER ROLE "brandon.patterson" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "david.pierce";
 ALTER ROLE "david.pierce" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
-CREATE ROLE geocoder;
-ALTER ROLE geocoder WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN REPLICATION NOBYPASSRLS PASSWORD 'md5cd06c02c1857e673e82d4cc0a3a4232a';
-CREATE ROLE geocoder_users;
-ALTER ROLE geocoder_users WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "indy-cdrbot-0273woh";
 ALTER ROLE "indy-cdrbot-0273woh" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "indy-pg-backup";
-ALTER ROLE "indy-pg-backup" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+ALTER ROLE "indy-pg-backup" WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "indy-test";
 ALTER ROLE "indy-test" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "indy_ePHI_SystemReporting";
+ALTER ROLE "indy_ePHI_SystemReporting" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE indy_jenkins_0273woh;
 ALTER ROLE indy_jenkins_0273woh WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE indy_jenkins_no_ephi;
@@ -198,7 +198,9 @@ ALTER ROLE "michael.reisz" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGI
 CREATE ROLE "nicholas.zenobi";
 ALTER ROLE "nicholas.zenobi" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE postgres;
-ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD 'md57f2c8995091789ab349fd1e9094a88cc';
+ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD 'md5573012b511fa8fd9b08eb5001464fec4';
+CREATE ROLE roche_admin;
+ALTER ROLE roche_admin WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md59a51d692172b50cabd9f13901241ad27' VALID UNTIL 'infinity';
 CREATE ROLE "shea.parkes";
 ALTER ROLE "shea.parkes" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "steve.gredell";
@@ -219,6 +221,9 @@ GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0032MMD" GRANTED BY postgres;
 GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0273NXG" GRANTED BY postgres;
 GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0273NYP" GRANTED BY postgres;
 GRANT "INDY_Jenkins_All" TO indy_jenkins_no_ephi GRANTED BY postgres;
+GRANT "Indy_ClientTeam_0032BOH" TO "afsheen.khan" GRANTED BY postgres;
+GRANT "Indy_ClientTeam_0032BOH" TO roche_admin;
+GRANT "Indy_ClientTeam_0032BOH" TO "van.nanney" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032CCS" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032CCS" TO "david.pierce" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032CCS" TO "jacob.krebs" GRANTED BY postgres;
@@ -452,10 +457,10 @@ GRANT "Indy_ePHI_0273ZQL" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZQL" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZQL" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_VT_QVW" TO "van.nanney" GRANTED BY postgres;
-GRANT geocoder_users TO "brandon.patterson" GRANTED BY "ben.wyatt";
-GRANT geocoder_users TO indy_jenkins_no_ephi GRANTED BY "ben.wyatt";
-GRANT geocoder_users TO "jacob.krebs" GRANTED BY "ben.wyatt";
-GRANT geocoder_users TO "jason.altieri" GRANTED BY "ben.wyatt";
+GRANT "indy_ePHI_SystemReporting" TO "afsheen.khan" GRANTED BY "ben.wyatt";
+GRANT "indy_ePHI_SystemReporting" TO "kelsie.stevenson" GRANTED BY "ben.wyatt";
+GRANT "indy_ePHI_SystemReporting" TO "michael.reisz" GRANTED BY "ben.wyatt";
+GRANT "indy_ePHI_SystemReporting" TO "surjit.malhi" GRANTED BY "ben.wyatt";
 GRANT ldap_groups TO "INDY_Jenkins_All" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0007FMC" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032ABG" GRANTED BY postgres;
@@ -529,11 +534,10 @@ GRANT ldap_groups TO "Indy_ePHI_NY_QVW" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_VT_QVW" GRANTED BY postgres;
 GRANT ldap_users TO "aaron.burgess" GRANTED BY postgres;
 GRANT ldap_users TO "afsheen.khan" GRANTED BY postgres;
-GRANT ldap_users TO "alex.pegg" GRANTED BY postgres;
 GRANT ldap_users TO "andy.barnes" GRANTED BY postgres;
 GRANT ldap_users TO "ben.wyatt" GRANTED BY postgres;
 GRANT ldap_users TO "brad.teach" GRANTED BY postgres;
-GRANT ldap_users TO "brandon.patterson" GRANTED BY "aaron.burgess";
+GRANT ldap_users TO "brandon.patterson" GRANTED BY postgres;
 GRANT ldap_users TO "david.pierce" GRANTED BY postgres;
 GRANT ldap_users TO "indy-cdrbot-0273woh" GRANTED BY postgres;
 GRANT ldap_users TO "indy-pg-backup" GRANTED BY postgres;
@@ -556,13 +560,2813 @@ GRANT ldap_users TO "van.nanney" GRANTED BY postgres;
 -- Database creation
 --
 
-CREATE DATABASE prm_geocoder_dev WITH TEMPLATE = template0 OWNER = "aaron.burgess";
-ALTER DATABASE prm_geocoder_dev SET search_path TO "$user", public, tiger;
+CREATE DATABASE "Acuity_Development" WITH TEMPLATE = template0 OWNER = "ben.wyatt";
+REVOKE ALL ON DATABASE "Acuity_Development" FROM PUBLIC;
+REVOKE ALL ON DATABASE "Acuity_Development" FROM "ben.wyatt";
+GRANT ALL ON DATABASE "Acuity_Development" TO "ben.wyatt";
+GRANT ALL ON DATABASE "Acuity_Development" TO "afsheen.khan";
+GRANT ALL ON DATABASE "Acuity_Development" TO "van.nanney";
+GRANT ALL ON DATABASE "Acuity_Development" TO "david.pierce";
+GRANT ALL ON DATABASE "Acuity_Development" TO "andy.barnes";
+CREATE DATABASE "Acuity_Staging" WITH TEMPLATE = template0 OWNER = "ben.wyatt";
+REVOKE ALL ON DATABASE "Acuity_Staging" FROM PUBLIC;
+REVOKE ALL ON DATABASE "Acuity_Staging" FROM "ben.wyatt";
+GRANT ALL ON DATABASE "Acuity_Staging" TO "ben.wyatt";
+GRANT ALL ON DATABASE "Acuity_Staging" TO "van.nanney";
+GRANT ALL ON DATABASE "Acuity_Staging" TO "david.pierce";
+GRANT ALL ON DATABASE "Acuity_Staging" TO "andy.barnes";
+GRANT ALL ON DATABASE "Acuity_Staging" TO "afsheen.khan";
+CREATE DATABASE "PG_Presentation_DB" WITH TEMPLATE = template0 OWNER = "steve.gredell";
+CREATE DATABASE "Roche_Medicare_Reimbursement_Develop" WITH TEMPLATE = template0 OWNER = "indy_ePHI_SystemReporting";
+REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" FROM PUBLIC;
+REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" TO "indy_ePHI_SystemReporting";
+CREATE DATABASE prm_know WITH TEMPLATE = template0 OWNER = "aaron.burgess";
+CREATE DATABASE systemreporting WITH TEMPLATE = template0 OWNER = "ben.wyatt";
+CREATE DATABASE systemreporting_application WITH TEMPLATE = template0 OWNER = "indy_ePHI_SystemReporting";
 REVOKE ALL ON DATABASE template1 FROM PUBLIC;
 REVOKE ALL ON DATABASE template1 FROM postgres;
 GRANT ALL ON DATABASE template1 TO postgres;
 GRANT CONNECT ON DATABASE template1 TO PUBLIC;
 
+
+\connect "Acuity_Development"
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Acuity_Staging"
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "PG_Presentation_DB"
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect "Roche_Medicare_Reimbursement_Develop"
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: rmrrdb_20160311; Type: SCHEMA; Schema: -; Owner: brad.teach
+--
+
+CREATE SCHEMA rmrrdb_20160311;
+
+
+ALTER SCHEMA rmrrdb_20160311 OWNER TO "brad.teach";
+
+--
+-- Name: rmrrdb_20160316; Type: SCHEMA; Schema: -; Owner: brad.teach
+--
+
+CREATE SCHEMA rmrrdb_20160316;
+
+
+ALTER SCHEMA rmrrdb_20160316 OWNER TO "brad.teach";
+
+--
+-- Name: rmrrdb_20160322; Type: SCHEMA; Schema: -; Owner: brad.teach
+--
+
+CREATE SCHEMA rmrrdb_20160322;
+
+
+ALTER SCHEMA rmrrdb_20160322 OWNER TO "brad.teach";
+
+--
+-- Name: rmrrdb_20160331; Type: SCHEMA; Schema: -; Owner: brad.teach
+--
+
+CREATE SCHEMA rmrrdb_20160331;
+
+
+ALTER SCHEMA rmrrdb_20160331 OWNER TO "brad.teach";
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = rmrrdb_20160311, pg_catalog;
+
+SET default_with_oids = false;
+
+--
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE analyzers OWNER TO "brad.teach";
+
+--
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
+
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
+
+
+--
+-- Name: code; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(5),
+    description character varying
+);
+
+
+ALTER TABLE code OWNER TO "brad.teach";
+
+--
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
+
+
+--
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
+
+
+--
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "brad.teach";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "brad.teach";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "brad.teach";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "brad.teach";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
+
+
+SET search_path = rmrrdb_20160316, pg_catalog;
+
+--
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE analyzers OWNER TO "brad.teach";
+
+--
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
+
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
+
+
+--
+-- Name: code; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(5),
+    description character varying
+);
+
+
+ALTER TABLE code OWNER TO "brad.teach";
+
+--
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
+
+
+--
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
+
+
+--
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "brad.teach";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "brad.teach";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "brad.teach";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "brad.teach";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
+
+
+SET search_path = rmrrdb_20160322, pg_catalog;
+
+--
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE analyzers OWNER TO "brad.teach";
+
+--
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
+
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
+
+
+--
+-- Name: code; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(5),
+    description character varying
+);
+
+
+ALTER TABLE code OWNER TO "brad.teach";
+
+--
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
+
+
+--
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
+
+
+--
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "brad.teach";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "brad.teach";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "brad.teach";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "brad.teach";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
+
+
+SET search_path = rmrrdb_20160331, pg_catalog;
+
+--
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE analyzers OWNER TO "brad.teach";
+
+--
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
+
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
+
+
+--
+-- Name: code; Type: TABLE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(5),
+    description character varying
+);
+
+
+ALTER TABLE code OWNER TO "brad.teach";
+
+--
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
+
+
+--
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
+
+
+--
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "brad.teach";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "brad.teach";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "brad.teach";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "brad.teach";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
+
+
+SET search_path = rmrrdb_20160311, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
+
+
+SET search_path = rmrrdb_20160316, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
+
+
+SET search_path = rmrrdb_20160322, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
+
+
+SET search_path = rmrrdb_20160331, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
+
+
+SET search_path = rmrrdb_20160311, pg_catalog;
+
+--
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+
+
+SET search_path = rmrrdb_20160316, pg_catalog;
+
+--
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+
+
+SET search_path = rmrrdb_20160322, pg_catalog;
+
+--
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+
+
+SET search_path = rmrrdb_20160331, pg_catalog;
+
+--
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+
+
+SET search_path = rmrrdb_20160311, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
+SET search_path = rmrrdb_20160316, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
+SET search_path = rmrrdb_20160322, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
+SET search_path = rmrrdb_20160331, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: rmrrdb_20160311; Type: ACL; Schema: -; Owner: brad.teach
+--
+
+REVOKE ALL ON SCHEMA rmrrdb_20160311 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20160311 FROM "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20160311 TO "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20160311 TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: rmrrdb_20160316; Type: ACL; Schema: -; Owner: brad.teach
+--
+
+REVOKE ALL ON SCHEMA rmrrdb_20160316 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20160316 FROM "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20160316 TO "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20160316 TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: rmrrdb_20160322; Type: ACL; Schema: -; Owner: brad.teach
+--
+
+REVOKE ALL ON SCHEMA rmrrdb_20160322 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20160322 FROM "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20160322 TO "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20160322 TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: rmrrdb_20160331; Type: ACL; Schema: -; Owner: brad.teach
+--
+
+REVOKE ALL ON SCHEMA rmrrdb_20160331 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20160331 FROM "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20160331 TO "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20160331 TO "Indy_ClientTeam_0032BOH";
+
+
+SET search_path = rmrrdb_20160311, pg_catalog;
+
+--
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "brad.teach";
+GRANT ALL ON TABLE analyzers TO "brad.teach";
+GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: code; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "brad.teach";
+GRANT ALL ON TABLE code TO "brad.teach";
+GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "brad.teach";
+GRANT ALL ON TABLE footnotes TO "brad.teach";
+GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "brad.teach";
+GRANT ALL ON TABLE localities TO "brad.teach";
+GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "brad.teach";
+GRANT ALL ON TABLE search_terms TO "brad.teach";
+GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "brad.teach";
+GRANT ALL ON TABLE weburl TO "brad.teach";
+GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+SET search_path = rmrrdb_20160316, pg_catalog;
+
+--
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "brad.teach";
+GRANT ALL ON TABLE analyzers TO "brad.teach";
+GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: code; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "brad.teach";
+GRANT ALL ON TABLE code TO "brad.teach";
+GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "brad.teach";
+GRANT ALL ON TABLE footnotes TO "brad.teach";
+GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "brad.teach";
+GRANT ALL ON TABLE localities TO "brad.teach";
+GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "brad.teach";
+GRANT ALL ON TABLE search_terms TO "brad.teach";
+GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "brad.teach";
+GRANT ALL ON TABLE weburl TO "brad.teach";
+GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+SET search_path = rmrrdb_20160322, pg_catalog;
+
+--
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "brad.teach";
+GRANT ALL ON TABLE analyzers TO "brad.teach";
+GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: code; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "brad.teach";
+GRANT ALL ON TABLE code TO "brad.teach";
+GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "brad.teach";
+GRANT ALL ON TABLE footnotes TO "brad.teach";
+GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "brad.teach";
+GRANT ALL ON TABLE localities TO "brad.teach";
+GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "brad.teach";
+GRANT ALL ON TABLE search_terms TO "brad.teach";
+GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "brad.teach";
+GRANT ALL ON TABLE weburl TO "brad.teach";
+GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+SET search_path = rmrrdb_20160331, pg_catalog;
+
+--
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "brad.teach";
+GRANT ALL ON TABLE analyzers TO "brad.teach";
+GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: code; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "brad.teach";
+GRANT ALL ON TABLE code TO "brad.teach";
+GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "brad.teach";
+GRANT ALL ON TABLE footnotes TO "brad.teach";
+GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "brad.teach";
+GRANT ALL ON TABLE localities TO "brad.teach";
+GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "brad.teach";
+GRANT ALL ON TABLE search_terms TO "brad.teach";
+GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "brad.teach";
+GRANT ALL ON TABLE weburl TO "brad.teach";
+GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "Indy_ClientTeam_0032BOH";
+
+
+SET search_path = rmrrdb_20160311, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 GRANT ALL ON SEQUENCES  TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 REVOKE ALL ON TABLES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
+
+
+SET search_path = rmrrdb_20160316, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 GRANT ALL ON SEQUENCES  TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 REVOKE ALL ON TABLES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
+
+
+SET search_path = rmrrdb_20160322, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 GRANT ALL ON SEQUENCES  TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 REVOKE ALL ON TABLES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
+
+
+SET search_path = rmrrdb_20160331, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT ALL ON SEQUENCES  TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20160331; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON TABLES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- PostgreSQL database dump complete
+--
 
 \connect postgres
 
@@ -632,7 +3436,7 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\connect prm_geocoder_dev
+\connect prm_know
 
 SET default_transaction_read_only = off;
 
@@ -652,82 +3456,51 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: geocoding_data; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
-CREATE SCHEMA geocoding_data;
-
-
-ALTER SCHEMA geocoding_data OWNER TO "aaron.burgess";
-
---
--- Name: tiger; Type: SCHEMA; Schema: -; Owner: aaron.burgess
---
-
-CREATE SCHEMA tiger;
-
-
-ALTER SCHEMA tiger OWNER TO "aaron.burgess";
-
---
--- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
-COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance between strings';
-
-
---
--- Name: postgis; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: 
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 
-COMMENT ON EXTENSION postgis IS 'PostGIS geometry, geography, and raster spatial types and functions';
-
-
---
--- Name: postgis_tiger_geocoder; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder WITH SCHEMA tiger;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- Name: EXTENSION postgis_tiger_geocoder; Type: COMMENT; Schema: -; Owner: 
+-- PostgreSQL database dump complete
 --
 
-COMMENT ON EXTENSION postgis_tiger_geocoder IS 'PostGIS tiger geocoder and reverse geocoder';
+\connect systemreporting
 
-
---
--- Name: tiger_staging; Type: SCHEMA; Schema: -; Owner: aaron.burgess
---
-
-CREATE SCHEMA tiger_staging;
-
-
-ALTER SCHEMA tiger_staging OWNER TO "aaron.burgess";
+SET default_transaction_read_only = off;
 
 --
--- Name: topology; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+-- PostgreSQL database dump
 --
 
-CREATE SCHEMA topology;
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
 
-
-ALTER SCHEMA topology OWNER TO "aaron.burgess";
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -743,171 +3516,177 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
---
--- Name: address_standardizer; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS address_standardizer WITH SCHEMA public;
-
-
---
--- Name: EXTENSION address_standardizer; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION address_standardizer IS 'Used to parse an address into constituent elements. Generally used to support geocoding address normalization step.';
-
-
---
--- Name: pgrouting; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS pgrouting WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pgrouting; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION pgrouting IS 'pgRouting Extension';
-
-
---
--- Name: postgis_topology; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS postgis_topology WITH SCHEMA topology;
-
-
---
--- Name: EXTENSION postgis_topology; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION postgis_topology IS 'PostGIS topology spatial types and functions';
-
-
 SET search_path = public, pg_catalog;
 
 --
--- Name: prm_generate_routing_query(integer, integer, text); Type: FUNCTION; Schema: public; Owner: aaron.burgess
+-- Name: merge_ranges(tstzrange[]); Type: FUNCTION; Schema: public; Owner: ben.wyatt
 --
 
-CREATE FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) RETURNS text
+CREATE FUNCTION merge_ranges(tstzrange[]) RETURNS SETOF tstzrange
+    LANGUAGE plpgsql
+    AS $_$
+declare
+    t tstzrange;
+    r tstzrange;
+begin
+    foreach t in array $1 loop
+        if r && t then r:= r + t;
+        else
+            if r notnull then return next r;
+            end if;
+            r:= t;
+        end if;
+    end loop;
+    if r notnull then return next r;
+    end if;
+end $_$;
+
+
+ALTER FUNCTION public.merge_ranges(tstzrange[]) OWNER TO "ben.wyatt";
+
+--
+-- Name: report_type_update(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE FUNCTION report_type_update() RETURNS integer
     LANGUAGE plpgsql
     AS $$
-BEGIN
-	RETURN 'SELECT gid as id, source, target, shape_length as cost
-		FROM tiger_data.' || stateabbrev || '_edges WHERE st_transform(the_geom, 2163)
-		&& ST_EXPAND((SELECT st_collect(st_transform(the_geom, 2163)) FROM tiger_data.' || stateabbrev || '_edges_vertices_pgr
-		WHERE id IN (' || start_node::text || ', ' || end_node::text || ')), 5000)'::text;
-END;
-$$;
 
-
-ALTER FUNCTION public.prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) OWNER TO "aaron.burgess";
-
---
--- Name: prm_geocode(text, text); Type: FUNCTION; Schema: public; Owner: aaron.burgess
---
-
-CREATE FUNCTION prm_geocode(_tbl text, statefips text) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-	EXECUTE 'INSERT INTO geocoding_data.cached_geocodes (base_address, gc_rating, street_number, street_name, street_type, city, state, zip_code, geom)
-	SELECT geocoded.address, (geocoded.geo).rating, ((geocoded.geo).addy).address, ((geocoded.geo).addy).streetname,
-	((geocoded.geo).addy).streettypeabbrev, ((geocoded.geo).addy).location, ((geocoded.geo).addy).stateabbrev,
-	((geocoded.geo).addy).zip, st_transform((geocoded.geo).geomout, 4326)
-	FROM (SELECT DISTINCT on (address) address, (geocode(pagc_normalize_address(address),1, (SELECT ST_UNION(the_geom) FROM place where statefp = ' || quote_literal(statefips) || '))) as geo
-	FROM ' || _tbl || '
-	WHERE address not in (SELECT distinct base_address FROM geocoding_data.cached_geocodes)) as geocoded';
-	REINDEX TABLE geocoding_data.cached_geocodes;
-END;
-$$;
-
-
-ALTER FUNCTION public.prm_geocode(_tbl text, statefips text) OWNER TO "aaron.burgess";
-
---
--- Name: prm_network_node(geometry, text); Type: FUNCTION; Schema: public; Owner: aaron.burgess
---
-
-CREATE FUNCTION prm_network_node(point geometry, stateabbrev text) RETURNS integer
-    LANGUAGE plpgsql
-    AS $$
 DECLARE
-	state_network_tbl text := 'tiger_data.' || stateabbrev || '_edges_vertices_pgr';
-	node INTEGER;
+	r report_temp;
+	rt reporttype;
+	a qvauditlog;
+	l qvauditlog;
+	it integer;
+	holding_id integer;
+	parsed_report_name TEXT;
+	parsed_keywords TEXT;
+	group_name TEXT;
+	GUID_report_name TEXT;
+	report_name TEXT;
+	Empty_String TEXT;
 BEGIN
-	EXECUTE format('SELECT id FROM %s ORDER BY st_transform(the_geom, 2163) <-> st_transform(%L::geometry, 2163) LIMIT 1'::text, state_network_tbl, point) INTO node;
-	RETURN node;
+	it := 0;			--This will keep track of how many records are updated
+	Empty_String = NULL;
+	--Goes through every report and attempts to match the reportname to the report type
+	FOR r IN SELECT * from public.report_temp ORDER BY id
+	LOOP
+		holding_id := NULL;
+		report_name := r.reportname;	
+		IF report_name NOT LIKE '% %' AND LENGTH(report_name) = 32 THEN
+			
+			--If a GUID then go through the qvauditlog to match the GUID to a report
+			FOR a IN SELECT * FROM public.qvauditlog_temp WHERE document LIKE '%' || report_name || '%' LIMIT 1
+			LOOP
+				group_name := substring(a.document from 0 for position('REDUCEDCACHEDQVWS' in a.document));
+				group_name := replace (group_name, '\', '\\');		--Deal with those pesky escape charachters
+			END LOOP;
+			
+			--After we get the group directory we find the root report name of that directory. This is the name we will match to a type
+			FOR l IN SELECT * FROM public.qvauditlog_temp WHERE document LIKE '%' || group_name || '%' AND document NOT LIKE '%REDUCEDCACHEDQVWS%' LIMIT 1
+			LOOP
+				group_name := replace(group_name, '\\', '\');
+
+				GUID_report_name := reverse(l.document);
+				GUID_report_name := substring(GUID_report_name, position('.' in GUID_report_name) + 1, position('\' in GUID_report_name) - 5); --parse the directory to only get the report name
+				GUID_report_name := reverse(GUID_report_name);
+
+				report_name := GUID_report_name;
+			END LOOP;
+
+		END IF;
+		
+		--Replace some undesirable charachters or strings that could be in the report name
+		parsed_report_name := '';
+		parsed_report_name := replace(report_name, '- ', '');
+		parsed_report_name := replace(parsed_report_name, 'REPORTING ', ''); --it was in commit# c37a55c9
+		
+		--Attempt to match the report name to any of the keywords in the report type table
+		FOR rt IN SELECT * FROM public.reporttype
+		LOOP
+			parsed_keywords := '';
+			parsed_keywords := replace(rt.keywords, ',', ' ');
+			parsed_keywords := trim(both ' ' from parsed_keywords);		--Turn the keywords into a string that can match up with the report name
+
+			IF parsed_report_name LIKE '%' || parsed_keywords || ' %' OR parsed_report_name = parsed_keywords THEN
+				it := it + 1;
+				update public.report_temp set fk_report_type_id = rt.id where id = r.id;		--When a match is found we update the table
+			END IF;
+
+		END LOOP;
+	END LOOP;	
+RETURN it;			--Returns the amount of fields with new report types
+
 END;
 $$;
 
 
-ALTER FUNCTION public.prm_network_node(point geometry, stateabbrev text) OWNER TO "aaron.burgess";
+ALTER FUNCTION public.report_type_update() OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: prm_routing(text, integer, integer); Type: FUNCTION; Schema: public; Owner: aaron.burgess
+-- Name: group_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) RETURNS double precision
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-	RETURN (SELECT sum(cost) * 0.00062137 as distance FROM pgr_dijkstra(routing_query, start_node, end_node, false, false) LIMIT 1);
-END;
-$$;
+CREATE SEQUENCE group_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
-ALTER FUNCTION public.prm_routing(routing_query text, start_node integer, end_node integer) OWNER TO "aaron.burgess";
-
---
--- Name: prm_table_routing(text, text, text, text); Type: FUNCTION; Schema: public; Owner: aaron.burgess
---
-
-CREATE FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-	EXECUTE format('INSERT INTO geocoding_data.cached_routes
-		SELECT a.start_id, a.end_id, a.start_node, a.end_node, ARRAY[a.start_node, a.end_node],
-		prm_routing(prm_generate_routing_query(a.start_node, a.end_node, ' || quote_literal(stateabbrev) || '), a.start_node, a.end_node)
-		FROM
-		(SELECT ' || gc_id_field1 || ' as start_id, ' || gc_id_field2 || ' as end_id,
-			prm_network_node((SELECT geom FROM geocoding_data.cached_geocodes WHERE id = ' || gc_id_field1 || '), %s::text) as start_node,
-			prm_network_node((SELECT geom FROM geocoding_data.cached_geocodes WHERE id = ' || gc_id_field2 || '), %s::text) as end_node
-		FROM ' || routing_table || ' b
-		WHERE NOT EXISTS (SELECT start_id, end_id FROM geocoding_data.cached_routes
-		WHERE (start_id = ' || gc_id_field1 || ' or start_id = ' || gc_id_field2 || ')
-		AND (end_id = ' || gc_id_field1 || ' or end_id = ' || gc_id_field2 || '))) a', quote_literal(stateabbrev), quote_literal(stateabbrev));
-    REINDEX TABLE geocoding_data.cached_routes;
-END;
-$$;
-
-
-ALTER FUNCTION public.prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) OWNER TO "aaron.burgess";
-
-SET search_path = geocoding_data, pg_catalog;
+ALTER TABLE group_id_seq OWNER TO "indy_ePHI_SystemReporting";
 
 SET default_with_oids = false;
 
 --
--- Name: Client Name; Type: TABLE; Schema: geocoding_data; Owner: brandon.patterson
+-- Name: group; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE TABLE "Client Name" (
-    id integer NOT NULL,
-    address character varying
+CREATE TABLE "group" (
+    id integer DEFAULT nextval('group_id_seq'::regclass) NOT NULL,
+    groupname character varying(250) NOT NULL,
+    groupdescription character varying(100),
+    adddate timestamp with time zone
 );
 
 
-ALTER TABLE "Client Name" OWNER TO "brandon.patterson";
+ALTER TABLE "group" OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: Client Name_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: brandon.patterson
+-- Name: iislog; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE SEQUENCE "Client Name_id_seq"
+CREATE TABLE iislog (
+    id integer NOT NULL,
+    useraccessdatetime timestamp with time zone,
+    clientipaddress character varying(15),
+    serveripaddress character varying(15),
+    portnumber integer,
+    commandsentmethod character varying(10),
+    stepuri character varying(80),
+    queryuri text,
+    statuscode integer,
+    substatuscode integer,
+    win32statuscode integer,
+    responsetime integer,
+    useragent text,
+    clientreferer text,
+    browser character varying(25),
+    eventtype character varying(25),
+    adddate timestamp with time zone,
+    fk_user_id integer,
+    fk_group_id integer
+);
+
+
+ALTER TABLE iislog OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: iislog_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE iislog_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -915,32 +3694,13 @@ CREATE SEQUENCE "Client Name_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "Client Name_id_seq" OWNER TO "brandon.patterson";
+ALTER TABLE iislog_id_seq OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: Client Name_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: brandon.patterson
+-- Name: iislog_id_seq1; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-ALTER SEQUENCE "Client Name_id_seq" OWNED BY "Client Name".id;
-
-
---
--- Name: HI; Type: TABLE; Schema: geocoding_data; Owner: brandon.patterson
---
-
-CREATE TABLE "HI" (
-    id integer NOT NULL,
-    address character varying
-);
-
-
-ALTER TABLE "HI" OWNER TO "brandon.patterson";
-
---
--- Name: HI_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: brandon.patterson
---
-
-CREATE SEQUENCE "HI_id_seq"
+CREATE SEQUENCE iislog_id_seq1
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -948,40 +3708,20 @@ CREATE SEQUENCE "HI_id_seq"
     CACHE 1;
 
 
-ALTER TABLE "HI_id_seq" OWNER TO "brandon.patterson";
+ALTER TABLE iislog_id_seq1 OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: HI_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: brandon.patterson
+-- Name: iislog_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-ALTER SEQUENCE "HI_id_seq" OWNED BY "HI".id;
+ALTER SEQUENCE iislog_id_seq1 OWNED BY iislog.id;
 
 
 --
--- Name: cached_geocodes; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: qvauditlog_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE TABLE cached_geocodes (
-    id integer NOT NULL,
-    base_address text,
-    gc_rating integer,
-    street_number text,
-    street_name text,
-    street_type text,
-    city text,
-    state text,
-    zip_code text,
-    geom public.geometry(Point,4326)
-);
-
-
-ALTER TABLE cached_geocodes OWNER TO "aaron.burgess";
-
---
--- Name: cached_geocodes_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE SEQUENCE cached_geocodes_id_seq
+CREATE SEQUENCE qvauditlog_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -989,48 +3729,33 @@ CREATE SEQUENCE cached_geocodes_id_seq
     CACHE 1;
 
 
-ALTER TABLE cached_geocodes_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE qvauditlog_id_seq OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: cached_geocodes_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: qvauditlog; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-ALTER SEQUENCE cached_geocodes_id_seq OWNED BY cached_geocodes.id;
-
-
---
--- Name: cached_routes; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE cached_routes (
-    start_id integer,
-    end_id integer,
-    start_node integer,
-    end_node integer,
-    nodes integer[],
-    distance double precision
+CREATE TABLE qvauditlog (
+    id integer DEFAULT nextval('qvauditlog_id_seq'::regclass) NOT NULL,
+    useraccessdatetime timestamp with time zone,
+    document text,
+    eventtype character varying(25),
+    message text,
+    isreduced boolean,
+    fk_user_id integer,
+    fk_group_id integer,
+    fk_report_id integer,
+    adddate timestamp with time zone
 );
 
 
-ALTER TABLE cached_routes OWNER TO "aaron.burgess";
+ALTER TABLE qvauditlog OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: client_name; Type: TABLE; Schema: geocoding_data; Owner: brandon.patterson
+-- Name: qvauditlog_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: surjit.malhi
 --
 
-CREATE TABLE client_name (
-    id integer NOT NULL,
-    address character varying
-);
-
-
-ALTER TABLE client_name OWNER TO "brandon.patterson";
-
---
--- Name: client_name_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: brandon.patterson
---
-
-CREATE SEQUENCE client_name_id_seq
+CREATE SEQUENCE qvauditlog_temp_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1038,2792 +3763,566 @@ CREATE SEQUENCE client_name_id_seq
     CACHE 1;
 
 
-ALTER TABLE client_name_id_seq OWNER TO "brandon.patterson";
+ALTER TABLE qvauditlog_temp_id_seq OWNER TO "surjit.malhi";
 
 --
--- Name: client_name_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: brandon.patterson
+-- Name: qvsessionlog_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-ALTER SEQUENCE client_name_id_seq OWNED BY client_name.id;
+CREATE SEQUENCE qvsessionlog_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
+
+ALTER TABLE qvsessionlog_id_seq OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: evh; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: qvsessionlog; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE TABLE evh (
+CREATE TABLE qvsessionlog (
+    id integer DEFAULT nextval('qvsessionlog_id_seq'::regclass) NOT NULL,
+    useraccessdatetime timestamp with time zone,
+    document text,
+    exitreason character varying(75),
+    sessionstarttime timestamp with time zone,
+    sessionduration character varying(10),
+    sessionendreason character varying(25),
+    cpuspents double precision,
+    clienttype character varying(75),
+    clientaddress character varying(25),
+    caltype character varying(20),
+    calusagecount integer,
+    browser character varying(25),
+    isreduced boolean,
+    fk_user_id integer,
+    fk_group_id integer,
+    fk_report_id integer,
+    adddate timestamp with time zone
+);
+
+
+ALTER TABLE qvsessionlog OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: qvsessionlog_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: surjit.malhi
+--
+
+CREATE SEQUENCE qvsessionlog_temp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE qvsessionlog_temp_id_seq OWNER TO "surjit.malhi";
+
+--
+-- Name: report_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE report_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE report_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: report; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE report (
+    id integer DEFAULT nextval('report_id_seq'::regclass) NOT NULL,
+    reportname character varying(100) NOT NULL,
+    reportdescription character varying(100),
+    adddate timestamp with time zone,
+    fk_report_type_id integer
+);
+
+
+ALTER TABLE report OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: report_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: surjit.malhi
+--
+
+CREATE SEQUENCE report_temp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE report_temp_id_seq OWNER TO "surjit.malhi";
+
+--
+-- Name: reporttype; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE reporttype (
     id integer NOT NULL,
-    address character varying
+    type character varying(100) NOT NULL,
+    keywords character varying(100) NOT NULL
 );
 
 
-ALTER TABLE evh OWNER TO "aaron.burgess";
+ALTER TABLE reporttype OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: evh_control; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: reporttype_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE TABLE evh_control (
-    gid integer,
-    zcta5ce character varying(5),
-    the_geom public.geometry,
-    frequency bigint
+CREATE SEQUENCE reporttype_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reporttype_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: reporttype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER SEQUENCE reporttype_id_seq OWNED BY reporttype.id;
+
+
+--
+-- Name: selected_fields; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE selected_fields (
+    id integer NOT NULL,
+    field_name text
 );
 
 
-ALTER TABLE evh_control OWNER TO "aaron.burgess";
+ALTER TABLE selected_fields OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: evh_evolution; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: selected_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE TABLE evh_evolution (
-    gid integer,
-    zcta5ce character varying(5),
-    the_geom public.geometry,
-    frequency bigint
+CREATE SEQUENCE selected_fields_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE selected_fields_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: selected_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER SEQUENCE selected_fields_id_seq OWNED BY selected_fields.id;
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE user_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE "user" (
+    id integer DEFAULT nextval('user_id_seq'::regclass) NOT NULL,
+    username character varying(100) NOT NULL,
+    adddate timestamp with time zone
 );
 
 
-ALTER TABLE evh_evolution OWNER TO "aaron.burgess";
+ALTER TABLE "user" OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: evh_by_zip; Type: VIEW; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: view_session_log; Type: VIEW; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE VIEW evh_by_zip AS
- SELECT a.zcta5ce AS zipcode,
+CREATE VIEW view_session_log AS
+ WITH sessions AS (
+         SELECT qvsessionlog.id,
+            tstzrange(qvsessionlog.useraccessdatetime,
+                CASE
+                    WHEN ((qvsessionlog.sessionendreason)::text = 'SESSIONTIMEOUT'::text) THEN ((qvsessionlog.useraccessdatetime + (qvsessionlog.sessionduration)::interval) - '00:30:00'::interval)
+                    ELSE (qvsessionlog.useraccessdatetime + (qvsessionlog.sessionduration)::interval)
+                END, '[]'::text) AS sessionrange,
+            qvsessionlog.fk_user_id,
+            qvsessionlog.fk_group_id,
+            qvsessionlog.fk_report_id
+           FROM qvsessionlog
+          ORDER BY qvsessionlog.fk_user_id, qvsessionlog.fk_group_id, qvsessionlog.fk_report_id, (tstzrange(qvsessionlog.useraccessdatetime,
+                CASE
+                    WHEN ((qvsessionlog.sessionendreason)::text = 'SESSIONTIMEOUT'::text) THEN ((qvsessionlog.useraccessdatetime + (qvsessionlog.sessionduration)::interval) - '00:30:00'::interval)
+                    ELSE (qvsessionlog.useraccessdatetime + (qvsessionlog.sessionduration)::interval)
+                END, '[]'::text))
+        ), merged_sessions AS (
+         SELECT sessions.fk_user_id,
+            sessions.fk_group_id,
+            sessions.fk_report_id,
+            merge_ranges(array_agg(sessions.sessionrange)) AS mergedrange
+           FROM sessions
+          GROUP BY sessions.fk_user_id, sessions.fk_group_id, sessions.fk_report_id
+        ), dataset AS (
+         SELECT min(sessions.id) AS first_session,
+            max(sessions.id) AS last_session,
+            count(sessions.id) AS included_sessions,
+            merged.mergedrange,
+            merged.fk_user_id,
+            merged.fk_group_id,
+            merged.fk_report_id
+           FROM (merged_sessions merged
+             JOIN sessions ON (((merged.fk_user_id = sessions.fk_user_id) AND (merged.fk_group_id = sessions.fk_group_id) AND (merged.fk_report_id = sessions.fk_report_id) AND (merged.mergedrange && sessions.sessionrange))))
+          GROUP BY merged.fk_user_id, merged.fk_group_id, merged.fk_report_id, merged.mergedrange
+        )
+ SELECT dataset.first_session AS sessionid,
+    dataset.included_sessions,
         CASE
-            WHEN (b.frequency IS NULL) THEN (0)::bigint
-            ELSE b.frequency
-        END AS evolution,
+            WHEN ((report.reportname)::text ~~ '%CARE COORDINATOR REPORT%'::text) THEN 'Care Coordinator Report'::text
+            WHEN ((report.reportname)::text ~~ '%COST MODEL DASHBOARD%'::text) THEN 'Cost Model Dashboard'::text
+            WHEN ((report.reportname)::text ~~ '%PRCA%'::text) THEN 'PRCA Report'::text
+            WHEN ((report.reportname)::text ~~ '%LIVE BPCI - CAM%'::text) THEN 'Live BPCI - CAM'::text
+            WHEN ((report.reportname)::text ~~ '%LIVE BPCI - CJR%'::text) THEN 'Live BPCI - CJR'::text
+            WHEN ((report.reportname)::text ~~ '%LIVE BPCI - PREMIER%'::text) THEN 'Live BPCI - Premier'::text
+            WHEN ((report.reportname)::text ~~ '%LIVE BPCI - USPI%'::text) THEN 'Live BPCI - USPI'::text
+            WHEN ((report.reportname)::text ~~ '%OHIO FINANCIAL DASHBOARD%'::text) THEN 'Ohio Financial Dashboard'::text
+            WHEN ((report.reportname)::text ~~ '%CAPITATION DASHBOARD%'::text) THEN 'Capitation Dashboard'::text
+            WHEN ((report.reportname)::text ~~ '%ENCOUNTER QUALITY DASHBOARD%'::text) THEN 'Encounter Quality Dashboard'::text
+            WHEN ((report.reportname)::text ~~ '%PIHP SUBMITTED ENCOUNTER DASHBOARD%'::text) THEN 'PIHP Submitted Encounter Dashboard'::text
+            WHEN ((report.reportname)::text ~~ '%GAP.QVW%'::text) THEN 'GAP'::text
+            WHEN ((report.reportname)::text ~~ '%SOC WC%'::text) THEN 'SOC WC'::text
+            WHEN ((report.reportname)::text ~~ '%LOAD TABLES DVW.QVW'::text) THEN 'Load Tables DVW'::text
+            WHEN ((report.reportname)::text ~~ '%VERMONT POC.QVW'::text) THEN 'Vermont PoC'::text
+            ELSE 'Other/Unknown'::text
+        END AS document_type,
+    lower(dataset.mergedrange) AS session_start_time,
+    (upper(dataset.mergedrange) - lower(dataset.mergedrange)) AS session_duration,
         CASE
-            WHEN (c.frequency IS NULL) THEN (0)::bigint
-            ELSE c.frequency
-        END AS test,
+            WHEN (upper((lastsession.browser)::text) ~~ '%ANDROID%'::text) THEN 'Android'::text
+            WHEN (upper((lastsession.browser)::text) ~~ '%CHROME%'::text) THEN 'Chrome'::text
+            WHEN (upper((lastsession.browser)::text) ~~ '%MSIE%'::text) THEN 'MSIE'::text
+            WHEN ((upper((lastsession.browser)::text) ~~ '%FIREFOX%'::text) OR (upper((lastsession.browser)::text) ~~ '%GECKO%'::text)) THEN 'Firefox'::text
+            WHEN (upper((lastsession.browser)::text) ~~ '%SAFARI%'::text) THEN 'Safari'::text
+            ELSE 'Unknown'::text
+        END AS browser_type,
         CASE
-            WHEN ((b.frequency IS NOT NULL) AND (c.frequency IS NULL)) THEN b.frequency
-            WHEN ((c.frequency IS NOT NULL) AND (b.frequency IS NULL)) THEN (0 - c.frequency)
-            ELSE (b.frequency - c.frequency)
-        END AS difference,
+            WHEN (upper((lastsession.browser)::text) ~~ '%CHROME%'::text) THEN 'Chrome'::character varying
+            WHEN (upper((lastsession.browser)::text) ~~ '%GECKO%'::text) THEN (replace((lastsession.browser)::text, 'GECKO'::text, 'Firefox'::text))::character varying
+            WHEN ((lastsession.browser)::text = 'msie'::text) THEN 'MSIE'::character varying
+            WHEN ((lastsession.browser)::text = 'safari'::text) THEN 'Safari'::character varying
+            WHEN ((lastsession.browser)::text = ANY (ARRAY[(''::character varying)::text, (NULL::character varying)::text])) THEN 'Unknown'::character varying
+            ELSE lastsession.browser
+        END AS browser_version,
+    dataset.fk_user_id AS userid,
+    dataset.fk_group_id AS groupid,
+    dataset.fk_report_id AS reportid
+   FROM ((dataset
+     JOIN report ON ((dataset.fk_report_id = report.id)))
+     JOIN qvsessionlog lastsession ON ((dataset.last_session = lastsession.id)))
+  ORDER BY dataset.included_sessions DESC;
+
+
+ALTER TABLE view_session_log OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: view_activity_log; Type: VIEW; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE VIEW view_activity_log WITH (security_barrier='true') AS
+ WITH fetch_names AS (
+         SELECT qvauditlog.id,
+            selected_fields.field_name,
+            (char_length(selected_fields.field_name) = max(char_length(selected_fields.field_name)) OVER (PARTITION BY qvauditlog.id ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)) AS longest_name
+           FROM (qvauditlog
+             JOIN selected_fields ON ((qvauditlog.message ~~ (selected_fields.field_name || '%'::text))))
+          WHERE ((qvauditlog.eventtype)::text = ANY (ARRAY[('Selection'::character varying)::text, ('Bookmark Selection'::character varying)::text]))
+        ), sessions AS (
+         SELECT view_session_log.sessionid,
+            view_session_log.userid,
+            view_session_log.groupid,
+            view_session_log.reportid,
+            tstzrange(view_session_log.session_start_time, (view_session_log.session_start_time + view_session_log.session_duration), '[]'::text) AS session_range
+           FROM view_session_log
+        )
+ SELECT sessions.sessionid,
+    log.useraccessdatetime AS actiondatetime,
+    log.eventtype AS event_type,
         CASE
-            WHEN ((b.frequency = 0) AND (c.frequency = 0)) THEN '0%'::text
-            WHEN ((b.frequency = 0) AND (c.frequency > 0)) THEN '-100%'::text
-            WHEN ((c.frequency = 0) AND (b.frequency > 0)) THEN '100%'::text
-            ELSE ((round(((100)::numeric * ((((b.frequency - c.frequency))::double precision / ((b.frequency + c.frequency))::double precision))::numeric), 2))::text || '%'::text)
-        END AS percentage
-   FROM ((( SELECT evh_control.zcta5ce
-           FROM evh_control
-        UNION
-         SELECT evh_evolution.zcta5ce
-           FROM evh_evolution) a
-     LEFT JOIN evh_evolution b ON (((a.zcta5ce)::text = (b.zcta5ce)::text)))
-     LEFT JOIN evh_control c ON (((a.zcta5ce)::text = (c.zcta5ce)::text)));
-
-
-ALTER TABLE evh_by_zip OWNER TO "aaron.burgess";
+            WHEN (((log.eventtype)::text = ANY (ARRAY[('Selection'::character varying)::text, ('Bookmark Selection'::character varying)::text])) AND (fetch_names.field_name IS NOT NULL)) THEN fetch_names.field_name
+            WHEN (((log.eventtype)::text = ANY (ARRAY[('Selection'::character varying)::text, ('Bookmark Selection'::character varying)::text])) AND (log.message <> 'Clear All'::text)) THEN 'Unmatched Field'::text
+            ELSE log.message
+        END AS event_message
+   FROM ((qvauditlog log
+     LEFT JOIN fetch_names ON (((log.id = fetch_names.id) AND (fetch_names.longest_name = true))))
+     JOIN sessions ON (((log.fk_user_id = sessions.userid) AND (log.fk_group_id = sessions.groupid) AND (log.fk_report_id = sessions.reportid) AND (log.useraccessdatetime <@ sessions.session_range))));
 
---
--- Name: evh_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE SEQUENCE evh_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE evh_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: evh_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER SEQUENCE evh_id_seq OWNED BY evh.id;
-
-
---
--- Name: evh_test; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE evh_test (
-    id integer NOT NULL,
-    population text,
-    zipcode text
-);
-
-
-ALTER TABLE evh_test OWNER TO "aaron.burgess";
-
---
--- Name: evh_test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE SEQUENCE evh_test_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE evh_test_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: evh_test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER SEQUENCE evh_test_id_seq OWNED BY evh_test.id;
-
-
---
--- Name: hi; Type: TABLE; Schema: geocoding_data; Owner: brandon.patterson
---
-
-CREATE TABLE hi (
-    id integer NOT NULL,
-    address character varying
-);
-
-
-ALTER TABLE hi OWNER TO "brandon.patterson";
-
---
--- Name: hi_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: brandon.patterson
---
-
-CREATE SEQUENCE hi_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE hi_id_seq OWNER TO "brandon.patterson";
-
---
--- Name: hi_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER SEQUENCE hi_id_seq OWNED BY hi.id;
-
-
---
--- Name: silly_test; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE silly_test (
-    id integer NOT NULL,
-    address character varying
-);
-
-
-ALTER TABLE silly_test OWNER TO "aaron.burgess";
-
---
--- Name: silly_test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE SEQUENCE silly_test_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE silly_test_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: silly_test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER SEQUENCE silly_test_id_seq OWNED BY silly_test.id;
-
-
---
--- Name: temp_addresses; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE temp_addresses (
-    address text,
-    fips text
-);
-
-
-ALTER TABLE temp_addresses OWNER TO "aaron.burgess";
-
---
--- Name: test; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE test (
-    id integer NOT NULL,
-    address character varying
-);
-
-
-ALTER TABLE test OWNER TO "aaron.burgess";
-
---
--- Name: test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE SEQUENCE test_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE test_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER SEQUENCE test_id_seq OWNED BY test.id;
-
-
---
--- Name: woah; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE woah (
-    index bigint,
-    member_id text,
-    member_address text,
-    provider_address text,
-    provider_gc_rating integer,
-    provider_stno text,
-    provider_street text,
-    provider_stype text,
-    provider_city text,
-    provider_state text,
-    provider_zip text,
-    member_gc_rating integer,
-    member_stno text,
-    member_street text,
-    member_stype text,
-    member_city text,
-    member_state text,
-    member_zip text,
-    provider_geom public.geometry(Point,4326),
-    member_geom public.geometry(Point,4326),
-    cost double precision
-);
-
-
-ALTER TABLE woah OWNER TO "aaron.burgess";
-
---
--- Name: woah_distance; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE woah_distance (
-    member_node integer,
-    prov_node integer,
-    sum double precision
-);
-
-
-ALTER TABLE woah_distance OWNER TO "aaron.burgess";
-
---
--- Name: woah_dummy; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE woah_dummy (
-    member_id text,
-    member_address text,
-    provider_address text,
-    mem_gc_id integer,
-    prov_gc_id integer
-);
-
-
-ALTER TABLE woah_dummy OWNER TO "aaron.burgess";
-
---
--- Name: woah_dummy_geocoded; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE woah_dummy_geocoded (
-    member_id text,
-    member_gc_rating integer,
-    member_street_number integer,
-    member_street character varying,
-    member_street_type character varying,
-    member_city character varying,
-    member_state character varying,
-    member_zip_code character varying,
-    member_geom public.geometry,
-    provider_gc_rating integer,
-    provider_street_number integer,
-    provider_street character varying,
-    provider_street_type character varying,
-    provider_city character varying,
-    provider_state character varying,
-    provider_zip_code character varying,
-    provider_geom public.geometry
-);
-
-
-ALTER TABLE woah_dummy_geocoded OWNER TO "aaron.burgess";
-
---
--- Name: woah_results; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE woah_results (
-    member_id text,
-    member_gc_rating integer,
-    member_gc_address text,
-    member_geom public.geometry(Point,4269),
-    prov_gc_rating integer,
-    prov_gc_address text,
-    prov_geom public.geometry(Point,4269),
-    cost double precision,
-    member_node integer,
-    prov_node integer,
-    routing_query text
-);
-
-
-ALTER TABLE woah_results OWNER TO "aaron.burgess";
-
-SET search_path = tiger_data, pg_catalog;
-
---
--- Name: or_bg; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_bg (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.bg);
-
-
-ALTER TABLE or_bg OWNER TO "aaron.burgess";
-
-SET search_path = geocoding_data, pg_catalog;
-
---
--- Name: woah_geo_detail; Type: VIEW; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE VIEW woah_geo_detail AS
- SELECT g.gid,
-    count(a.member_geom) AS member_frequency,
-    g.the_geom
-   FROM (tiger_data.or_bg g
-     LEFT JOIN woah_results a ON (public.st_contains(public.st_transform(g.the_geom, 2163), public.st_transform(a.member_geom, 2163))))
-  GROUP BY g.gid, g.the_geom;
-
-
-ALTER TABLE woah_geo_detail OWNER TO "aaron.burgess";
-
---
--- Name: woah_nodes; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE woah_nodes (
-    member_id text,
-    member_node bigint,
-    prov_node bigint
-);
-
-
-ALTER TABLE woah_nodes OWNER TO "aaron.burgess";
-
---
--- Name: woah_result_comp; Type: VIEW; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE VIEW woah_result_comp AS
- SELECT a.member_id,
-    a.member_address,
-    a.provider_address,
-    b.member_gc_rating,
-    b.member_gc_address,
-    b.prov_gc_rating,
-    b.prov_gc_address
-   FROM woah a,
-    woah_results b
-  WHERE (a.member_id = b.member_id);
-
-
-ALTER TABLE woah_result_comp OWNER TO "aaron.burgess";
-
---
--- Name: woah_routing_sample; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE woah_routing_sample (
-    member_address text,
-    provider_address text,
-    member_gc_id integer,
-    prov_gc_id integer
-);
-
-
-ALTER TABLE woah_routing_sample OWNER TO "aaron.burgess";
-
---
--- Name: woah_sample_check; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE TABLE woah_sample_check (
-    address text
-);
-
-
-ALTER TABLE woah_sample_check OWNER TO "aaron.burgess";
-
-SET search_path = tiger, pg_catalog;
-
---
--- Name: temp_state; Type: TABLE; Schema: tiger; Owner: aaron.burgess
---
-
-CREATE TABLE temp_state (
-    id integer NOT NULL,
-    geom public.geometry(MultiPolygon,4269),
-    region character varying(2),
-    division character varying(2),
-    statefp character varying(2),
-    statens character varying(8),
-    geoid character varying(2),
-    stusps character varying(2),
-    name character varying(100),
-    lsad character varying(2),
-    mtfcc character varying(5),
-    funcstat character varying(1),
-    aland bigint,
-    awater bigint,
-    intptlat character varying(11),
-    intptlon character varying(12)
-);
-
-
-ALTER TABLE temp_state OWNER TO "aaron.burgess";
-
---
--- Name: temp_state_id_seq; Type: SEQUENCE; Schema: tiger; Owner: aaron.burgess
---
-
-CREATE SEQUENCE temp_state_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE temp_state_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: temp_state_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger; Owner: aaron.burgess
---
-
-ALTER SEQUENCE temp_state_id_seq OWNED BY temp_state.id;
-
-
---
--- Name: temp_zip; Type: TABLE; Schema: tiger; Owner: aaron.burgess
---
-
-CREATE TABLE temp_zip (
-    id integer NOT NULL,
-    the_geom public.geometry(MultiPolygon,4269),
-    zcta5ce10 character varying(5),
-    geoid10 character varying(5),
-    classfp10 character varying(2),
-    mtfcc10 character varying(5),
-    funcstat10 character varying(1),
-    aland10 bigint,
-    awater10 bigint,
-    intptlat10 character varying(11),
-    intptlon10 character varying(12)
-);
-
-
-ALTER TABLE temp_zip OWNER TO "aaron.burgess";
-
---
--- Name: temp_zip_id_seq; Type: SEQUENCE; Schema: tiger; Owner: aaron.burgess
---
-
-CREATE SEQUENCE temp_zip_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE temp_zip_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: temp_zip_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger; Owner: aaron.burgess
---
-
-ALTER SEQUENCE temp_zip_id_seq OWNED BY temp_zip.id;
-
-
-SET search_path = tiger_data, pg_catalog;
-
---
--- Name: county_all; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE county_all (
-)
-INHERITS (tiger.county);
-
-
-ALTER TABLE county_all OWNER TO "aaron.burgess";
-
---
--- Name: county_all_lookup; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE county_all_lookup (
-)
-INHERITS (tiger.county_lookup);
-
-
-ALTER TABLE county_all_lookup OWNER TO "aaron.burgess";
-
---
--- Name: fl_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_addr (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.addr);
-
-
-ALTER TABLE fl_addr OWNER TO "aaron.burgess";
-
---
--- Name: fl_bg; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_bg (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.bg);
-
-
-ALTER TABLE fl_bg OWNER TO "aaron.burgess";
-
---
--- Name: fl_cousub; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_cousub (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.cousub);
-
-
-ALTER TABLE fl_cousub OWNER TO "aaron.burgess";
-
---
--- Name: fl_edges; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_edges (
-    source integer,
-    target integer,
-    shape_length double precision,
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.edges);
-
-
-ALTER TABLE fl_edges OWNER TO "aaron.burgess";
-
---
--- Name: fl_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_edges_vertices_pgr (
-    id bigint NOT NULL,
-    cnt integer,
-    chk integer,
-    ein integer,
-    eout integer,
-    the_geom public.geometry(Point,4269)
-);
-
-
-ALTER TABLE fl_edges_vertices_pgr OWNER TO "aaron.burgess";
-
---
--- Name: fl_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE SEQUENCE fl_edges_vertices_pgr_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE fl_edges_vertices_pgr_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: fl_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER SEQUENCE fl_edges_vertices_pgr_id_seq OWNED BY fl_edges_vertices_pgr.id;
-
-
---
--- Name: fl_faces; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_faces (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.faces);
-
-
-ALTER TABLE fl_faces OWNER TO "aaron.burgess";
-
---
--- Name: fl_featnames; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_featnames (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.featnames);
-
-
-ALTER TABLE fl_featnames OWNER TO "aaron.burgess";
-
---
--- Name: fl_place; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_place (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.place);
-
-
-ALTER TABLE fl_place OWNER TO "aaron.burgess";
-
---
--- Name: fl_tabblock; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_tabblock (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.tabblock);
-
-
-ALTER TABLE fl_tabblock OWNER TO "aaron.burgess";
-
---
--- Name: fl_tract; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_tract (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.tract);
-
-
-ALTER TABLE fl_tract OWNER TO "aaron.burgess";
-
---
--- Name: fl_zcta5; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_zcta5 (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.zcta5);
-
-
-ALTER TABLE fl_zcta5 OWNER TO "aaron.burgess";
-
---
--- Name: fl_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_zip_lookup_base (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.zip_lookup_base);
-ALTER TABLE ONLY fl_zip_lookup_base ALTER COLUMN state SET NOT NULL;
-ALTER TABLE ONLY fl_zip_lookup_base ALTER COLUMN county SET NOT NULL;
-ALTER TABLE ONLY fl_zip_lookup_base ALTER COLUMN city SET NOT NULL;
-ALTER TABLE ONLY fl_zip_lookup_base ALTER COLUMN statefp SET NOT NULL;
-
-
-ALTER TABLE fl_zip_lookup_base OWNER TO "aaron.burgess";
-
---
--- Name: fl_zip_state; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_zip_state (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.zip_state);
-
-
-ALTER TABLE fl_zip_state OWNER TO "aaron.burgess";
-
---
--- Name: fl_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE fl_zip_state_loc (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '12'::text))
-)
-INHERITS (tiger.zip_state_loc);
-
-
-ALTER TABLE fl_zip_state_loc OWNER TO "aaron.burgess";
-
---
--- Name: in_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_addr (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.addr);
-
-
-ALTER TABLE in_addr OWNER TO "aaron.burgess";
-
---
--- Name: in_bg; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_bg (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.bg);
-
-
-ALTER TABLE in_bg OWNER TO "aaron.burgess";
-
---
--- Name: in_cousub; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_cousub (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.cousub);
-
-
-ALTER TABLE in_cousub OWNER TO "aaron.burgess";
-
---
--- Name: in_edges; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_edges (
-    source integer,
-    target integer,
-    shape_length double precision,
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.edges);
-
-
-ALTER TABLE in_edges OWNER TO "aaron.burgess";
-
---
--- Name: in_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_edges_vertices_pgr (
-    id bigint NOT NULL,
-    cnt integer,
-    chk integer,
-    ein integer,
-    eout integer,
-    the_geom public.geometry(Point,4269)
-);
-
-
-ALTER TABLE in_edges_vertices_pgr OWNER TO "aaron.burgess";
-
---
--- Name: in_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE SEQUENCE in_edges_vertices_pgr_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE in_edges_vertices_pgr_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: in_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER SEQUENCE in_edges_vertices_pgr_id_seq OWNED BY in_edges_vertices_pgr.id;
-
-
---
--- Name: in_faces; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_faces (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.faces);
-
-
-ALTER TABLE in_faces OWNER TO "aaron.burgess";
-
---
--- Name: in_featnames; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_featnames (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.featnames);
-
-
-ALTER TABLE in_featnames OWNER TO "aaron.burgess";
-
---
--- Name: in_place; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_place (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.place);
-
-
-ALTER TABLE in_place OWNER TO "aaron.burgess";
-
---
--- Name: in_tabblock; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_tabblock (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.tabblock);
-
-
-ALTER TABLE in_tabblock OWNER TO "aaron.burgess";
-
---
--- Name: in_tract; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_tract (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.tract);
-
-
-ALTER TABLE in_tract OWNER TO "aaron.burgess";
-
---
--- Name: in_zcta5; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_zcta5 (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.zcta5);
-
-
-ALTER TABLE in_zcta5 OWNER TO "aaron.burgess";
-
---
--- Name: in_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_zip_lookup_base (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.zip_lookup_base);
-ALTER TABLE ONLY in_zip_lookup_base ALTER COLUMN state SET NOT NULL;
-ALTER TABLE ONLY in_zip_lookup_base ALTER COLUMN county SET NOT NULL;
-ALTER TABLE ONLY in_zip_lookup_base ALTER COLUMN city SET NOT NULL;
-ALTER TABLE ONLY in_zip_lookup_base ALTER COLUMN statefp SET NOT NULL;
-
-
-ALTER TABLE in_zip_lookup_base OWNER TO "aaron.burgess";
-
---
--- Name: in_zip_state; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_zip_state (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.zip_state);
-
-
-ALTER TABLE in_zip_state OWNER TO "aaron.burgess";
-
---
--- Name: in_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE in_zip_state_loc (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '18'::text))
-)
-INHERITS (tiger.zip_state_loc);
-
-
-ALTER TABLE in_zip_state_loc OWNER TO "aaron.burgess";
-
---
--- Name: or_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_addr (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.addr);
-
-
-ALTER TABLE or_addr OWNER TO "aaron.burgess";
-
---
--- Name: or_cousub; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_cousub (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.cousub);
-
-
-ALTER TABLE or_cousub OWNER TO "aaron.burgess";
-
---
--- Name: or_edges; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_edges (
-    source integer,
-    target integer,
-    shape_length double precision,
-    x1 double precision,
-    y1 double precision,
-    x2 double precision,
-    y2 double precision,
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.edges);
-
-
-ALTER TABLE or_edges OWNER TO "aaron.burgess";
-
---
--- Name: or_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_edges_vertices_pgr (
-    id bigint NOT NULL,
-    cnt integer,
-    chk integer,
-    ein integer,
-    eout integer,
-    the_geom public.geometry(Point,4269)
-);
-
-
-ALTER TABLE or_edges_vertices_pgr OWNER TO "aaron.burgess";
-
---
--- Name: or_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE SEQUENCE or_edges_vertices_pgr_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE or_edges_vertices_pgr_id_seq OWNER TO "aaron.burgess";
-
---
--- Name: or_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER SEQUENCE or_edges_vertices_pgr_id_seq OWNED BY or_edges_vertices_pgr.id;
-
-
---
--- Name: or_faces; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_faces (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.faces);
-
-
-ALTER TABLE or_faces OWNER TO "aaron.burgess";
-
---
--- Name: or_featnames; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_featnames (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.featnames);
-
-
-ALTER TABLE or_featnames OWNER TO "aaron.burgess";
-
---
--- Name: or_place; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_place (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.place);
-
-
-ALTER TABLE or_place OWNER TO "aaron.burgess";
-
---
--- Name: or_tabblock; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_tabblock (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.tabblock);
-
-
-ALTER TABLE or_tabblock OWNER TO "aaron.burgess";
-
---
--- Name: or_tract; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_tract (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.tract);
-
-
-ALTER TABLE or_tract OWNER TO "aaron.burgess";
-
---
--- Name: or_zcta5; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_zcta5 (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.zcta5);
-
-
-ALTER TABLE or_zcta5 OWNER TO "aaron.burgess";
-
---
--- Name: or_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_zip_lookup_base (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.zip_lookup_base);
-ALTER TABLE ONLY or_zip_lookup_base ALTER COLUMN state SET NOT NULL;
-ALTER TABLE ONLY or_zip_lookup_base ALTER COLUMN county SET NOT NULL;
-ALTER TABLE ONLY or_zip_lookup_base ALTER COLUMN city SET NOT NULL;
-ALTER TABLE ONLY or_zip_lookup_base ALTER COLUMN statefp SET NOT NULL;
-
-
-ALTER TABLE or_zip_lookup_base OWNER TO "aaron.burgess";
-
---
--- Name: or_zip_state; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_zip_state (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.zip_state);
-
-
-ALTER TABLE or_zip_state OWNER TO "aaron.burgess";
-
---
--- Name: or_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE or_zip_state_loc (
-    CONSTRAINT chk_statefp CHECK (((statefp)::text = '41'::text))
-)
-INHERITS (tiger.zip_state_loc);
-
-
-ALTER TABLE or_zip_state_loc OWNER TO "aaron.burgess";
-
---
--- Name: state_all; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE TABLE state_all (
-)
-INHERITS (tiger.state);
-
-
-ALTER TABLE state_all OWNER TO "aaron.burgess";
-
-SET search_path = geocoding_data, pg_catalog;
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER TABLE ONLY "Client Name" ALTER COLUMN id SET DEFAULT nextval('"Client Name_id_seq"'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER TABLE ONLY "HI" ALTER COLUMN id SET DEFAULT nextval('"HI_id_seq"'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY cached_geocodes ALTER COLUMN id SET DEFAULT nextval('cached_geocodes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER TABLE ONLY client_name ALTER COLUMN id SET DEFAULT nextval('client_name_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY evh ALTER COLUMN id SET DEFAULT nextval('evh_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY evh_test ALTER COLUMN id SET DEFAULT nextval('evh_test_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER TABLE ONLY hi ALTER COLUMN id SET DEFAULT nextval('hi_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY silly_test ALTER COLUMN id SET DEFAULT nextval('silly_test_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY test ALTER COLUMN id SET DEFAULT nextval('test_id_seq'::regclass);
-
-
-SET search_path = tiger, pg_catalog;
-
---
--- Name: id; Type: DEFAULT; Schema: tiger; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY temp_state ALTER COLUMN id SET DEFAULT nextval('temp_state_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: tiger; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY temp_zip ALTER COLUMN id SET DEFAULT nextval('temp_zip_id_seq'::regclass);
-
-
-SET search_path = tiger_data, pg_catalog;
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY county_all ALTER COLUMN gid SET DEFAULT nextval('tiger.county_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
-
-
---
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_addr ALTER COLUMN statefp SET DEFAULT '12'::character varying;
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_bg ALTER COLUMN gid SET DEFAULT nextval('tiger.bg_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_cousub ALTER COLUMN gid SET DEFAULT nextval('tiger.cousub_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_edges ALTER COLUMN gid SET DEFAULT nextval('tiger.edges_gid_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_edges_vertices_pgr ALTER COLUMN id SET DEFAULT nextval('fl_edges_vertices_pgr_id_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_faces ALTER COLUMN gid SET DEFAULT nextval('tiger.faces_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_featnames ALTER COLUMN gid SET DEFAULT nextval('tiger.featnames_gid_seq'::regclass);
-
-
---
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_featnames ALTER COLUMN statefp SET DEFAULT '12'::character varying;
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_place ALTER COLUMN gid SET DEFAULT nextval('tiger.place_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_tabblock ALTER COLUMN gid SET DEFAULT nextval('tiger.tabblock_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_tract ALTER COLUMN gid SET DEFAULT nextval('tiger.tract_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
-
-
---
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_addr ALTER COLUMN statefp SET DEFAULT '18'::character varying;
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_bg ALTER COLUMN gid SET DEFAULT nextval('tiger.bg_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_cousub ALTER COLUMN gid SET DEFAULT nextval('tiger.cousub_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_edges ALTER COLUMN gid SET DEFAULT nextval('tiger.edges_gid_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_edges_vertices_pgr ALTER COLUMN id SET DEFAULT nextval('in_edges_vertices_pgr_id_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_faces ALTER COLUMN gid SET DEFAULT nextval('tiger.faces_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_featnames ALTER COLUMN gid SET DEFAULT nextval('tiger.featnames_gid_seq'::regclass);
-
-
---
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_featnames ALTER COLUMN statefp SET DEFAULT '18'::character varying;
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_place ALTER COLUMN gid SET DEFAULT nextval('tiger.place_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_tabblock ALTER COLUMN gid SET DEFAULT nextval('tiger.tabblock_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_tract ALTER COLUMN gid SET DEFAULT nextval('tiger.tract_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
-
-
---
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_addr ALTER COLUMN statefp SET DEFAULT '41'::character varying;
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_bg ALTER COLUMN gid SET DEFAULT nextval('tiger.bg_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_cousub ALTER COLUMN gid SET DEFAULT nextval('tiger.cousub_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_edges ALTER COLUMN gid SET DEFAULT nextval('tiger.edges_gid_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_edges_vertices_pgr ALTER COLUMN id SET DEFAULT nextval('or_edges_vertices_pgr_id_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_faces ALTER COLUMN gid SET DEFAULT nextval('tiger.faces_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_featnames ALTER COLUMN gid SET DEFAULT nextval('tiger.featnames_gid_seq'::regclass);
-
-
---
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_featnames ALTER COLUMN statefp SET DEFAULT '41'::character varying;
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_place ALTER COLUMN gid SET DEFAULT nextval('tiger.place_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_tabblock ALTER COLUMN gid SET DEFAULT nextval('tiger.tabblock_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_tract ALTER COLUMN gid SET DEFAULT nextval('tiger.tract_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY state_all ALTER COLUMN gid SET DEFAULT nextval('tiger.state_gid_seq'::regclass);
-
-
-SET search_path = geocoding_data, pg_catalog;
-
---
--- Name: Client Name_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER TABLE ONLY "Client Name"
-    ADD CONSTRAINT "Client Name_pkey" PRIMARY KEY (id);
-
-
---
--- Name: HI_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER TABLE ONLY "HI"
-    ADD CONSTRAINT "HI_pkey" PRIMARY KEY (id);
-
-
---
--- Name: cached_geocodes_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY cached_geocodes
-    ADD CONSTRAINT cached_geocodes_pkey PRIMARY KEY (id);
-
-
---
--- Name: client_name_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER TABLE ONLY client_name
-    ADD CONSTRAINT client_name_pkey PRIMARY KEY (id);
-
-
---
--- Name: evh_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY evh
-    ADD CONSTRAINT evh_pkey PRIMARY KEY (id);
-
-
---
--- Name: evh_test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY evh_test
-    ADD CONSTRAINT evh_test_pkey PRIMARY KEY (id);
-
-
---
--- Name: hi_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: brandon.patterson
---
-
-ALTER TABLE ONLY hi
-    ADD CONSTRAINT hi_pkey PRIMARY KEY (id);
-
-
---
--- Name: silly_test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY silly_test
-    ADD CONSTRAINT silly_test_pkey PRIMARY KEY (id);
-
-
---
--- Name: test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY test
-    ADD CONSTRAINT test_pkey PRIMARY KEY (id);
-
-
-SET search_path = tiger, pg_catalog;
-
---
--- Name: temp_state_pkey; Type: CONSTRAINT; Schema: tiger; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY temp_state
-    ADD CONSTRAINT temp_state_pkey PRIMARY KEY (id);
-
-
---
--- Name: temp_zip_pkey; Type: CONSTRAINT; Schema: tiger; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY temp_zip
-    ADD CONSTRAINT temp_zip_pkey PRIMARY KEY (id);
-
-
-SET search_path = tiger_data, pg_catalog;
-
---
--- Name: fl_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_edges_vertices_pgr
-    ADD CONSTRAINT fl_edges_vertices_pgr_pkey PRIMARY KEY (id);
-
-
---
--- Name: in_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_edges_vertices_pgr
-    ADD CONSTRAINT in_edges_vertices_pgr_pkey PRIMARY KEY (id);
-
-
---
--- Name: or_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_edges_vertices_pgr
-    ADD CONSTRAINT or_edges_vertices_pgr_pkey PRIMARY KEY (id);
-
-
---
--- Name: pk_county_all_lookup; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY county_all_lookup
-    ADD CONSTRAINT pk_county_all_lookup PRIMARY KEY (st_code, co_code);
-
-
---
--- Name: pk_fl_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_addr
-    ADD CONSTRAINT pk_fl_addr PRIMARY KEY (gid);
-
-
---
--- Name: pk_fl_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_bg
-    ADD CONSTRAINT pk_fl_bg PRIMARY KEY (bg_id);
-
-
---
--- Name: pk_fl_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_cousub
-    ADD CONSTRAINT pk_fl_cousub PRIMARY KEY (cosbidfp);
-
-
---
--- Name: pk_fl_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_edges
-    ADD CONSTRAINT pk_fl_edges PRIMARY KEY (gid);
-
-
---
--- Name: pk_fl_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_faces
-    ADD CONSTRAINT pk_fl_faces PRIMARY KEY (gid);
-
-
---
--- Name: pk_fl_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_featnames
-    ADD CONSTRAINT pk_fl_featnames PRIMARY KEY (gid);
-
-
---
--- Name: pk_fl_place; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_place
-    ADD CONSTRAINT pk_fl_place PRIMARY KEY (plcidfp);
-
-
---
--- Name: pk_fl_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_tabblock
-    ADD CONSTRAINT pk_fl_tabblock PRIMARY KEY (tabblock_id);
-
-
---
--- Name: pk_fl_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_tract
-    ADD CONSTRAINT pk_fl_tract PRIMARY KEY (tract_id);
-
-
---
--- Name: pk_fl_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_zcta5
-    ADD CONSTRAINT pk_fl_zcta5 PRIMARY KEY (zcta5ce, statefp);
-
-
---
--- Name: pk_fl_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_zip_state
-    ADD CONSTRAINT pk_fl_zip_state PRIMARY KEY (zip, stusps);
-
-
---
--- Name: pk_fl_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_zip_state_loc
-    ADD CONSTRAINT pk_fl_zip_state_loc PRIMARY KEY (zip, stusps, place);
-
-
---
--- Name: pk_fl_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_zip_lookup_base
-    ADD CONSTRAINT pk_fl_zip_state_loc_city PRIMARY KEY (zip, state, county, city, statefp);
-
-
---
--- Name: pk_in_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_addr
-    ADD CONSTRAINT pk_in_addr PRIMARY KEY (gid);
-
-
---
--- Name: pk_in_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_bg
-    ADD CONSTRAINT pk_in_bg PRIMARY KEY (bg_id);
-
-
---
--- Name: pk_in_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_cousub
-    ADD CONSTRAINT pk_in_cousub PRIMARY KEY (cosbidfp);
-
-
---
--- Name: pk_in_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_edges
-    ADD CONSTRAINT pk_in_edges PRIMARY KEY (gid);
-
-
---
--- Name: pk_in_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_faces
-    ADD CONSTRAINT pk_in_faces PRIMARY KEY (gid);
-
-
---
--- Name: pk_in_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_featnames
-    ADD CONSTRAINT pk_in_featnames PRIMARY KEY (gid);
-
-
---
--- Name: pk_in_place; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_place
-    ADD CONSTRAINT pk_in_place PRIMARY KEY (plcidfp);
-
-
---
--- Name: pk_in_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_tabblock
-    ADD CONSTRAINT pk_in_tabblock PRIMARY KEY (tabblock_id);
-
-
---
--- Name: pk_in_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_tract
-    ADD CONSTRAINT pk_in_tract PRIMARY KEY (tract_id);
-
-
---
--- Name: pk_in_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_zcta5
-    ADD CONSTRAINT pk_in_zcta5 PRIMARY KEY (zcta5ce, statefp);
-
-
---
--- Name: pk_in_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_zip_state
-    ADD CONSTRAINT pk_in_zip_state PRIMARY KEY (zip, stusps);
-
-
---
--- Name: pk_in_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_zip_state_loc
-    ADD CONSTRAINT pk_in_zip_state_loc PRIMARY KEY (zip, stusps, place);
-
-
---
--- Name: pk_in_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_zip_lookup_base
-    ADD CONSTRAINT pk_in_zip_state_loc_city PRIMARY KEY (zip, state, county, city, statefp);
-
-
---
--- Name: pk_or_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_addr
-    ADD CONSTRAINT pk_or_addr PRIMARY KEY (gid);
-
-
---
--- Name: pk_or_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_bg
-    ADD CONSTRAINT pk_or_bg PRIMARY KEY (bg_id);
-
-
---
--- Name: pk_or_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_cousub
-    ADD CONSTRAINT pk_or_cousub PRIMARY KEY (cosbidfp);
-
-
---
--- Name: pk_or_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_edges
-    ADD CONSTRAINT pk_or_edges PRIMARY KEY (gid);
-
-
---
--- Name: pk_or_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_faces
-    ADD CONSTRAINT pk_or_faces PRIMARY KEY (gid);
-
-
---
--- Name: pk_or_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_featnames
-    ADD CONSTRAINT pk_or_featnames PRIMARY KEY (gid);
-
-
---
--- Name: pk_or_place; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_place
-    ADD CONSTRAINT pk_or_place PRIMARY KEY (plcidfp);
-
-
---
--- Name: pk_or_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_tabblock
-    ADD CONSTRAINT pk_or_tabblock PRIMARY KEY (tabblock_id);
-
-
---
--- Name: pk_or_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_tract
-    ADD CONSTRAINT pk_or_tract PRIMARY KEY (tract_id);
-
-
---
--- Name: pk_or_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_zcta5
-    ADD CONSTRAINT pk_or_zcta5 PRIMARY KEY (zcta5ce, statefp);
-
-
---
--- Name: pk_or_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_zip_state
-    ADD CONSTRAINT pk_or_zip_state PRIMARY KEY (zip, stusps);
-
-
---
--- Name: pk_or_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_zip_state_loc
-    ADD CONSTRAINT pk_or_zip_state_loc PRIMARY KEY (zip, stusps, place);
-
-
---
--- Name: pk_or_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_zip_lookup_base
-    ADD CONSTRAINT pk_or_zip_state_loc_city PRIMARY KEY (zip, state, county, city, statefp);
-
-
---
--- Name: pk_state_all; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY state_all
-    ADD CONSTRAINT pk_state_all PRIMARY KEY (statefp);
-
-
---
--- Name: pk_tiger_data_county_all; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY county_all
-    ADD CONSTRAINT pk_tiger_data_county_all PRIMARY KEY (cntyidfp);
-
-
---
--- Name: uidx_fl_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_cousub
-    ADD CONSTRAINT uidx_fl_cousub_gid UNIQUE (gid);
-
-
---
--- Name: uidx_fl_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_place
-    ADD CONSTRAINT uidx_fl_place_gid UNIQUE (gid);
-
-
---
--- Name: uidx_fl_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY fl_zcta5
-    ADD CONSTRAINT uidx_fl_zcta5_gid UNIQUE (gid);
-
-
---
--- Name: uidx_in_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_cousub
-    ADD CONSTRAINT uidx_in_cousub_gid UNIQUE (gid);
-
-
---
--- Name: uidx_in_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_place
-    ADD CONSTRAINT uidx_in_place_gid UNIQUE (gid);
-
-
---
--- Name: uidx_in_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY in_zcta5
-    ADD CONSTRAINT uidx_in_zcta5_gid UNIQUE (gid);
-
-
---
--- Name: uidx_or_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_cousub
-    ADD CONSTRAINT uidx_or_cousub_gid UNIQUE (gid);
-
-
---
--- Name: uidx_or_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_place
-    ADD CONSTRAINT uidx_or_place_gid UNIQUE (gid);
-
-
---
--- Name: uidx_or_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY or_zcta5
-    ADD CONSTRAINT uidx_or_zcta5_gid UNIQUE (gid);
-
-
---
--- Name: uidx_state_all_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY state_all
-    ADD CONSTRAINT uidx_state_all_gid UNIQUE (gid);
-
-
---
--- Name: uidx_state_all_stusps; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY state_all
-    ADD CONSTRAINT uidx_state_all_stusps UNIQUE (stusps);
-
-
---
--- Name: uidx_tiger_data_county_all_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
---
-
-ALTER TABLE ONLY county_all
-    ADD CONSTRAINT uidx_tiger_data_county_all_gid UNIQUE (gid);
-
-
-SET search_path = geocoding_data, pg_catalog;
-
---
--- Name: idx_base_address; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_base_address ON cached_geocodes USING btree (base_address);
-
-
---
--- Name: idx_composite_route; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_composite_route ON cached_routes USING btree (start_node, end_node);
-
-
---
--- Name: idx_geom_cached; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_geom_cached ON cached_geocodes USING gist (geom);
-
-
---
--- Name: idx_woah_member_geom; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_woah_member_geom ON woah_results USING gist (member_geom);
-
-
---
--- Name: idx_woah_member_geom_transformed; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_woah_member_geom_transformed ON woah_results USING gist (public.st_transform(member_geom, 2163));
-
-
---
--- Name: idx_woah_prov_geom; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_woah_prov_geom ON woah_results USING gist (prov_geom);
-
-
---
--- Name: idx_woah_prov_geom_transformed; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_woah_prov_geom_transformed ON woah_results USING gist (public.st_transform(prov_geom, 2163));
-
-
---
--- Name: ix_geocoding_data_woah_index; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
---
-
-CREATE INDEX ix_geocoding_data_woah_index ON woah USING btree (index);
-
-
-SET search_path = tiger_data, pg_catalog;
-
---
--- Name: fl_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX fl_edges_source_idx ON fl_edges USING btree (source);
-
-
---
--- Name: fl_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX fl_edges_target_idx ON fl_edges USING btree (target);
-
-
---
--- Name: fl_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX fl_edges_vertices_pgr_the_geom_idx ON fl_edges_vertices_pgr USING gist (the_geom);
-
-
---
--- Name: idx_fl_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_fl_place_soundex_name ON fl_place USING btree (public.soundex((name)::text));
-
-
---
--- Name: idx_in_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_in_place_soundex_name ON in_place USING btree (public.soundex((name)::text));
-
-
---
--- Name: idx_or_edges_vertices_transformed; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_or_edges_vertices_transformed ON or_edges_vertices_pgr USING gist (public.st_transform(the_geom, 2163));
-
-
---
--- Name: idx_or_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_or_place_soundex_name ON or_place USING btree (public.soundex((name)::text));
-
-
---
--- Name: idx_tiger_data_fl_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_addr_least_address ON fl_addr USING btree (tiger.least_hn(fromhn, tohn));
-
-
---
--- Name: idx_tiger_data_fl_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_addr_tlid_statefp ON fl_addr USING btree (tlid, statefp);
-
-
---
--- Name: idx_tiger_data_fl_addr_zip; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_addr_zip ON fl_addr USING btree (zip);
-
-
---
--- Name: idx_tiger_data_fl_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_cousub_countyfp ON fl_cousub USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_fl_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_edges_countyfp ON fl_edges USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_fl_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_edges_tfidl ON fl_edges USING btree (tfidl);
-
-
---
--- Name: idx_tiger_data_fl_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_edges_tlid ON fl_edges USING btree (tlid);
-
-
---
--- Name: idx_tiger_data_fl_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_edges_zipl ON fl_edges USING btree (zipl);
-
-
---
--- Name: idx_tiger_data_fl_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_edgestfidr ON fl_edges USING btree (tfidr);
-
-
---
--- Name: idx_tiger_data_fl_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_faces_countyfp ON fl_faces USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_fl_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_faces_tfid ON fl_faces USING btree (tfid);
-
-
---
--- Name: idx_tiger_data_fl_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_featnames_lname ON fl_featnames USING btree (lower((name)::text));
-
-
---
--- Name: idx_tiger_data_fl_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_featnames_snd_name ON fl_featnames USING btree (public.soundex((name)::text));
-
-
---
--- Name: idx_tiger_data_fl_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_featnames_tlid_statefp ON fl_featnames USING btree (tlid, statefp);
-
-
---
--- Name: idx_tiger_data_fl_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_zip_lookup_base_citysnd ON fl_zip_lookup_base USING btree (public.soundex((city)::text));
-
-
---
--- Name: idx_tiger_data_fl_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_fl_zip_state_loc_place ON fl_zip_state_loc USING btree (public.soundex((place)::text));
-
-
---
--- Name: idx_tiger_data_in_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_addr_least_address ON in_addr USING btree (tiger.least_hn(fromhn, tohn));
-
-
---
--- Name: idx_tiger_data_in_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_addr_tlid_statefp ON in_addr USING btree (tlid, statefp);
-
-
---
--- Name: idx_tiger_data_in_addr_zip; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_addr_zip ON in_addr USING btree (zip);
-
-
---
--- Name: idx_tiger_data_in_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_cousub_countyfp ON in_cousub USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_in_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_edges_countyfp ON in_edges USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_in_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_edges_tfidl ON in_edges USING btree (tfidl);
-
-
---
--- Name: idx_tiger_data_in_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_edges_tlid ON in_edges USING btree (tlid);
-
-
---
--- Name: idx_tiger_data_in_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_edges_zipl ON in_edges USING btree (zipl);
-
-
---
--- Name: idx_tiger_data_in_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_edgestfidr ON in_edges USING btree (tfidr);
-
-
---
--- Name: idx_tiger_data_in_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_faces_countyfp ON in_faces USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_in_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_faces_tfid ON in_faces USING btree (tfid);
-
-
---
--- Name: idx_tiger_data_in_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_featnames_lname ON in_featnames USING btree (lower((name)::text));
-
-
---
--- Name: idx_tiger_data_in_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_featnames_snd_name ON in_featnames USING btree (public.soundex((name)::text));
-
-
---
--- Name: idx_tiger_data_in_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_featnames_tlid_statefp ON in_featnames USING btree (tlid, statefp);
-
-
---
--- Name: idx_tiger_data_in_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_in_zip_lookup_base_citysnd ON in_zip_lookup_base USING btree (public.soundex((city)::text));
 
+ALTER TABLE view_activity_log OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: idx_tiger_data_in_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: view_group; Type: VIEW; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX idx_tiger_data_in_zip_state_loc_place ON in_zip_state_loc USING btree (public.soundex((place)::text));
+CREATE VIEW view_group AS
+ SELECT "group".id AS groupid,
+        CASE
+            WHEN ((("group".groupname)::text ~~ '%DEMO%'::text) OR (("group".groupname)::text ~~ '%TEST%'::text) OR (("group".groupname)::text ~~ '%PROTOTYPES%'::text)) THEN 'Other'::text
+            WHEN (("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) AND (substr(("group".groupname)::text, 5, 3) <> ALL (ARRAY['MMD'::text, 'ODM'::text]))) THEN 'PRM Analytics'::text
+            WHEN ("left"(("group".groupname)::text, 7) = ANY (ARRAY['0032MMD'::text, '0032ODM'::text])) THEN 'Indianapolis Medicaid'::text
+            WHEN (("left"(("group".groupname)::text, 17) = '0000EXT01_NEWYORK'::text) OR ("left"(("group".groupname)::text, 9) = 'NY OFFICE'::text)) THEN 'New York'::text
+            WHEN ("left"(("group".groupname)::text, 16) = '0000EXT01_BOSTON'::text) THEN 'Vermont'::text
+            WHEN ("left"(("group".groupname)::text, 18) = '0000EXT01_HARTFORD'::text) THEN 'Hartford'::text
+            WHEN ("left"(("group".groupname)::text, 17) = '0000EXT01_VERMONT'::text) THEN 'Vermont'::text
+            ELSE 'Other'::text
+        END AS office,
+        CASE
+            WHEN ("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) THEN substr(("group".groupname)::text, 1, 7)
+            WHEN ("left"(("group".groupname)::text, 9) = ANY (ARRAY['0000EXT01'::text, 'NY OFFICE'::text])) THEN
+            CASE
+                WHEN (("group".groupname)::text ~~ '%PREMIER'::text) THEN 'Premier'::text
+                WHEN (("group".groupname)::text ~~ '%USPI'::text) THEN 'USPI'::text
+                WHEN (("group".groupname)::text ~~ '%CAM'::text) THEN 'CAM'::text
+                WHEN (("group".groupname)::text ~~ '%CJR'::text) THEN 'CJR'::text
+                ELSE 'Other/Unknown'::text
+            END
+            ELSE 'Unknown'::text
+        END AS client,
+    "group".groupname AS group_name
+   FROM "group";
 
 
---
--- Name: idx_tiger_data_or_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_addr_least_address ON or_addr USING btree (tiger.least_hn(fromhn, tohn));
-
-
---
--- Name: idx_tiger_data_or_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_addr_tlid_statefp ON or_addr USING btree (tlid, statefp);
-
-
---
--- Name: idx_tiger_data_or_addr_zip; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_addr_zip ON or_addr USING btree (zip);
-
-
---
--- Name: idx_tiger_data_or_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_cousub_countyfp ON or_cousub USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_or_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_edges_countyfp ON or_edges USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_or_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_edges_tfidl ON or_edges USING btree (tfidl);
-
-
---
--- Name: idx_tiger_data_or_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_edges_tlid ON or_edges USING btree (tlid);
-
-
---
--- Name: idx_tiger_data_or_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_edges_zipl ON or_edges USING btree (zipl);
-
-
---
--- Name: idx_tiger_data_or_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_edgestfidr ON or_edges USING btree (tfidr);
-
-
---
--- Name: idx_tiger_data_or_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_faces_countyfp ON or_faces USING btree (countyfp);
-
-
---
--- Name: idx_tiger_data_or_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_faces_tfid ON or_faces USING btree (tfid);
-
-
---
--- Name: idx_tiger_data_or_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_featnames_lname ON or_featnames USING btree (lower((name)::text));
-
-
---
--- Name: idx_tiger_data_or_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_featnames_snd_name ON or_featnames USING btree (public.soundex((name)::text));
-
+ALTER TABLE view_group OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: idx_tiger_data_or_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: view_user; Type: VIEW; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX idx_tiger_data_or_featnames_tlid_statefp ON or_featnames USING btree (tlid, statefp);
+CREATE VIEW view_user AS
+ SELECT "user".id AS userid,
+    "user".username AS user_name
+   FROM "user";
 
 
---
--- Name: idx_tiger_data_or_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_zip_lookup_base_citysnd ON or_zip_lookup_base USING btree (public.soundex((city)::text));
-
-
---
--- Name: idx_tiger_data_or_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX idx_tiger_data_or_zip_state_loc_place ON or_zip_state_loc USING btree (public.soundex((place)::text));
-
-
---
--- Name: in_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX in_edges_source_idx ON in_edges USING btree (source);
-
-
---
--- Name: in_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX in_edges_target_idx ON in_edges USING btree (target);
-
-
---
--- Name: in_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX in_edges_vertices_pgr_the_geom_idx ON in_edges_vertices_pgr USING gist (the_geom);
-
-
---
--- Name: or_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX or_edges_source_idx ON or_edges USING btree (source);
-
-
---
--- Name: or_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
+ALTER TABLE view_user OWNER TO "indy_ePHI_SystemReporting";
 
-CREATE INDEX or_edges_target_idx ON or_edges USING btree (target);
-
-
---
--- Name: or_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX or_edges_vertices_pgr_the_geom_idx ON or_edges_vertices_pgr USING gist (the_geom);
-
-
---
--- Name: tiger_data_county_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX tiger_data_county_the_geom_gist ON county_all USING gist (the_geom);
-
-
---
--- Name: tiger_data_fl_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX tiger_data_fl_bg_the_geom_gist ON fl_bg USING gist (the_geom);
-
-
---
--- Name: tiger_data_fl_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX tiger_data_fl_cousub_the_geom_gist ON fl_cousub USING gist (the_geom);
-
-
---
--- Name: tiger_data_fl_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
-
-CREATE INDEX tiger_data_fl_edges_the_geom_gist ON fl_edges USING gist (the_geom);
-
-
---
--- Name: tiger_data_fl_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
 --
-
-CREATE INDEX tiger_data_fl_faces_the_geom_gist ON fl_faces USING gist (the_geom);
-
-
+-- Name: id; Type: DEFAULT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
--- Name: tiger_data_fl_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
---
 
-CREATE INDEX tiger_data_fl_place_the_geom_gist ON fl_place USING gist (the_geom);
+ALTER TABLE ONLY iislog ALTER COLUMN id SET DEFAULT nextval('iislog_id_seq1'::regclass);
 
 
 --
--- Name: tiger_data_fl_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_fl_tabblock_the_geom_gist ON fl_tabblock USING gist (the_geom);
+ALTER TABLE ONLY reporttype ALTER COLUMN id SET DEFAULT nextval('reporttype_id_seq'::regclass);
 
 
 --
--- Name: tiger_data_fl_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_fl_tract_the_geom_gist ON fl_tract USING gist (the_geom);
+ALTER TABLE ONLY selected_fields ALTER COLUMN id SET DEFAULT nextval('selected_fields_id_seq'::regclass);
 
 
 --
--- Name: tiger_data_fl_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_group_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_fl_zcta5_the_geom_gist ON fl_zcta5 USING gist (the_geom);
+ALTER TABLE ONLY "group"
+    ADD CONSTRAINT pk_group_id PRIMARY KEY (id);
 
 
 --
--- Name: tiger_data_in_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_iislog_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_in_bg_the_geom_gist ON in_bg USING gist (the_geom);
+ALTER TABLE ONLY iislog
+    ADD CONSTRAINT pk_iislog_id PRIMARY KEY (id);
 
 
 --
--- Name: tiger_data_in_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_qvauditlog_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_in_cousub_the_geom_gist ON in_cousub USING gist (the_geom);
+ALTER TABLE ONLY qvauditlog
+    ADD CONSTRAINT pk_qvauditlog_id PRIMARY KEY (id);
 
 
 --
--- Name: tiger_data_in_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_qvsessionlog_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_in_edges_the_geom_gist ON in_edges USING gist (the_geom);
+ALTER TABLE ONLY qvsessionlog
+    ADD CONSTRAINT pk_qvsessionlog_id PRIMARY KEY (id);
 
 
 --
--- Name: tiger_data_in_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_report_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_in_faces_the_geom_gist ON in_faces USING gist (the_geom);
+ALTER TABLE ONLY report
+    ADD CONSTRAINT pk_report_id PRIMARY KEY (id);
 
 
 --
--- Name: tiger_data_in_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_reporttype_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_in_place_the_geom_gist ON in_place USING gist (the_geom);
+ALTER TABLE ONLY reporttype
+    ADD CONSTRAINT pk_reporttype_id PRIMARY KEY (id);
 
 
 --
--- Name: tiger_data_in_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_user_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_in_tabblock_the_geom_gist ON in_tabblock USING gist (the_geom);
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
 
 
 --
--- Name: tiger_data_in_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: selected_fields_field_name_key; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_in_tract_the_geom_gist ON in_tract USING gist (the_geom);
+ALTER TABLE ONLY selected_fields
+    ADD CONSTRAINT selected_fields_field_name_key UNIQUE (field_name);
 
 
 --
--- Name: tiger_data_in_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: selected_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_in_zcta5_the_geom_gist ON in_zcta5 USING gist (the_geom);
+ALTER TABLE ONLY selected_fields
+    ADD CONSTRAINT selected_fields_pkey PRIMARY KEY (id);
 
 
 --
--- Name: tiger_data_or_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uq_group_groupname; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_or_bg_the_geom_gist ON or_bg USING gist (the_geom);
+ALTER TABLE ONLY "group"
+    ADD CONSTRAINT uq_group_groupname UNIQUE (groupname);
 
 
 --
--- Name: tiger_data_or_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uq_report_reportname; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_or_cousub_the_geom_gist ON or_cousub USING gist (the_geom);
+ALTER TABLE ONLY report
+    ADD CONSTRAINT uq_report_reportname UNIQUE (reportname);
 
 
 --
--- Name: tiger_data_or_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uq_reporttype_type; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_or_edges_the_geom_gist ON or_edges USING gist (the_geom);
+ALTER TABLE ONLY reporttype
+    ADD CONSTRAINT uq_reporttype_type UNIQUE (type);
 
 
 --
--- Name: tiger_data_or_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uq_user_username; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_or_faces_the_geom_gist ON or_faces USING gist (the_geom);
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT uq_user_username UNIQUE (username);
 
 
 --
--- Name: tiger_data_or_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: fk_report_type_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_or_place_the_geom_gist ON or_place USING gist (the_geom);
+ALTER TABLE ONLY report
+    ADD CONSTRAINT fk_report_type_id FOREIGN KEY (fk_report_type_id) REFERENCES reporttype(id);
 
 
 --
--- Name: tiger_data_or_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: fk_tbl_group_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_or_tabblock_the_geom_gist ON or_tabblock USING gist (the_geom);
+ALTER TABLE ONLY qvauditlog
+    ADD CONSTRAINT fk_tbl_group_id FOREIGN KEY (fk_group_id) REFERENCES "group"(id);
 
 
 --
--- Name: tiger_data_or_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: fk_tbl_group_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_or_tract_the_geom_gist ON or_tract USING gist (the_geom);
+ALTER TABLE ONLY qvsessionlog
+    ADD CONSTRAINT fk_tbl_group_id FOREIGN KEY (fk_group_id) REFERENCES "group"(id);
 
 
 --
--- Name: tiger_data_or_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: fk_tbl_group_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_or_zcta5_the_geom_gist ON or_zcta5 USING gist (the_geom);
+ALTER TABLE ONLY iislog
+    ADD CONSTRAINT fk_tbl_group_id FOREIGN KEY (fk_group_id) REFERENCES "group"(id);
 
 
 --
--- Name: tiger_data_state_all_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: fk_tbl_report_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-CREATE INDEX tiger_data_state_all_the_geom_gist ON state_all USING gist (the_geom);
+ALTER TABLE ONLY qvauditlog
+    ADD CONSTRAINT fk_tbl_report_id FOREIGN KEY (fk_report_id) REFERENCES report(id);
 
 
 --
--- Name: uidx_tiger_data_county_all_statefp_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: fk_tbl_report_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
-
-CREATE UNIQUE INDEX uidx_tiger_data_county_all_statefp_countyfp ON county_all USING btree (statefp, countyfp);
 
+ALTER TABLE ONLY qvsessionlog
+    ADD CONSTRAINT fk_tbl_report_id FOREIGN KEY (fk_report_id) REFERENCES report(id);
 
-SET search_path = geocoding_data, pg_catalog;
 
 --
--- Name: cached_routes_end_id_fkey; Type: FK CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: fk_tbl_user_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-ALTER TABLE ONLY cached_routes
-    ADD CONSTRAINT cached_routes_end_id_fkey FOREIGN KEY (end_id) REFERENCES cached_geocodes(id);
+ALTER TABLE ONLY qvauditlog
+    ADD CONSTRAINT fk_tbl_user_id FOREIGN KEY (fk_user_id) REFERENCES "user"(id);
 
 
 --
--- Name: cached_routes_start_id_fkey; Type: FK CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: fk_tbl_user_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-ALTER TABLE ONLY cached_routes
-    ADD CONSTRAINT cached_routes_start_id_fkey FOREIGN KEY (start_id) REFERENCES cached_geocodes(id);
+ALTER TABLE ONLY qvsessionlog
+    ADD CONSTRAINT fk_tbl_user_id FOREIGN KEY (fk_user_id) REFERENCES "user"(id);
 
 
 --
--- Name: geocoding_data; Type: ACL; Schema: -; Owner: aaron.burgess
+-- Name: fk_tbl_user_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-REVOKE ALL ON SCHEMA geocoding_data FROM PUBLIC;
-REVOKE ALL ON SCHEMA geocoding_data FROM "aaron.burgess";
-GRANT ALL ON SCHEMA geocoding_data TO "aaron.burgess";
-GRANT CREATE ON SCHEMA geocoding_data TO geocoder_users;
+ALTER TABLE ONLY iislog
+    ADD CONSTRAINT fk_tbl_user_id FOREIGN KEY (fk_user_id) REFERENCES "user"(id);
 
 
 --
@@ -3833,34 +4332,819 @@ GRANT CREATE ON SCHEMA geocoding_data TO geocoder_users;
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- Name: tiger; Type: ACL; Schema: -; Owner: aaron.burgess
+-- Name: group_id_seq; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-REVOKE ALL ON SCHEMA tiger FROM PUBLIC;
-REVOKE ALL ON SCHEMA tiger FROM "aaron.burgess";
-GRANT ALL ON SCHEMA tiger TO "aaron.burgess";
-
-
---
--- Name: tiger_staging; Type: ACL; Schema: -; Owner: aaron.burgess
---
-
-REVOKE ALL ON SCHEMA tiger_staging FROM PUBLIC;
-REVOKE ALL ON SCHEMA tiger_staging FROM "aaron.burgess";
-GRANT ALL ON SCHEMA tiger_staging TO "aaron.burgess";
-GRANT CREATE ON SCHEMA tiger_staging TO geocoder_users;
+REVOKE ALL ON SEQUENCE group_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE group_id_seq FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON SEQUENCE group_id_seq TO "indy_ePHI_SystemReporting";
 
 
 --
--- Name: topology; Type: ACL; Schema: -; Owner: aaron.burgess
+-- Name: group; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-REVOKE ALL ON SCHEMA topology FROM PUBLIC;
-REVOKE ALL ON SCHEMA topology FROM "aaron.burgess";
-GRANT ALL ON SCHEMA topology TO "aaron.burgess";
+REVOKE ALL ON TABLE "group" FROM PUBLIC;
+REVOKE ALL ON TABLE "group" FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE "group" TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE "group" TO PUBLIC;
+
+
+--
+-- Name: iislog; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE iislog FROM PUBLIC;
+REVOKE ALL ON TABLE iislog FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE iislog TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE iislog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE qvauditlog TO "indy_ePHI_SystemReporting";
+
+
+--
+-- Name: qvauditlog.id; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(id) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(id) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(id) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.useraccessdatetime; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(useraccessdatetime) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(useraccessdatetime) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(useraccessdatetime) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.document; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(document) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(document) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(document) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.eventtype; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(eventtype) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(eventtype) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(eventtype) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.isreduced; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(isreduced) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(isreduced) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(isreduced) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.fk_user_id; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(fk_user_id) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(fk_user_id) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(fk_user_id) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.fk_group_id; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(fk_group_id) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(fk_group_id) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(fk_group_id) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.fk_report_id; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(fk_report_id) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(fk_report_id) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(fk_report_id) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.adddate; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(adddate) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(adddate) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(adddate) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvsessionlog; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE qvsessionlog FROM PUBLIC;
+REVOKE ALL ON TABLE qvsessionlog FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE qvsessionlog TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE qvsessionlog TO PUBLIC;
+
+
+--
+-- Name: report; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE report FROM PUBLIC;
+REVOKE ALL ON TABLE report FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE report TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE report TO PUBLIC;
+
+
+--
+-- Name: selected_fields; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE selected_fields FROM PUBLIC;
+REVOKE ALL ON TABLE selected_fields FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE selected_fields TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE selected_fields TO PUBLIC;
+
+
+--
+-- Name: user; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE "user" FROM PUBLIC;
+REVOKE ALL ON TABLE "user" FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE "user" TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE "user" TO PUBLIC;
+
+
+--
+-- Name: view_session_log; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE view_session_log FROM PUBLIC;
+REVOKE ALL ON TABLE view_session_log FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE view_session_log TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE view_session_log TO PUBLIC;
+
+
+--
+-- Name: view_activity_log; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE view_activity_log FROM PUBLIC;
+REVOKE ALL ON TABLE view_activity_log FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE view_activity_log TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE view_activity_log TO PUBLIC;
+
+
+--
+-- Name: view_group; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE view_group FROM PUBLIC;
+REVOKE ALL ON TABLE view_group FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE view_group TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE view_group TO PUBLIC;
+
+
+--
+-- Name: view_user; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE view_user FROM PUBLIC;
+REVOKE ALL ON TABLE view_user FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE view_user TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE view_user TO PUBLIC;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: ben.wyatt
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON TABLES  FROM "ben.wyatt";
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON TABLES  TO "indy_ePHI_SystemReporting";
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect systemreporting_application
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: group_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE group_id_seq
+    START WITH 156
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE group_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+SET default_with_oids = false;
+
+--
+-- Name: group; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE "group" (
+    id integer DEFAULT nextval('group_id_seq'::regclass) NOT NULL,
+    groupname character varying(250) NOT NULL,
+    groupdescription character varying(100),
+    adddate timestamp with time zone
+);
+
+
+ALTER TABLE "group" OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: iislog_id_seq1; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE iislog_id_seq1
+    START WITH 59819
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE iislog_id_seq1 OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: iislog; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE iislog (
+    id integer DEFAULT nextval('iislog_id_seq1'::regclass) NOT NULL,
+    useraccessdatetime timestamp with time zone,
+    clientipaddress character varying(15),
+    serveripaddress character varying(15),
+    portnumber integer,
+    commandsentmethod character varying(10),
+    stepuri character varying(80),
+    queryuri text,
+    statuscode integer,
+    substatuscode integer,
+    win32statuscode integer,
+    responsetime integer,
+    useragent text,
+    clientreferer text,
+    browser character varying(25),
+    eventtype character varying(25),
+    adddate timestamp with time zone,
+    fk_user_id integer,
+    fk_group_id integer
+);
+
+
+ALTER TABLE iislog OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: iislog_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE iislog_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE iislog_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: qvauditlog_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE qvauditlog_id_seq
+    START WITH 605925
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE qvauditlog_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: qvauditlog; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE qvauditlog (
+    id integer DEFAULT nextval('qvauditlog_id_seq'::regclass) NOT NULL,
+    useraccessdatetime timestamp with time zone,
+    document text,
+    eventtype character varying(25),
+    message text,
+    isreduced boolean,
+    fk_user_id integer,
+    fk_group_id integer,
+    fk_report_id integer,
+    adddate timestamp with time zone
+);
+
+
+ALTER TABLE qvauditlog OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: qvsessionlog_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE qvsessionlog_id_seq
+    START WITH 36336
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE qvsessionlog_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: qvsessionlog; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE qvsessionlog (
+    id integer DEFAULT nextval('qvsessionlog_id_seq'::regclass) NOT NULL,
+    useraccessdatetime timestamp with time zone,
+    document text,
+    exitreason character varying(75),
+    sessionstarttime timestamp with time zone,
+    sessionduration character varying(10),
+    sessionendreason character varying(25),
+    cpuspents double precision,
+    clienttype character varying(75),
+    clientaddress character varying(25),
+    caltype character varying(20),
+    calusagecount integer,
+    browser character varying(25),
+    isreduced boolean,
+    fk_user_id integer,
+    fk_group_id integer,
+    fk_report_id integer,
+    adddate timestamp with time zone
+);
+
+
+ALTER TABLE qvsessionlog OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: report_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE report_id_seq
+    START WITH 856
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE report_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: report; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE report (
+    id integer DEFAULT nextval('report_id_seq'::regclass) NOT NULL,
+    reportname character varying(100) NOT NULL,
+    reportdescription character varying(100),
+    adddate timestamp with time zone,
+    fk_report_type_id integer
+);
+
+
+ALTER TABLE report OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: reporttype_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE reporttype_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reporttype_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: reporttype; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE reporttype (
+    id integer DEFAULT nextval('reporttype_id_seq'::regclass) NOT NULL,
+    type character varying(100) NOT NULL,
+    keywords character varying(100) NOT NULL
+);
+
+
+ALTER TABLE reporttype OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE user_id_seq
+    START WITH 1231
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE user_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE "user" (
+    id integer DEFAULT nextval('user_id_seq'::regclass) NOT NULL,
+    username character varying(100) NOT NULL,
+    adddate timestamp with time zone
+);
+
+
+ALTER TABLE "user" OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: pk_group_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY "group"
+    ADD CONSTRAINT pk_group_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_iislog_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY iislog
+    ADD CONSTRAINT pk_iislog_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_qvauditlog_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY qvauditlog
+    ADD CONSTRAINT pk_qvauditlog_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_qvsessionlog_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY qvsessionlog
+    ADD CONSTRAINT pk_qvsessionlog_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_report_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT pk_report_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reporttype_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY reporttype
+    ADD CONSTRAINT pk_reporttype_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_user_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_group_groupname; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY "group"
+    ADD CONSTRAINT uq_group_groupname UNIQUE (groupname);
+
+
+--
+-- Name: uq_report_reportname; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT uq_report_reportname UNIQUE (reportname);
+
+
+--
+-- Name: uq_reporttype_type; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY reporttype
+    ADD CONSTRAINT uq_reporttype_type UNIQUE (type);
+
+
+--
+-- Name: uq_user_username; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT uq_user_username UNIQUE (username);
+
+
+--
+-- Name: fk_report_type_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT fk_report_type_id FOREIGN KEY (fk_report_type_id) REFERENCES reporttype(id);
+
+
+--
+-- Name: fk_tbl_group_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY iislog
+    ADD CONSTRAINT fk_tbl_group_id FOREIGN KEY (fk_group_id) REFERENCES "group"(id);
+
+
+--
+-- Name: fk_tbl_group_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY qvsessionlog
+    ADD CONSTRAINT fk_tbl_group_id FOREIGN KEY (fk_group_id) REFERENCES "group"(id);
+
+
+--
+-- Name: fk_tbl_group_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY qvauditlog
+    ADD CONSTRAINT fk_tbl_group_id FOREIGN KEY (fk_group_id) REFERENCES "group"(id);
+
+
+--
+-- Name: fk_tbl_report_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY qvsessionlog
+    ADD CONSTRAINT fk_tbl_report_id FOREIGN KEY (fk_report_id) REFERENCES report(id);
+
+
+--
+-- Name: fk_tbl_report_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY qvauditlog
+    ADD CONSTRAINT fk_tbl_report_id FOREIGN KEY (fk_report_id) REFERENCES report(id);
+
+
+--
+-- Name: fk_tbl_user_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY iislog
+    ADD CONSTRAINT fk_tbl_user_id FOREIGN KEY (fk_user_id) REFERENCES "user"(id);
+
+
+--
+-- Name: fk_tbl_user_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY qvsessionlog
+    ADD CONSTRAINT fk_tbl_user_id FOREIGN KEY (fk_user_id) REFERENCES "user"(id);
+
+
+--
+-- Name: fk_tbl_user_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY qvauditlog
+    ADD CONSTRAINT fk_tbl_user_id FOREIGN KEY (fk_user_id) REFERENCES "user"(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: group_id_seq; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON SEQUENCE group_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE group_id_seq FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON SEQUENCE group_id_seq TO "indy_ePHI_SystemReporting";
+
+
+--
+-- Name: group; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE "group" FROM PUBLIC;
+REVOKE ALL ON TABLE "group" FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE "group" TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE "group" TO PUBLIC;
+
+
+--
+-- Name: iislog; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE iislog FROM PUBLIC;
+REVOKE ALL ON TABLE iislog FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE iislog TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE iislog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE qvauditlog TO "indy_ePHI_SystemReporting";
+
+
+--
+-- Name: qvauditlog.id; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(id) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(id) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(id) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.useraccessdatetime; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(useraccessdatetime) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(useraccessdatetime) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(useraccessdatetime) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.document; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(document) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(document) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(document) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.eventtype; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(eventtype) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(eventtype) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(eventtype) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.isreduced; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(isreduced) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(isreduced) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(isreduced) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.fk_user_id; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(fk_user_id) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(fk_user_id) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(fk_user_id) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.fk_group_id; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(fk_group_id) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(fk_group_id) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(fk_group_id) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.fk_report_id; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(fk_report_id) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(fk_report_id) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(fk_report_id) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvauditlog.adddate; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL(adddate) ON TABLE qvauditlog FROM PUBLIC;
+REVOKE ALL(adddate) ON TABLE qvauditlog FROM "indy_ePHI_SystemReporting";
+GRANT SELECT(adddate) ON TABLE qvauditlog TO PUBLIC;
+
+
+--
+-- Name: qvsessionlog; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE qvsessionlog FROM PUBLIC;
+REVOKE ALL ON TABLE qvsessionlog FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE qvsessionlog TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE qvsessionlog TO PUBLIC;
+
+
+--
+-- Name: report; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE report FROM PUBLIC;
+REVOKE ALL ON TABLE report FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE report TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE report TO PUBLIC;
+
+
+--
+-- Name: user; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE "user" FROM PUBLIC;
+REVOKE ALL ON TABLE "user" FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE "user" TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE "user" TO PUBLIC;
 
 
 --
