@@ -20,7 +20,6 @@ def build_repo_url(
 
 def execute_dump(
         pgsql_username,
-        pgsql_password,
         target_server,
         repo_url,
         target_file
@@ -67,7 +66,6 @@ if __name__ == '__main__':
 
     execute_dump(
         pgsql_username=os.environ['PGSQL_USERNAME'],
-        pgsql_password=os.environ['PGSQL_PASSWORD'],
         target_server=str(sys.argv[1]),
         repo_url=build_repo_url(str(sys.argv[2]), os.environ['OAUTH_TOKEN']),
         target_file=str(sys.argv[3])
