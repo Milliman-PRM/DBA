@@ -72,7 +72,7 @@ def execute_dump(
 
         # Check for changes
         process_output = subprocess.check_output([path_to_git, "status", "--porcelain"])
-        print process_output
+        print(process_output)
 
         # Commit and push back to master if any changes are found
         if len(process_output.strip()) > 0:
@@ -83,11 +83,11 @@ def execute_dump(
                                    "--verbose", "--force"])
             send_notification(commit_message, commit_message)
         else:
-            print "No changes found"
+            print("No changes found")
 
     except subprocess.CalledProcessError as err:
         send_notification(err, err)
-        print err
+        print(err)
         raise
 
 if __name__ == '__main__':
