@@ -7,11 +7,9 @@
 
 ### DEVELOPER NOTES:
 """
-import re
 import sys
 import os
 import subprocess
-import fileinput
 
 def build_repo_url(
         base_url,
