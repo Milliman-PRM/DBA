@@ -68,7 +68,7 @@ def execute_dump(
                                "--schema-only"])
 
         # Change to the repo directory to issue git commands
-        os.chdir(os.path.relpath("DBA"))
+        #os.chdir(os.path.relpath("DBA"))
 
         # Check for changes
         process_output = subprocess.check_output([path_to_git, "status", "--porcelain"])
