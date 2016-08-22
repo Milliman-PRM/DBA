@@ -21,23 +21,20 @@ from email.mime.text import MIMEText
 RECIPIENT_LIST = ['ben.wyatt@milliman.com']
 USER_EMAIL = 'ben.wyatt@milliman.com'
 
-def send_notification(subject):
+def send_notification(subject, message):
     """
         Send a notification e-mail
-
-        code shamelessly stolen from the
-            User Statistics repo by Ben Wyatt on 8/22/2016
     """
 
     # Convert the message string
-    subject = MIMEText(subject)
+    message = MIMEText(message)
 
     # Build the e-mail
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = 'DBA Repo Notification: ' + subject
+    msg['Subject'] = 'PRM Notification: ' + subject
     msg['From'] = USER_EMAIL
     msg['To'] = ', '.join(RECIPIENT_LIST)
-    msg.attach(subject)
+    msg.attach(message)
 
     # Send the message via local SMTP server.
     email = smtplib.SMTP('smtp.milliman.com')
@@ -84,12 +81,12 @@ def execute_dump(
             subprocess.check_call([path_to_git, "commit", "-am", str(commit_message)])
             subprocess.check_call([path_to_git, "push", repo_url, "HEAD:master",
                                    "--verbose", "--force"])
-            send_notification(commit_message)
+            send_notification(commit_message, commit_message)
         else:
             print "No changes found"
 
     except subprocess.CalledProcessError as err:
-        send_notification(err)
+        send_notification(err, err)
         print err
         raise
 
