@@ -35,9 +35,9 @@ def execute_dump(
     try:
 
         # Run pg_dumpall to dump
-        subprocess.check_call([path_to_pgdumpall, "--host", target_server, "--port", "5432",
-                               "--username", pgsql_username, "--password", pgsql_password,
-                               "--verbose", "--file", target_file, "--no-tablespaces",
+        subprocess.check_call([path_to_pgdumpall, "-h", target_server, "-p", "5432",
+                               "-U", pgsql_username, "-W", str(pgsql_password),
+                               "-f", target_file, "--no-tablespaces",
                                "--schema-only"])
 
         """
@@ -84,9 +84,9 @@ if __name__ == '__main__':
     assert len(sys.argv) == 4, 'Unexpected number of arguments passed.'
 
     execute_dump(
-        pgsql_username=os.environ['pgsql_username'],
-        pgsql_password=os.environ['pgsql_password'],
+        pgsql_username=os.environ['PGSQL_USERNAME'],
+        pgsql_password=os.environ['PGSQL_PASSWORD'],
         target_server=str(sys.argv[1]),
-        repo_url=build_repo_url(str(sys.argv[2]), os.environ['oauth_token']),
+        repo_url=build_repo_url(str(sys.argv[2]), os.environ['OAUTH_TOKEN']),
         target_file=str(sys.argv[3])
     )
