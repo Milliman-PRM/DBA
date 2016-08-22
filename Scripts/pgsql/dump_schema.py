@@ -53,8 +53,8 @@ def execute_dump(
         "[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}"
 
         #for line in fileinput.input(target_file, inplace=True):
-    #        if not re.search(timestamp_expression, line):
-    #            print line,
+            #if not re.search(timestamp_expression, line):
+                #print line,
 
         # Change to the repo directory to issue git commands
         os.chdir(os.path.relpath("DBA"))
@@ -68,7 +68,7 @@ def execute_dump(
             commit_message = "Updated schema documentation for " + target_server
             subprocess.check_call([path_to_git, "add", "*"])
             subprocess.check_call([path_to_git, "commit", "-am", str(commit_message)])
-            subprocess.check_call([path_to_git, "push", "--repo=" + repo_url])
+            #subprocess.check_call([path_to_git, "push", "--repo=" + repo_url, "HEAD:master", "--force"])
         else:
             print "No changes found"
 
