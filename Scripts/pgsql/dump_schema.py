@@ -1,15 +1,48 @@
 """
-## CODE OWNERS: Ben Wyatt
+## CODE OWNERS: Ben Wyatt, Michael Reisz
 
 ### OBJECTIVE:
   Dump database schemas, roles, and privileges for all PostgreSQL
     databases on a given server
+
+  Updates the IndyIT/DBA repo with the latest documentation if anything changes
+    and sends an email notification to the DBA, so that they
+    can comment on the commit in github
 
 ### DEVELOPER NOTES:
 """
 import sys
 import os
 import subprocess
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+RECIPIENT_LIST = ['ben.wyatt@milliman.com']
+USER_EMAIL = 'ben.wyatt@milliman.com'
+
+def send_notification(subject):
+    """
+        Send a notification e-mail
+
+        code shamelessly stolen from the
+            User Statistics repo by Ben Wyatt on 8/22/2016
+    """
+
+    # Convert the message string
+    subject = MIMEText(subject)
+
+    # Build the e-mail
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = 'DBA Repo Notification: ' + subject
+    msg['From'] = USER_EMAIL
+    msg['To'] = ', '.join(RECIPIENT_LIST)
+    msg.attach(subject)
+
+    # Send the message via local SMTP server.
+    email = smtplib.SMTP('smtp.milliman.com')
+    email.sendmail(msg['From'], RECIPIENT_LIST, msg.as_string())
+    email.quit()
 
 def build_repo_url(
         base_url,
@@ -51,14 +84,13 @@ def execute_dump(
             subprocess.check_call([path_to_git, "commit", "-am", str(commit_message)])
             subprocess.check_call([path_to_git, "push", repo_url, "HEAD:master",
                                    "--verbose", "--force"])
+            send_notification(commit_message)
         else:
             print "No changes found"
 
     except subprocess.CalledProcessError as err:
         print err
         raise
-
-    # Clean up folder, if necessary
 
 if __name__ == '__main__':
     # Script args: hostname, github url, path to target file
