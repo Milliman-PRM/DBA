@@ -36,7 +36,7 @@ def execute_dump(
 
         # Run pg_dumpall to dump
         subprocess.check_call([path_to_pgdumpall, "-h", target_server, "-p", "5432",
-                               "-U", pgsql_username, "-W", str(pgsql_password),
+                               "-U", "ben.wyatt", "-w",# + pgsql_password,
                                "-f", target_file, "--no-tablespaces",
                                "--schema-only"])
 
@@ -49,12 +49,12 @@ def execute_dump(
         Expression is as specific as possible to ensure only exact matches get
             stripped out of the file
         """ # pylint: disable=pointless-string-statement
-        timestamp_expression = r"^-- ((Started)|(Completed)) on 20[0-9]{2}-", \
-        "[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+        timestamp_expression = "-- ((Started)|(Completed)) on 20[0-9]{2}-", \
+        "[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}"
 
-        for line in fileinput.input(target_file, inplace=True):
-            if not re.match(timestamp_expression, line):
-                print line,
+        #for line in fileinput.input(target_file, inplace=True):
+    #        if not re.search(timestamp_expression, line):
+    #            print line,
 
         # Change to the repo directory to issue git commands
         os.chdir(os.path.relpath("DBA"))
