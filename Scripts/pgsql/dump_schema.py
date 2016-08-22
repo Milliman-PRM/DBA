@@ -65,7 +65,7 @@ if __name__ == '__main__':
     assert len(sys.argv) == 4, 'Unexpected number of arguments passed.'
 
     execute_dump(
-        pgsql_username=os.environ['PGSQL_USERNAME'],
+        pgsql_username=os.environ['ephi_username'],
         target_server=str(sys.argv[1]),
         repo_url=build_repo_url(str(sys.argv[2]), os.environ['OAUTH_TOKEN']),
         target_file=str(sys.argv[3])
