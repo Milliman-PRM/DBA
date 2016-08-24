@@ -1876,6 +1876,85 @@ end $_$;
 ALTER FUNCTION public.merge_ranges(tstzrange[]) OWNER TO "ben.wyatt";
 
 --
+-- Name: report_type_update(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE FUNCTION report_type_update() RETURNS integer
+    LANGUAGE plpgsql
+    AS $$
+
+DECLARE
+	r report_temp;
+	rt reporttype;
+	a qvauditlog;
+	l qvauditlog;
+	it integer;
+	holding_id integer;
+	parsed_report_name TEXT;
+	parsed_keywords TEXT;
+	group_name TEXT;
+	GUID_report_name TEXT;
+	report_name TEXT;
+	Empty_String TEXT;
+BEGIN
+	it := 0;			--This will keep track of how many records are updated
+	Empty_String = NULL;
+	--Goes through every report and attempts to match the reportname to the report type
+	FOR r IN SELECT * from public.report_temp ORDER BY id
+	LOOP
+		holding_id := NULL;
+		report_name := r.reportname;	
+		IF report_name NOT LIKE '% %' AND LENGTH(report_name) = 32 THEN
+			
+			--If a GUID then go through the qvauditlog to match the GUID to a report
+			FOR a IN SELECT * FROM public.qvauditlog_temp WHERE document LIKE '%' || report_name || '%' LIMIT 1
+			LOOP
+				group_name := substring(a.document from 0 for position('REDUCEDCACHEDQVWS' in a.document));
+				group_name := replace (group_name, '\', '\\');		
+			END LOOP;
+			
+			--After we get the group directory we find the root report name of that directory. This is the name we will match to a type
+			FOR l IN SELECT * FROM public.qvauditlog_temp WHERE document LIKE '%' || group_name || '%' AND document NOT LIKE '%REDUCEDCACHEDQVWS%' LIMIT 1
+			LOOP
+				group_name := replace(group_name, '\\', '\');
+
+				GUID_report_name := reverse(l.document);
+				GUID_report_name := substring(GUID_report_name, position('.' in GUID_report_name) + 1, position('\' in GUID_report_name) - 5); --parse the directory to only get the report name
+				GUID_report_name := reverse(GUID_report_name);
+
+				report_name := GUID_report_name;
+			END LOOP;
+
+		END IF;
+		
+		--Replace some undesirable charachters or strings that could be in the report name
+		parsed_report_name := '';
+		parsed_report_name := replace(report_name, '- ', '');
+		parsed_report_name := replace(parsed_report_name, 'REPORTING ', ''); --it was in commit# c37a55c9
+		
+		--Attempt to match the report name to any of the keywords in the report type table
+		FOR rt IN SELECT * FROM public.reporttype
+		LOOP
+			parsed_keywords := '';
+			parsed_keywords := replace(rt.keywords, ',', ' ');
+			parsed_keywords := trim(both ' ' from parsed_keywords);		--Turn the keywords into a string that can match up with the report name
+
+			IF parsed_report_name LIKE '%' || parsed_keywords || ' %' OR parsed_report_name = parsed_keywords THEN
+				it := it + 1;
+				update public.report_temp set fk_report_type_id = rt.id where id = r.id;		--When a match is found we update the table
+			END IF;
+
+		END LOOP;
+	END LOOP;	
+RETURN it;			--Returns the amount of fields with new report types
+
+END;
+$$;
+
+
+ALTER FUNCTION public.report_type_update() OWNER TO "indy_ePHI_SystemReporting";
+
+--
 -- Name: group_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
@@ -2004,6 +2083,20 @@ CREATE TABLE qvauditlog (
 ALTER TABLE qvauditlog OWNER TO "indy_ePHI_SystemReporting";
 
 --
+-- Name: qvauditlog_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE qvauditlog_temp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE qvauditlog_temp_id_seq OWNER TO "ben.wyatt";
+
+--
 -- Name: qvsessionlog_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
@@ -2046,6 +2139,20 @@ CREATE TABLE qvsessionlog (
 ALTER TABLE qvsessionlog OWNER TO "indy_ePHI_SystemReporting";
 
 --
+-- Name: qvsessionlog_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE qvsessionlog_temp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE qvsessionlog_temp_id_seq OWNER TO "ben.wyatt";
+
+--
 -- Name: report_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
@@ -2068,11 +2175,59 @@ CREATE TABLE report (
     reportname character varying(100) NOT NULL,
     reportdescription character varying(100),
     adddate timestamp with time zone,
-    reporttype character varying(100)
+    fk_report_type_id integer
 );
 
 
 ALTER TABLE report OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: report_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE report_temp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE report_temp_id_seq OWNER TO "ben.wyatt";
+
+--
+-- Name: reporttype; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE TABLE reporttype (
+    id integer NOT NULL,
+    type character varying(100) NOT NULL,
+    keywords character varying(100) NOT NULL
+);
+
+
+ALTER TABLE reporttype OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: reporttype_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE SEQUENCE reporttype_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reporttype_id_seq OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: reporttype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER SEQUENCE reporttype_id_seq OWNED BY reporttype.id;
+
 
 --
 -- Name: selected_fields; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
@@ -2315,6 +2470,13 @@ ALTER TABLE ONLY iislog ALTER COLUMN id SET DEFAULT nextval('iislog_id_seq1'::re
 -- Name: id; Type: DEFAULT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
+ALTER TABLE ONLY reporttype ALTER COLUMN id SET DEFAULT nextval('reporttype_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
 ALTER TABLE ONLY selected_fields ALTER COLUMN id SET DEFAULT nextval('selected_fields_id_seq'::regclass);
 
 
@@ -2359,6 +2521,14 @@ ALTER TABLE ONLY report
 
 
 --
+-- Name: pk_reporttype_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY reporttype
+    ADD CONSTRAINT pk_reporttype_id PRIMARY KEY (id);
+
+
+--
 -- Name: pk_user_id; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
@@ -2399,11 +2569,27 @@ ALTER TABLE ONLY report
 
 
 --
+-- Name: uq_reporttype_type; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY reporttype
+    ADD CONSTRAINT uq_reporttype_type UNIQUE (type);
+
+
+--
 -- Name: uq_user_username; Type: CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 ALTER TABLE ONLY "user"
     ADD CONSTRAINT uq_user_username UNIQUE (username);
+
+
+--
+-- Name: fk_report_type_id; Type: FK CONSTRAINT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT fk_report_type_id FOREIGN KEY (fk_report_type_id) REFERENCES reporttype(id);
 
 
 --
@@ -2617,6 +2803,15 @@ REVOKE ALL ON TABLE report FROM PUBLIC;
 REVOKE ALL ON TABLE report FROM "indy_ePHI_SystemReporting";
 GRANT ALL ON TABLE report TO "indy_ePHI_SystemReporting";
 GRANT SELECT ON TABLE report TO PUBLIC;
+
+
+--
+-- Name: reporttype; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE reporttype FROM PUBLIC;
+REVOKE ALL ON TABLE reporttype FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE reporttype TO "indy_ePHI_SystemReporting";
 
 
 --
