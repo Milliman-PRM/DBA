@@ -2201,8 +2201,8 @@ ALTER TABLE report_temp_id_seq OWNER TO "ben.wyatt";
 
 CREATE TABLE reporttype (
     id integer NOT NULL,
-    type character varying(100) NOT NULL,
-    keywords character varying(100) NOT NULL
+    type character varying(100),
+    keywords character varying(100)
 );
 
 
