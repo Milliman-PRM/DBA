@@ -77,6 +77,8 @@ CREATE ROLE "Indy_ePHI_0032WCS";
 ALTER ROLE "Indy_ePHI_0032WCS" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0032WVH";
 ALTER ROLE "Indy_ePHI_0032WVH" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "Indy_ePHI_0036VML";
+ALTER ROLE "Indy_ePHI_0036VML" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0037LPP";
 ALTER ROLE "Indy_ePHI_0037LPP" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0116IWA";
@@ -267,6 +269,7 @@ GRANT "Indy_ePHI_0032UTH" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032UTH" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "david.pierce" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273ACO" TO "jacob.krebs" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "kelsie.stevenson" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "michael.reisz" GRANTED BY postgres;
@@ -323,6 +326,7 @@ GRANT "Indy_ePHI_0273EVH" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273EVH" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273EVH" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "david.pierce" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273FAI" TO "jacob.krebs" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "kelsie.stevenson" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "michael.reisz" GRANTED BY postgres;
@@ -437,6 +441,7 @@ GRANT "Indy_ePHI_0273WOH" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "nicholas.zenobi" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "steve.gredell" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273WOH" TO "surjit.malhi" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "tom.puckett" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "van.nanney" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZAC" TO "david.pierce" GRANTED BY postgres;
@@ -492,6 +497,7 @@ GRANT ldap_groups TO "Indy_ePHI_0032SVC" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032UTH" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032WCS" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032WVH" GRANTED BY postgres;
+GRANT ldap_groups TO "Indy_ePHI_0036VML" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0037LPP" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0116IWA" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0116OKC" GRANTED BY postgres;
@@ -3870,8 +3876,8 @@ ALTER TABLE report_temp_id_seq OWNER TO "surjit.malhi";
 
 CREATE TABLE reporttype (
     id integer NOT NULL,
-    type character varying(100) NOT NULL,
-    keywords character varying(100) NOT NULL
+    type character varying(100),
+    keywords character varying(100)
 );
 
 
