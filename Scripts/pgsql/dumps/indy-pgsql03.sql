@@ -436,6 +436,7 @@ GRANT "Indy_ePHI_0273WOH" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "nicholas.zenobi" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "steve.gredell" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273WOH" TO "surjit.malhi" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "tom.puckett" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "van.nanney" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZAC" TO "david.pierce" GRANTED BY postgres;
