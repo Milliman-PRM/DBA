@@ -73,6 +73,8 @@ CREATE ROLE "Indy_ePHI_0032WCS";
 ALTER ROLE "Indy_ePHI_0032WCS" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0032WVH";
 ALTER ROLE "Indy_ePHI_0032WVH" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "Indy_ePHI_0036VML";
+ALTER ROLE "Indy_ePHI_0036VML" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0037LPP";
 ALTER ROLE "Indy_ePHI_0037LPP" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0116IWA";
@@ -258,6 +260,7 @@ GRANT "Indy_ePHI_0032UTH" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032UTH" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "david.pierce" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273ACO" TO "jacob.krebs" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "kelsie.stevenson" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "michael.reisz" GRANTED BY postgres;
@@ -314,6 +317,7 @@ GRANT "Indy_ePHI_0273EVH" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273EVH" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273EVH" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "david.pierce" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273FAI" TO "jacob.krebs" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "kelsie.stevenson" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "michael.reisz" GRANTED BY postgres;
@@ -428,6 +432,7 @@ GRANT "Indy_ePHI_0273WOH" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "nicholas.zenobi" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "steve.gredell" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273WOH" TO "surjit.malhi" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "tom.puckett" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "van.nanney" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZAC" TO "david.pierce" GRANTED BY postgres;
@@ -479,6 +484,7 @@ GRANT ldap_groups TO "Indy_ePHI_0032SVC" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032UTH" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032WCS" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032WVH" GRANTED BY postgres;
+GRANT ldap_groups TO "Indy_ePHI_0036VML" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0037LPP" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0116IWA" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0116OKC" GRANTED BY postgres;
@@ -711,7 +717,7 @@ CREATE TABLE chargecode (
     codemeaning character varying,
     codemodifier character varying,
     codemodifierdescription character varying,
-    "Chargedbid" bigint NOT NULL,
+    chargedbid bigint NOT NULL,
     updatetime timestamp without time zone NOT NULL,
     lastimportfiledate character varying NOT NULL
 );
@@ -828,7 +834,7 @@ ALTER SEQUENCE diagnosis_dbid_seq OWNED BY diagnosis.dbid;
 --
 
 CREATE TABLE immunization (
-    bdid bigint NOT NULL,
+    dbid bigint NOT NULL,
     emridentifier character varying,
     description character varying,
     performeddatetime timestamp with time zone,
@@ -867,7 +873,7 @@ ALTER TABLE immunization_bdid_seq OWNER TO "indy-cdrbot-0273woh";
 -- Name: immunization_bdid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
 --
 
-ALTER SEQUENCE immunization_bdid_seq OWNED BY immunization.bdid;
+ALTER SEQUENCE immunization_bdid_seq OWNED BY immunization.dbid;
 
 
 --
@@ -1233,8 +1239,8 @@ ALTER SEQUENCE problem_dbid_seq OWNED BY problem.dbid;
 
 CREATE TABLE procedure (
     dbid bigint NOT NULL,
-    "Patientdbid" bigint NOT NULL,
-    "VisitEncounterdbid" bigint NOT NULL,
+    patientdbid bigint NOT NULL,
+    visitencounterdbid bigint NOT NULL,
     emridentifier character varying NOT NULL,
     code character varying,
     codesystem character varying,
@@ -1390,10 +1396,10 @@ ALTER TABLE ONLY diagnosis ALTER COLUMN dbid SET DEFAULT nextval('diagnosis_dbid
 
 
 --
--- Name: bdid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
 --
 
-ALTER TABLE ONLY immunization ALTER COLUMN bdid SET DEFAULT nextval('immunization_bdid_seq'::regclass);
+ALTER TABLE ONLY immunization ALTER COLUMN dbid SET DEFAULT nextval('immunization_bdid_seq'::regclass);
 
 
 --
@@ -1518,7 +1524,7 @@ ALTER TABLE ONLY diagnosis
 --
 
 ALTER TABLE ONLY immunization
-    ADD CONSTRAINT "PK_immunization" PRIMARY KEY (bdid);
+    ADD CONSTRAINT "PK_immunization" PRIMARY KEY (dbid);
 
 
 --
@@ -1630,7 +1636,7 @@ ALTER TABLE ONLY charge
 --
 
 ALTER TABLE ONLY chargecode
-    ADD CONSTRAINT "FK_chargecode_Charge" FOREIGN KEY ("Chargedbid") REFERENCES charge(dbid);
+    ADD CONSTRAINT "FK_chargecode_Charge" FOREIGN KEY (chargedbid) REFERENCES charge(dbid);
 
 
 --
@@ -1758,7 +1764,7 @@ ALTER TABLE ONLY problem
 --
 
 ALTER TABLE ONLY procedure
-    ADD CONSTRAINT "FK_procedure_Patient" FOREIGN KEY ("Patientdbid") REFERENCES patient(dbid);
+    ADD CONSTRAINT "FK_procedure_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
 
 
 --
@@ -1766,7 +1772,7 @@ ALTER TABLE ONLY procedure
 --
 
 ALTER TABLE ONLY procedure
-    ADD CONSTRAINT "FK_procedure_VisitEncounter" FOREIGN KEY ("VisitEncounterdbid") REFERENCES visitencounter(dbid);
+    ADD CONSTRAINT "FK_procedure_VisitEncounter" FOREIGN KEY (visitencounterdbid) REFERENCES visitencounter(dbid);
 
 
 --
