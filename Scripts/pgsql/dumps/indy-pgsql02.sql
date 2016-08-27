@@ -3585,7 +3585,7 @@ BEGIN
 			FOR a IN SELECT * FROM public.qvauditlog_temp WHERE document LIKE '%' || report_name || '%' LIMIT 1
 			LOOP
 				group_name := substring(a.document from 0 for position('REDUCEDCACHEDQVWS' in a.document));
-				group_name := replace (group_name, '\', '\\');		--Deal with those pesky escape charachters
+				group_name := replace (group_name, '\', '\\');		
 			END LOOP;
 			
 			--After we get the group directory we find the root report name of that directory. This is the name we will match to a type
@@ -3758,7 +3758,7 @@ CREATE TABLE qvauditlog (
 ALTER TABLE qvauditlog OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: qvauditlog_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: surjit.malhi
+-- Name: qvauditlog_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
 --
 
 CREATE SEQUENCE qvauditlog_temp_id_seq
@@ -3769,7 +3769,7 @@ CREATE SEQUENCE qvauditlog_temp_id_seq
     CACHE 1;
 
 
-ALTER TABLE qvauditlog_temp_id_seq OWNER TO "surjit.malhi";
+ALTER TABLE qvauditlog_temp_id_seq OWNER TO "ben.wyatt";
 
 --
 -- Name: qvsessionlog_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
@@ -3814,7 +3814,7 @@ CREATE TABLE qvsessionlog (
 ALTER TABLE qvsessionlog OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: qvsessionlog_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: surjit.malhi
+-- Name: qvsessionlog_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
 --
 
 CREATE SEQUENCE qvsessionlog_temp_id_seq
@@ -3825,7 +3825,7 @@ CREATE SEQUENCE qvsessionlog_temp_id_seq
     CACHE 1;
 
 
-ALTER TABLE qvsessionlog_temp_id_seq OWNER TO "surjit.malhi";
+ALTER TABLE qvsessionlog_temp_id_seq OWNER TO "ben.wyatt";
 
 --
 -- Name: report_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
@@ -3857,7 +3857,7 @@ CREATE TABLE report (
 ALTER TABLE report OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: report_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: surjit.malhi
+-- Name: report_temp_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
 --
 
 CREATE SEQUENCE report_temp_id_seq
@@ -3868,7 +3868,7 @@ CREATE SEQUENCE report_temp_id_seq
     CACHE 1;
 
 
-ALTER TABLE report_temp_id_seq OWNER TO "surjit.malhi";
+ALTER TABLE report_temp_id_seq OWNER TO "ben.wyatt";
 
 --
 -- Name: reporttype; Type: TABLE; Schema: public; Owner: indy_ePHI_SystemReporting
@@ -4478,6 +4478,15 @@ REVOKE ALL ON TABLE report FROM PUBLIC;
 REVOKE ALL ON TABLE report FROM "indy_ePHI_SystemReporting";
 GRANT ALL ON TABLE report TO "indy_ePHI_SystemReporting";
 GRANT SELECT ON TABLE report TO PUBLIC;
+
+
+--
+-- Name: reporttype; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+REVOKE ALL ON TABLE reporttype FROM PUBLIC;
+REVOKE ALL ON TABLE reporttype FROM "indy_ePHI_SystemReporting";
+GRANT ALL ON TABLE reporttype TO "indy_ePHI_SystemReporting";
 
 
 --
