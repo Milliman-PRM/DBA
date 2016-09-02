@@ -1149,6 +1149,58 @@ ALTER SEQUENCE evh_id_seq OWNED BY evh.id;
 
 
 --
+-- Name: evh_pop_evo_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE evh_pop_evo_zip_freq (
+    zcta5ce text,
+    frequency integer
+);
+
+
+ALTER TABLE evh_pop_evo_zip_freq OWNER TO "aaron.burgess";
+
+--
+-- Name: evh_pop_nonevo_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE evh_pop_nonevo_zip_freq (
+    zcta5ce text,
+    frequency integer
+);
+
+
+ALTER TABLE evh_pop_nonevo_zip_freq OWNER TO "aaron.burgess";
+
+--
+-- Name: evh_population_evo; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE evh_population_evo (
+    gid integer,
+    zcta5ce character varying(5),
+    the_geom public.geometry,
+    frequency bigint
+);
+
+
+ALTER TABLE evh_population_evo OWNER TO "aaron.burgess";
+
+--
+-- Name: evh_population_nonevo; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE evh_population_nonevo (
+    gid integer,
+    zcta5ce character varying(5),
+    the_geom public.geometry,
+    frequency bigint
+);
+
+
+ALTER TABLE evh_population_nonevo OWNER TO "aaron.burgess";
+
+--
 -- Name: evh_test; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
 --
 
