@@ -372,7 +372,6 @@ GRANT "Indy_ePHI_0273NXG" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NXG" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NXG" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NYP" TO "aaron.burgess" GRANTED BY postgres;
-GRANT "Indy_ePHI_0273NYP" TO "brandon.patterson" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NYP" TO "david.pierce" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NYP" TO "jacob.krebs" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NYP" TO "jason.altieri" GRANTED BY postgres;
@@ -3523,7 +3522,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 --
--- Name: merge_ranges(tstzrange[]); Type: FUNCTION; Schema: public; Owner: ben.wyatt
+-- Name: merge_ranges(tstzrange[]); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 CREATE FUNCTION merge_ranges(tstzrange[]) RETURNS SETOF tstzrange
@@ -3546,7 +3545,7 @@ begin
 end $_$;
 
 
-ALTER FUNCTION public.merge_ranges(tstzrange[]) OWNER TO "ben.wyatt";
+ALTER FUNCTION public.merge_ranges(tstzrange[]) OWNER TO "indy_ePHI_SystemReporting";
 
 --
 -- Name: report_type_update(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
@@ -3626,6 +3625,140 @@ $$;
 
 
 ALTER FUNCTION public.report_type_update() OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: test_view_group_record_count(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE FUNCTION test_view_group_record_count() RETURNS boolean
+    LANGUAGE sql
+    AS $$select (select count(*) as view_group_count from view_group) = (select count(*) as group_table_count from "group") as pass_test$$;
+
+
+ALTER FUNCTION public.test_view_group_record_count() OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: FUNCTION test_view_group_record_count(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+COMMENT ON FUNCTION test_view_group_record_count() IS 'Returns true if the record count in view_group matches the count from the table public."group"';
+
+
+--
+-- Name: test_view_qvauditlog_containment(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE FUNCTION test_view_qvauditlog_containment() RETURNS boolean
+    LANGUAGE sql
+    AS $$select count(*) = 0 as pass_test from (
+
+select qvauditlog.id
+
+from qvauditlog inner join view_session_log 
+			on qvauditlog.fk_user_id = view_session_log.userid 
+			   and qvauditlog.fk_group_id = view_session_log.groupid
+			   and qvauditlog.fk_report_id = view_session_log.reportid
+			   and qvauditlog.useraccessdatetime <@ tstzrange(session_start_time, session_start_time + session_duration)
+
+group by qvauditlog.id
+
+having count(view_session_log.sessionid) > 1) sub1$$;
+
+
+ALTER FUNCTION public.test_view_qvauditlog_containment() OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: FUNCTION test_view_qvauditlog_containment(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+COMMENT ON FUNCTION test_view_qvauditlog_containment() IS 'Returns true if zero records in qvauditlog can be contained by multiple records in view_session_log';
+
+
+--
+-- Name: test_view_qvauditlog_entries_included(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE FUNCTION test_view_qvauditlog_entries_included() RETURNS boolean
+    LANGUAGE sql
+    AS $$select  (select count(qvauditlog.id) * 1.0 as non_matched_count
+
+from qvauditlog left outer join view_session_log 
+			on qvauditlog.fk_user_id = view_session_log.userid 
+			   and qvauditlog.fk_group_id = view_session_log.groupid
+			   and qvauditlog.fk_report_id = view_session_log.reportid
+			   and qvauditlog.useraccessdatetime <@ tstzrange(session_start_time, session_start_time + session_duration)
+
+where view_session_log.sessionid is null) / (select count(*) * 1.0 as overall_count from qvauditlog) < 0.002 as portion_unmatched$$;
+
+
+ALTER FUNCTION public.test_view_qvauditlog_entries_included() OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: FUNCTION test_view_qvauditlog_entries_included(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+COMMENT ON FUNCTION test_view_qvauditlog_entries_included() IS 'Returns true if fewer than 0.2% of qvauditlog records do not correspond to a view_session_log record';
+
+
+--
+-- Name: test_view_session_details_exist(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE FUNCTION test_view_session_details_exist() RETURNS boolean
+    LANGUAGE sql
+    AS $$select count(view_session_log.sessionid) = 0 as pass_test
+	from view_session_log
+		left outer join "user" on view_session_log.userid = "user".id
+		left outer join "group" on view_session_log.groupid = "group".id
+		left outer join report on view_session_log.reportid = report.id
+
+where "user".id is null or "group".id is null or report.id is null$$;
+
+
+ALTER FUNCTION public.test_view_session_details_exist() OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: FUNCTION test_view_session_details_exist(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+COMMENT ON FUNCTION test_view_session_details_exist() IS 'Returns true if no records in view_session_log contain a userid, groupid, or reportid that does not exist in the source tables.';
+
+
+--
+-- Name: test_view_session_record_count(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE FUNCTION test_view_session_record_count() RETURNS boolean
+    LANGUAGE sql
+    AS $$select (select sum(included_sessions) as included_count from view_session_log) = (select count(*) as raw_count from qvsessionlog) as pass_test$$;
+
+
+ALTER FUNCTION public.test_view_session_record_count() OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: FUNCTION test_view_session_record_count(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+COMMENT ON FUNCTION test_view_session_record_count() IS 'Returns true if the sum of view_session_log.included_sessions equals the record count from qvsessionlog.';
+
+
+--
+-- Name: test_view_user_record_count(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+CREATE FUNCTION test_view_user_record_count() RETURNS boolean
+    LANGUAGE sql
+    AS $$select (select count(*) as view_user_count from view_user) = (select count(*) as user_table_count from "user") as pass_test$$;
+
+
+ALTER FUNCTION public.test_view_user_record_count() OWNER TO "indy_ePHI_SystemReporting";
+
+--
+-- Name: FUNCTION test_view_user_record_count(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
+--
+
+COMMENT ON FUNCTION test_view_user_record_count() IS 'Returns true if the record count from view_user equals the record count from the table public."user"';
+
 
 --
 -- Name: group_id_seq; Type: SEQUENCE; Schema: public; Owner: indy_ePHI_SystemReporting
