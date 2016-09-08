@@ -557,6 +557,12 @@ REVOKE ALL ON DATABASE cdr_woh FROM postgres;
 GRANT ALL ON DATABASE cdr_woh TO postgres;
 GRANT ALL ON DATABASE cdr_woh TO "indy-cdrbot-0273woh";
 GRANT CONNECT ON DATABASE cdr_woh TO "Indy_ePHI_0273WOH";
+CREATE DATABASE cdr_woh_unfiltered WITH TEMPLATE = template0 OWNER = postgres;
+REVOKE ALL ON DATABASE cdr_woh_unfiltered FROM PUBLIC;
+REVOKE ALL ON DATABASE cdr_woh_unfiltered FROM postgres;
+GRANT ALL ON DATABASE cdr_woh_unfiltered TO postgres;
+GRANT ALL ON DATABASE cdr_woh_unfiltered TO "indy-cdrbot-0273woh";
+GRANT CONNECT ON DATABASE cdr_woh_unfiltered TO "Indy_ePHI_0273WOH";
 REVOKE ALL ON DATABASE template1 FROM PUBLIC;
 REVOKE ALL ON DATABASE template1 FROM postgres;
 GRANT ALL ON DATABASE template1 TO postgres;
@@ -2230,6 +2236,1474 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" IN SCHEMA public REVOKE 
 ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" IN SCHEMA public REVOKE ALL ON TABLES  FROM "indy-cdrbot-0273woh";
 ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" IN SCHEMA public GRANT SELECT ON TABLES  TO "Indy_ePHI_0273WOH";
 ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" IN SCHEMA public GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO indy_jenkins_0273woh;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect cdr_woh_unfiltered
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_with_oids = false;
+
+--
+-- Name: aggregationrun; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE aggregationrun (
+    dbid bigint NOT NULL,
+    statusflags integer NOT NULL,
+    startdatetime timestamp with time zone,
+    datafeeddbid bigint NOT NULL
+);
+
+
+ALTER TABLE aggregationrun OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: COLUMN aggregationrun.statusflags; Type: COMMENT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+COMMENT ON COLUMN aggregationrun.statusflags IS 'Bit mask';
+
+
+--
+-- Name: aggregationrun_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE aggregationrun_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE aggregationrun_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: aggregationrun_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE aggregationrun_dbid_seq OWNED BY aggregationrun.dbid;
+
+
+--
+-- Name: charge; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE charge (
+    dbid bigint NOT NULL,
+    emridentifier character varying,
+    description character varying,
+    comment character varying,
+    dateofservice timestamp with time zone,
+    submitteddate timestamp with time zone,
+    submitter character varying,
+    dateinfolastupdated timestamp with time zone,
+    state character varying,
+    toothnumber smallint,
+    toothsurfacecode character varying,
+    visitencounterdbid bigint,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE charge OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: charge_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE charge_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE charge_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: charge_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE charge_dbid_seq OWNED BY charge.dbid;
+
+
+--
+-- Name: chargecode; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE chargecode (
+    dbid bigint NOT NULL,
+    emridentifier character varying NOT NULL,
+    code character varying,
+    codesystem character varying,
+    codesystemversion character varying,
+    codemeaning character varying,
+    codemodifier character varying,
+    codemodifierdescription character varying,
+    chargedbid bigint NOT NULL,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE chargecode OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: chargecode_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE chargecode_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE chargecode_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: chargecode_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE chargecode_dbid_seq OWNED BY chargecode.dbid;
+
+
+--
+-- Name: datafeed; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE datafeed (
+    dbid bigint NOT NULL,
+    feedname character varying NOT NULL,
+    organizationdbid bigint NOT NULL
+);
+
+
+ALTER TABLE datafeed OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: datafeed_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE datafeed_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE datafeed_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: datafeed_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE datafeed_dbid_seq OWNED BY datafeed.dbid;
+
+
+--
+-- Name: diagnosis; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE diagnosis (
+    dbid bigint NOT NULL,
+    emridentifier character varying,
+    shortdescription character varying,
+    longdescription character varying,
+    code character varying,
+    codesystem character varying,
+    codesystemversion character varying,
+    codemeaning character varying,
+    codemodifier character varying,
+    codemodifierdescription character varying,
+    determinationdatetime timestamp with time zone,
+    startdatetime timestamp with time zone,
+    enddatetime timestamp with time zone,
+    status character varying,
+    statusdatetime timestamp with time zone,
+    patientdbid bigint NOT NULL,
+    visitencounterdbid bigint,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE diagnosis OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: diagnosis_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE diagnosis_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE diagnosis_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: diagnosis_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE diagnosis_dbid_seq OWNED BY diagnosis.dbid;
+
+
+--
+-- Name: immunization; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE immunization (
+    dbid bigint NOT NULL,
+    emridentifier character varying,
+    description character varying,
+    performeddatetime timestamp with time zone,
+    code character varying,
+    codesystem character varying,
+    codesystemversion character varying,
+    codemeaning character varying,
+    codemodifier character varying,
+    codemodifierdescription character varying,
+    patientdbid bigint NOT NULL,
+    visitencounterdbid bigint,
+    resultid character varying NOT NULL,
+    visitid character varying NOT NULL,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE immunization OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: immunization_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE immunization_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE immunization_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: immunization_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE immunization_dbid_seq OWNED BY immunization.dbid;
+
+
+--
+-- Name: insurancecoverage; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE insurancecoverage (
+    dbid bigint NOT NULL,
+    emridentifier character varying NOT NULL,
+    payer character varying,
+    startdate timestamp without time zone,
+    enddate timestamp without time zone,
+    planname character varying,
+    patientdbid bigint NOT NULL,
+    coveragetype character varying NOT NULL,
+    memberid character varying NOT NULL,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE insurancecoverage OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: insurancecoverage_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE insurancecoverage_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE insurancecoverage_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: insurancecoverage_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE insurancecoverage_dbid_seq OWNED BY insurancecoverage.dbid;
+
+
+--
+-- Name: measurement; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE measurement (
+    dbid bigint NOT NULL,
+    emridentifier character varying,
+    name character varying,
+    description character varying,
+    comments character varying,
+    code character varying,
+    codesystem character varying,
+    codesystemversion character varying,
+    codemeaning character varying,
+    codemodifier character varying,
+    codemodifierdescription character varying,
+    assessmentdatetime timestamp with time zone,
+    value character varying,
+    units character varying,
+    normalrangelow character varying,
+    normalrangehigh character varying,
+    normaltype smallint,
+    patientdbid bigint NOT NULL,
+    visitencounterdbid bigint,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL,
+    bc_startdatetime timestamp with time zone,
+    bc_enddatetime timestamp with time zone,
+    bc_performeddatetime timestamp with time zone,
+    bc_verifieddatetime timestamp with time zone,
+    bc_administrationstartdatetime timestamp with time zone,
+    bc_administrationenddatetime timestamp with time zone,
+    bc_expiredatetime timestamp with time zone,
+    bc_effectivebegindatetime timestamp with time zone,
+    bc_effectiveenddatetime timestamp with time zone,
+    bc_updatedatetime timestamp with time zone
+);
+
+
+ALTER TABLE measurement OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: TABLE measurement; Type: COMMENT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+COMMENT ON TABLE measurement IS 'All measurements, including labs and vitals';
+
+
+--
+-- Name: measurement_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE measurement_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE measurement_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: measurement_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE measurement_dbid_seq OWNED BY measurement.dbid;
+
+
+--
+-- Name: medication; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE medication (
+    dbid bigint NOT NULL,
+    emridentifier character varying,
+    rxnorm character varying,
+    ndc character varying,
+    dnum character varying,
+    catalogcki character varying,
+    prescriptiondate timestamp with time zone,
+    filldate timestamp with time zone,
+    instructions character varying,
+    description character varying,
+    startdate timestamp with time zone,
+    stopdate timestamp with time zone,
+    status character varying,
+    statusdatetime timestamp with time zone,
+    patientdbid bigint NOT NULL,
+    visitencounterdbid bigint,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE medication OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: medication_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE medication_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE medication_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: medication_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE medication_dbid_seq OWNED BY medication.dbid;
+
+
+--
+-- Name: organization; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE organization (
+    dbid bigint NOT NULL,
+    emridentifier character varying,
+    orgname character varying NOT NULL
+);
+
+
+ALTER TABLE organization OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: organization_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE organization_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE organization_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: organization_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE organization_dbid_seq OWNED BY organization.dbid;
+
+
+--
+-- Name: patient; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE patient (
+    dbid bigint NOT NULL,
+    emridentifier character varying NOT NULL,
+    namelast character varying,
+    namefirst character varying,
+    namemiddle character varying,
+    birthdate timestamp without time zone,
+    gender smallint,
+    deathdate timestamp without time zone,
+    race character varying,
+    ethnicity character varying,
+    maritalstatus smallint,
+    latestimportfiledate character varying(8) NOT NULL,
+    updatetime timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE patient OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: patient_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE patient_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE patient_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: patient_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE patient_dbid_seq OWNED BY patient.dbid;
+
+
+--
+-- Name: patientidentifier; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE patientidentifier (
+    dbid bigint NOT NULL,
+    emridentifier character varying NOT NULL,
+    identifier character varying NOT NULL,
+    identifiertype character varying NOT NULL,
+    datefirstreported timestamp without time zone,
+    datelastreported timestamp without time zone,
+    patientdbid bigint NOT NULL,
+    organizationdbid bigint NOT NULL,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE patientidentifier OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: patientidentifier_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE patientidentifier_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE patientidentifier_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: patientidentifier_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE patientidentifier_dbid_seq OWNED BY patientidentifier.dbid;
+
+
+--
+-- Name: physicaladdress; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE physicaladdress (
+    dbid bigint NOT NULL,
+    emridentifier character varying NOT NULL,
+    city character varying,
+    state character varying,
+    postalcode character varying,
+    country character varying,
+    line1 character varying,
+    line2 character varying,
+    line3 character varying,
+    line4 character varying,
+    datefirstreported timestamp without time zone,
+    datelastreported timestamp without time zone,
+    patientdbid bigint NOT NULL,
+    addresstype smallint,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE physicaladdress OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: physicaladdress_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE physicaladdress_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE physicaladdress_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: physicaladdress_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE physicaladdress_dbid_seq OWNED BY physicaladdress.dbid;
+
+
+--
+-- Name: problem; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE problem (
+    dbid bigint NOT NULL,
+    emridentifier character varying,
+    description character varying,
+    effectivedatetime timestamp with time zone,
+    begindatetime timestamp with time zone,
+    enddatetime timestamp with time zone,
+    patientdbid bigint NOT NULL,
+    visitencounterdbid bigint,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE problem OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: problem_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE problem_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE problem_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: problem_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE problem_dbid_seq OWNED BY problem.dbid;
+
+
+--
+-- Name: procedure; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE procedure (
+    dbid bigint NOT NULL,
+    patientdbid bigint NOT NULL,
+    visitencounterdbid bigint NOT NULL,
+    emridentifier character varying NOT NULL,
+    code character varying,
+    codesystem character varying,
+    codesystemversion character varying,
+    codemeaning character varying,
+    codemodifier character varying,
+    codemodifierdescription character varying,
+    note character varying NOT NULL,
+    proceduredatetime timestamp without time zone NOT NULL,
+    statusdatetime timestamp without time zone NOT NULL,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE procedure OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: procedure_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE procedure_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE procedure_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: procedure_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE procedure_dbid_seq OWNED BY procedure.dbid;
+
+
+--
+-- Name: telephonenumber; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE telephonenumber (
+    dbid bigint NOT NULL,
+    emridentifier character varying NOT NULL,
+    number character varying NOT NULL,
+    phonetype smallint NOT NULL,
+    datefirstreported timestamp without time zone,
+    datelastreported timestamp without time zone,
+    patientdbid bigint NOT NULL,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE telephonenumber OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: telephonenumber_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE telephonenumber_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE telephonenumber_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: telephonenumber_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE telephonenumber_dbid_seq OWNED BY telephonenumber.dbid;
+
+
+--
+-- Name: visitencounter; Type: TABLE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE TABLE visitencounter (
+    dbid bigint NOT NULL,
+    emridentifier character varying,
+    begindatetime timestamp with time zone,
+    enddatetime timestamp with time zone,
+    status character varying,
+    statusdatetime timestamp with time zone,
+    organizationdbid bigint NOT NULL,
+    patientdbid bigint NOT NULL,
+    updatetime timestamp without time zone NOT NULL,
+    lastimportfiledate character varying NOT NULL
+);
+
+
+ALTER TABLE visitencounter OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: visitencounter_dbid_seq; Type: SEQUENCE; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+CREATE SEQUENCE visitencounter_dbid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE visitencounter_dbid_seq OWNER TO "indy-cdrbot-0273woh";
+
+--
+-- Name: visitencounter_dbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER SEQUENCE visitencounter_dbid_seq OWNED BY visitencounter.dbid;
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY aggregationrun ALTER COLUMN dbid SET DEFAULT nextval('aggregationrun_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY charge ALTER COLUMN dbid SET DEFAULT nextval('charge_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY chargecode ALTER COLUMN dbid SET DEFAULT nextval('chargecode_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY datafeed ALTER COLUMN dbid SET DEFAULT nextval('datafeed_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY diagnosis ALTER COLUMN dbid SET DEFAULT nextval('diagnosis_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY immunization ALTER COLUMN dbid SET DEFAULT nextval('immunization_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY insurancecoverage ALTER COLUMN dbid SET DEFAULT nextval('insurancecoverage_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY measurement ALTER COLUMN dbid SET DEFAULT nextval('measurement_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY medication ALTER COLUMN dbid SET DEFAULT nextval('medication_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY organization ALTER COLUMN dbid SET DEFAULT nextval('organization_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY patient ALTER COLUMN dbid SET DEFAULT nextval('patient_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY patientidentifier ALTER COLUMN dbid SET DEFAULT nextval('patientidentifier_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY physicaladdress ALTER COLUMN dbid SET DEFAULT nextval('physicaladdress_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY problem ALTER COLUMN dbid SET DEFAULT nextval('problem_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY procedure ALTER COLUMN dbid SET DEFAULT nextval('procedure_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY telephonenumber ALTER COLUMN dbid SET DEFAULT nextval('telephonenumber_dbid_seq'::regclass);
+
+
+--
+-- Name: dbid; Type: DEFAULT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY visitencounter ALTER COLUMN dbid SET DEFAULT nextval('visitencounter_dbid_seq'::regclass);
+
+
+--
+-- Name: PK_aggregationrun; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY aggregationrun
+    ADD CONSTRAINT "PK_aggregationrun" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_charge; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY charge
+    ADD CONSTRAINT "PK_charge" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_chargecode; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY chargecode
+    ADD CONSTRAINT "PK_chargecode" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_datafeed; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY datafeed
+    ADD CONSTRAINT "PK_datafeed" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_diagnosis; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY diagnosis
+    ADD CONSTRAINT "PK_diagnosis" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_immunization; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY immunization
+    ADD CONSTRAINT "PK_immunization" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_insurancecoverage; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY insurancecoverage
+    ADD CONSTRAINT "PK_insurancecoverage" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_measurement; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY measurement
+    ADD CONSTRAINT "PK_measurement" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_medication; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY medication
+    ADD CONSTRAINT "PK_medication" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_organization; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY organization
+    ADD CONSTRAINT "PK_organization" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_patient; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY patient
+    ADD CONSTRAINT "PK_patient" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_patientidentifier; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY patientidentifier
+    ADD CONSTRAINT "PK_patientidentifier" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_physicaladdress; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY physicaladdress
+    ADD CONSTRAINT "PK_physicaladdress" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_problem; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY problem
+    ADD CONSTRAINT "PK_problem" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_procedure; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY procedure
+    ADD CONSTRAINT "PK_procedure" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_telephonenumber; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY telephonenumber
+    ADD CONSTRAINT "PK_telephonenumber" PRIMARY KEY (dbid);
+
+
+--
+-- Name: PK_visitencounter; Type: CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY visitencounter
+    ADD CONSTRAINT "PK_visitencounter" PRIMARY KEY (dbid);
+
+
+--
+-- Name: FK_aggregationrun_DataFeed; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY aggregationrun
+    ADD CONSTRAINT "FK_aggregationrun_DataFeed" FOREIGN KEY (datafeeddbid) REFERENCES datafeed(dbid);
+
+
+--
+-- Name: FK_charge_VisitEncounter; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY charge
+    ADD CONSTRAINT "FK_charge_VisitEncounter" FOREIGN KEY (visitencounterdbid) REFERENCES visitencounter(dbid);
+
+
+--
+-- Name: FK_chargecode_Charge; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY chargecode
+    ADD CONSTRAINT "FK_chargecode_Charge" FOREIGN KEY (chargedbid) REFERENCES charge(dbid);
+
+
+--
+-- Name: FK_datafeed_Organization; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY datafeed
+    ADD CONSTRAINT "FK_datafeed_Organization" FOREIGN KEY (organizationdbid) REFERENCES organization(dbid);
+
+
+--
+-- Name: FK_diagnosis_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY diagnosis
+    ADD CONSTRAINT "FK_diagnosis_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_diagnosis_VisitEncounter; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY diagnosis
+    ADD CONSTRAINT "FK_diagnosis_VisitEncounter" FOREIGN KEY (visitencounterdbid) REFERENCES visitencounter(dbid);
+
+
+--
+-- Name: FK_immunization_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY immunization
+    ADD CONSTRAINT "FK_immunization_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_immunization_VisitEncounter; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY immunization
+    ADD CONSTRAINT "FK_immunization_VisitEncounter" FOREIGN KEY (visitencounterdbid) REFERENCES visitencounter(dbid);
+
+
+--
+-- Name: FK_insurancecoverage_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY insurancecoverage
+    ADD CONSTRAINT "FK_insurancecoverage_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_measurement_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY measurement
+    ADD CONSTRAINT "FK_measurement_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_measurement_VisitEncounter; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY measurement
+    ADD CONSTRAINT "FK_measurement_VisitEncounter" FOREIGN KEY (visitencounterdbid) REFERENCES visitencounter(dbid);
+
+
+--
+-- Name: FK_medication_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY medication
+    ADD CONSTRAINT "FK_medication_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_medication_VisitEncounter; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY medication
+    ADD CONSTRAINT "FK_medication_VisitEncounter" FOREIGN KEY (visitencounterdbid) REFERENCES visitencounter(dbid);
+
+
+--
+-- Name: FK_patientidentifier_Organization; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY patientidentifier
+    ADD CONSTRAINT "FK_patientidentifier_Organization" FOREIGN KEY (organizationdbid) REFERENCES organization(dbid);
+
+
+--
+-- Name: FK_patientidentifier_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY patientidentifier
+    ADD CONSTRAINT "FK_patientidentifier_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_physicaladdress_patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY physicaladdress
+    ADD CONSTRAINT "FK_physicaladdress_patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_problem_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY problem
+    ADD CONSTRAINT "FK_problem_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_problem_VisitEncounter; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY problem
+    ADD CONSTRAINT "FK_problem_VisitEncounter" FOREIGN KEY (visitencounterdbid) REFERENCES visitencounter(dbid);
+
+
+--
+-- Name: FK_procedure_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY procedure
+    ADD CONSTRAINT "FK_procedure_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_procedure_VisitEncounter; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY procedure
+    ADD CONSTRAINT "FK_procedure_VisitEncounter" FOREIGN KEY (visitencounterdbid) REFERENCES visitencounter(dbid);
+
+
+--
+-- Name: FK_telephonenumber_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY telephonenumber
+    ADD CONSTRAINT "FK_telephonenumber_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: FK_visitencounter_Organization; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY visitencounter
+    ADD CONSTRAINT "FK_visitencounter_Organization" FOREIGN KEY (organizationdbid) REFERENCES organization(dbid);
+
+
+--
+-- Name: FK_visitencounter_Patient; Type: FK CONSTRAINT; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER TABLE ONLY visitencounter
+    ADD CONSTRAINT "FK_visitencounter_Patient" FOREIGN KEY (patientdbid) REFERENCES patient(dbid);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: aggregationrun; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE aggregationrun FROM PUBLIC;
+REVOKE ALL ON TABLE aggregationrun FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE aggregationrun TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE aggregationrun TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE aggregationrun TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE aggregationrun TO indy_jenkins_0273woh;
+
+
+--
+-- Name: charge; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE charge FROM PUBLIC;
+REVOKE ALL ON TABLE charge FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE charge TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE charge TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE charge TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE charge TO indy_jenkins_0273woh;
+
+
+--
+-- Name: chargecode; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE chargecode FROM PUBLIC;
+REVOKE ALL ON TABLE chargecode FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE chargecode TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE chargecode TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE chargecode TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE chargecode TO indy_jenkins_0273woh;
+
+
+--
+-- Name: datafeed; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE datafeed FROM PUBLIC;
+REVOKE ALL ON TABLE datafeed FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE datafeed TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE datafeed TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE datafeed TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE datafeed TO indy_jenkins_0273woh;
+
+
+--
+-- Name: diagnosis; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE diagnosis FROM PUBLIC;
+REVOKE ALL ON TABLE diagnosis FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE diagnosis TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE diagnosis TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE diagnosis TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE diagnosis TO indy_jenkins_0273woh;
+
+
+--
+-- Name: immunization; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE immunization FROM PUBLIC;
+REVOKE ALL ON TABLE immunization FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE immunization TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE immunization TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE immunization TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE immunization TO indy_jenkins_0273woh;
+
+
+--
+-- Name: insurancecoverage; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE insurancecoverage FROM PUBLIC;
+REVOKE ALL ON TABLE insurancecoverage FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE insurancecoverage TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE insurancecoverage TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE insurancecoverage TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE insurancecoverage TO indy_jenkins_0273woh;
+
+
+--
+-- Name: measurement; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE measurement FROM PUBLIC;
+REVOKE ALL ON TABLE measurement FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE measurement TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE measurement TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE measurement TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE measurement TO indy_jenkins_0273woh;
+
+
+--
+-- Name: medication; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE medication FROM PUBLIC;
+REVOKE ALL ON TABLE medication FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE medication TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE medication TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE medication TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE medication TO indy_jenkins_0273woh;
+
+
+--
+-- Name: organization; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE organization FROM PUBLIC;
+REVOKE ALL ON TABLE organization FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE organization TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE organization TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE organization TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE organization TO indy_jenkins_0273woh;
+
+
+--
+-- Name: patient; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE patient FROM PUBLIC;
+REVOKE ALL ON TABLE patient FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE patient TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE patient TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE patient TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE patient TO indy_jenkins_0273woh;
+
+
+--
+-- Name: patientidentifier; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE patientidentifier FROM PUBLIC;
+REVOKE ALL ON TABLE patientidentifier FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE patientidentifier TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE patientidentifier TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE patientidentifier TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE patientidentifier TO indy_jenkins_0273woh;
+
+
+--
+-- Name: physicaladdress; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE physicaladdress FROM PUBLIC;
+REVOKE ALL ON TABLE physicaladdress FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE physicaladdress TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE physicaladdress TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE physicaladdress TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE physicaladdress TO indy_jenkins_0273woh;
+
+
+--
+-- Name: problem; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE problem FROM PUBLIC;
+REVOKE ALL ON TABLE problem FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE problem TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE problem TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE problem TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE problem TO indy_jenkins_0273woh;
+
+
+--
+-- Name: procedure; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE procedure FROM PUBLIC;
+REVOKE ALL ON TABLE procedure FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE procedure TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE procedure TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE procedure TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE procedure TO indy_jenkins_0273woh;
+
+
+--
+-- Name: telephonenumber; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE telephonenumber FROM PUBLIC;
+REVOKE ALL ON TABLE telephonenumber FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE telephonenumber TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE telephonenumber TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE telephonenumber TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE telephonenumber TO indy_jenkins_0273woh;
+
+
+--
+-- Name: visitencounter; Type: ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+REVOKE ALL ON TABLE visitencounter FROM PUBLIC;
+REVOKE ALL ON TABLE visitencounter FROM "indy-cdrbot-0273woh";
+GRANT ALL ON TABLE visitencounter TO "indy-cdrbot-0273woh";
+GRANT SELECT ON TABLE visitencounter TO "Indy_ePHI_0273WOH";
+GRANT ALL ON TABLE visitencounter TO "ben.wyatt";
+GRANT INSERT,UPDATE ON TABLE visitencounter TO indy_jenkins_0273woh;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: -; Owner: indy-cdrbot-0273woh
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" REVOKE ALL ON TABLES  FROM "indy-cdrbot-0273woh";
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" GRANT ALL ON TABLES  TO "indy-cdrbot-0273woh";
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" GRANT SELECT ON TABLES  TO "Indy_ePHI_0273WOH";
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" GRANT ALL ON TABLES  TO "ben.wyatt";
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" GRANT INSERT,UPDATE ON TABLES  TO indy_jenkins_0273woh;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: indy-cdrbot-0273woh
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" IN SCHEMA public REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" IN SCHEMA public REVOKE ALL ON TABLES  FROM "indy-cdrbot-0273woh";
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" IN SCHEMA public GRANT INSERT,UPDATE ON TABLES  TO "indy-cdrbot-0273woh";
+ALTER DEFAULT PRIVILEGES FOR ROLE "indy-cdrbot-0273woh" IN SCHEMA public GRANT SELECT ON TABLES  TO "Indy_ePHI_0273WOH";
 
 
 --
