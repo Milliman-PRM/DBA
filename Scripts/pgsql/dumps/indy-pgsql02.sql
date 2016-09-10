@@ -11,8 +11,6 @@ SET standard_conforming_strings = on;
 -- Roles
 --
 
-CREATE ROLE "INDY_Jenkins_All";
-ALTER ROLE "INDY_Jenkins_All" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ClientTeam_0032BOH";
 ALTER ROLE "Indy_ClientTeam_0032BOH" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_PostgreSQl";
@@ -219,10 +217,6 @@ ALTER ROLE "van.nanney" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN N
 -- Role memberships
 --
 
-GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0032MMD" GRANTED BY postgres;
-GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0273NXG" GRANTED BY postgres;
-GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0273NYP" GRANTED BY postgres;
-GRANT "INDY_Jenkins_All" TO indy_jenkins_no_ephi GRANTED BY postgres;
 GRANT "Indy_ClientTeam_0032BOH" TO "afsheen.khan" GRANTED BY postgres;
 GRANT "Indy_ClientTeam_0032BOH" TO roche_admin;
 GRANT "Indy_ClientTeam_0032BOH" TO "van.nanney" GRANTED BY postgres;
@@ -463,7 +457,6 @@ GRANT "indy_ePHI_SystemReporting" TO "afsheen.khan" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "kelsie.stevenson" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "michael.reisz" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "surjit.malhi" GRANTED BY "ben.wyatt";
-GRANT ldap_groups TO "INDY_Jenkins_All" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0007FMC" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032ABG" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032ADI" GRANTED BY postgres;
