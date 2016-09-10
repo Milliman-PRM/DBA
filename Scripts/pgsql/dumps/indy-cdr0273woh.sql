@@ -11,8 +11,6 @@ SET standard_conforming_strings = on;
 -- Roles
 --
 
-CREATE ROLE "INDY_Jenkins_All";
-ALTER ROLE "INDY_Jenkins_All" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0007FMC";
 ALTER ROLE "Indy_ePHI_0007FMC" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0032ABG";
@@ -213,10 +211,6 @@ ALTER ROLE "van.nanney" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN N
 -- Role memberships
 --
 
-GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0032MMD" GRANTED BY postgres;
-GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0273NXG" GRANTED BY postgres;
-GRANT "INDY_Jenkins_All" TO "Indy_ePHI_0273NYP" GRANTED BY postgres;
-GRANT "INDY_Jenkins_All" TO indy_jenkins_no_ephi GRANTED BY postgres;
 GRANT "Indy_ePHI_0032CCS" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032CCS" TO "david.pierce" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032CCS" TO "jacob.krebs" GRANTED BY postgres;
@@ -450,7 +444,6 @@ GRANT "Indy_ePHI_0273ZQL" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZQL" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZQL" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_VT_QVW" TO "van.nanney" GRANTED BY postgres;
-GRANT ldap_groups TO "INDY_Jenkins_All" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0007FMC" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032ABG" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0032ADI" GRANTED BY postgres;
