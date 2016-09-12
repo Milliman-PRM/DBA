@@ -660,6 +660,15 @@ CREATE SCHEMA geocoding_data;
 ALTER SCHEMA geocoding_data OWNER TO "aaron.burgess";
 
 --
+-- Name: pierce; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+--
+
+CREATE SCHEMA pierce;
+
+
+ALTER SCHEMA pierce OWNER TO "aaron.burgess";
+
+--
 -- Name: tiger; Type: SCHEMA; Schema: -; Owner: aaron.burgess
 --
 
@@ -1535,6 +1544,42 @@ CREATE TABLE woah_sample_check (
 
 ALTER TABLE woah_sample_check OWNER TO "aaron.burgess";
 
+SET search_path = pierce, pg_catalog;
+
+--
+-- Name: quotes; Type: TABLE; Schema: pierce; Owner: aaron.burgess
+--
+
+CREATE TABLE quotes (
+    id integer NOT NULL,
+    author text,
+    quote text
+);
+
+
+ALTER TABLE quotes OWNER TO "aaron.burgess";
+
+--
+-- Name: quotes_id_seq; Type: SEQUENCE; Schema: pierce; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE quotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE quotes_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: quotes_id_seq; Type: SEQUENCE OWNED BY; Schema: pierce; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE quotes_id_seq OWNED BY quotes.id;
+
+
 SET search_path = tiger, pg_catalog;
 
 --
@@ -2318,6 +2363,15 @@ ALTER TABLE ONLY silly_test ALTER COLUMN id SET DEFAULT nextval('silly_test_id_s
 ALTER TABLE ONLY test ALTER COLUMN id SET DEFAULT nextval('test_id_seq'::regclass);
 
 
+SET search_path = pierce, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: pierce; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY quotes ALTER COLUMN id SET DEFAULT nextval('quotes_id_seq'::regclass);
+
+
 SET search_path = tiger, pg_catalog;
 
 --
@@ -2695,6 +2749,16 @@ ALTER TABLE ONLY silly_test
 
 ALTER TABLE ONLY test
     ADD CONSTRAINT test_pkey PRIMARY KEY (id);
+
+
+SET search_path = pierce, pg_catalog;
+
+--
+-- Name: quotes_pkey; Type: CONSTRAINT; Schema: pierce; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY quotes
+    ADD CONSTRAINT quotes_pkey PRIMARY KEY (id);
 
 
 SET search_path = tiger, pg_catalog;
