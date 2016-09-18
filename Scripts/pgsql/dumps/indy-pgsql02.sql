@@ -3393,6 +3393,24 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: project_data; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+--
+
+CREATE SCHEMA project_data;
+
+
+ALTER SCHEMA project_data OWNER TO "aaron.burgess";
+
+--
+-- Name: reference_data; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+--
+
+CREATE SCHEMA reference_data;
+
+
+ALTER SCHEMA reference_data OWNER TO "aaron.burgess";
+
+--
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -3404,6 +3422,3562 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = project_data, pg_catalog;
+
+SET default_with_oids = false;
+
+--
+-- Name: allowedtop5; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE allowedtop5 (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    claimid text,
+    records double precision,
+    mr_units_days double precision,
+    mr_billed double precision,
+    mr_allowed double precision
+);
+
+
+ALTER TABLE allowedtop5 OWNER TO "aaron.burgess";
+
+--
+-- Name: allowedtop5_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE allowedtop5_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE allowedtop5_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: allowedtop5_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE allowedtop5_id_seq OWNED BY allowedtop5.id;
+
+
+--
+-- Name: caseclaimmemcounts; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE caseclaimmemcounts (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    claimtype text,
+    records integer,
+    claims integer,
+    cases integer,
+    members integer,
+    casesmembers integer
+);
+
+
+ALTER TABLE caseclaimmemcounts OWNER TO "aaron.burgess";
+
+--
+-- Name: caseclaimmemcounts_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE caseclaimmemcounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE caseclaimmemcounts_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: caseclaimmemcounts_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE caseclaimmemcounts_id_seq OWNED BY caseclaimmemcounts.id;
+
+
+--
+-- Name: dmrspec; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE dmrspec (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    mr_line_case text,
+    spec_type text,
+    specialty text,
+    num_recs double precision,
+    mr_cases_admits double precision,
+    mr_units_days double precision,
+    mr_procs double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mr_patientpay double precision,
+    units double precision,
+    days double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    patientpay double precision,
+    cob double precision
+);
+
+
+ALTER TABLE dmrspec OWNER TO "aaron.burgess";
+
+--
+-- Name: dmrspec_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE dmrspec_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dmrspec_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: dmrspec_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE dmrspec_id_seq OWNED BY dmrspec.id;
+
+
+--
+-- Name: hip; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE hip (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    cat text,
+    mr_line_case text,
+    records double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    cob double precision,
+    patientpay double precision,
+    days double precision,
+    mr_cases_admits double precision,
+    mr_units_days double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mr_patientpay double precision
+);
+
+
+ALTER TABLE hip OWNER TO "aaron.burgess";
+
+--
+-- Name: hip_ckclm; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE hip_ckclm (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    ck_lowdolls integer,
+    ck_highday integer,
+    ck_pdiem integer,
+    sequencenumber double precision,
+    claimid text,
+    linenum text,
+    contractid text,
+    memberid text,
+    dob date,
+    gender text,
+    fromdate date,
+    todate date,
+    admitdate date,
+    dischdate date,
+    paiddate date,
+    drg text,
+    drgversion text,
+    revcode text,
+    hcpcs text,
+    modifier text,
+    modifier2 text,
+    srcpos text,
+    pos text,
+    srcspecialty text,
+    specialty text,
+    encounterflag text,
+    providerid text,
+    providerzip text,
+    providercounty text,
+    medicareid text,
+    billtype text,
+    admitsource text,
+    admittype text,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    cob double precision,
+    copay double precision,
+    coinsurance double precision,
+    deductible double precision,
+    patientpay double precision,
+    days double precision,
+    units double precision,
+    dischargestatus text,
+    icdversion text,
+    admitdiag text,
+    icddiag1 text,
+    icddiag2 text,
+    icddiag3 text,
+    icddiag4 text,
+    icddiag5 text,
+    icddiag6 text,
+    icddiag7 text,
+    icddiag8 text,
+    icddiag9 text,
+    icddiag10 text,
+    icddiag11 text,
+    icddiag12 text,
+    icddiag13 text,
+    icddiag14 text,
+    icddiag15 text,
+    poa1 text,
+    poa2 text,
+    poa3 text,
+    poa4 text,
+    poa5 text,
+    poa6 text,
+    poa7 text,
+    poa8 text,
+    poa9 text,
+    poa10 text,
+    poa11 text,
+    poa12 text,
+    poa13 text,
+    poa14 text,
+    poa15 text,
+    icdproc1 text,
+    icdproc2 text,
+    icdproc3 text,
+    icdproc4 text,
+    icdproc5 text,
+    icdproc6 text,
+    icdproc7 text,
+    icdproc8 text,
+    icdproc9 text,
+    icdproc10 text,
+    icdproc11 text,
+    icdproc12 text,
+    icdproc13 text,
+    icdproc14 text,
+    icdproc15 text,
+    riskpool text,
+    oon text,
+    srclob text,
+    lob text,
+    srcproduct text,
+    product text,
+    groupid text,
+    zip text,
+    county text,
+    memberstatus text,
+    userdefpop1 text,
+    userdefpop2 text,
+    userdefpop3 text,
+    userdefnum1 double precision,
+    userdefnum2 double precision,
+    userdefnum3 double precision,
+    yearmo text,
+    paidmo text,
+    state text,
+    msa text,
+    exclusioncode text,
+    partialyeargroup double precision,
+    medicarecovered double precision,
+    hcgindicator text,
+    memberageband text,
+    contractageband text,
+    hcgageband text,
+    demographicgroup text,
+    industry text,
+    pcp text,
+    managedpopulation text,
+    ms_drg text,
+    cms_errorcode text,
+    caseadmitid text,
+    mr_line text,
+    mr_line_det text,
+    mr_line_case text,
+    pbp_line text,
+    ma_line text,
+    ma_line_det text,
+    spec_type text,
+    facility_case_id text,
+    mr_cases_admits double precision,
+    mr_units_days double precision,
+    mr_procs double precision,
+    mr_cases_admits_patientpay double precision,
+    mr_units_days_patientpay double precision,
+    mr_procs_patientpay double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mr_copay double precision,
+    mr_coinsurance double precision,
+    mr_deductible double precision,
+    mr_patientpay double precision,
+    pbp_cases_admits double precision,
+    pbp_cases_admits_patientpay double precision
+);
+
+
+ALTER TABLE hip_ckclm OWNER TO "aaron.burgess";
+
+--
+-- Name: hip_ckclm_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE hip_ckclm_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hip_ckclm_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: hip_ckclm_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE hip_ckclm_id_seq OWNED BY hip_ckclm.id;
+
+
+--
+-- Name: hip_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE hip_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hip_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: hip_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE hip_id_seq OWNED BY hip.id;
+
+
+--
+-- Name: hip_map; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE hip_map (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    cat text,
+    drgversion text,
+    drg text,
+    icddiag1 text,
+    mr_line_case text,
+    pbp_line text,
+    medicarecovered double precision,
+    hcgindicator text,
+    num_recs double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    days double precision,
+    mr_cases_admits double precision,
+    mr_units_days double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    pbp_cases_admits double precision
+);
+
+
+ALTER TABLE hip_map OWNER TO "aaron.burgess";
+
+--
+-- Name: hip_map_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE hip_map_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hip_map_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: hip_map_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE hip_map_id_seq OWNED BY hip_map.id;
+
+
+--
+-- Name: hop; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE hop (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    cat text,
+    mr_line_case text,
+    records double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    cob double precision,
+    patientpay double precision,
+    mr_cases_admits double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mr_patientpay double precision
+);
+
+
+ALTER TABLE hop OWNER TO "aaron.burgess";
+
+--
+-- Name: hop_ckclm; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE hop_ckclm (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    ck_highdolls integer,
+    sequencenumber double precision,
+    claimid text,
+    linenum text,
+    contractid text,
+    memberid text,
+    dob date,
+    gender text,
+    fromdate date,
+    todate date,
+    admitdate date,
+    dischdate date,
+    paiddate date,
+    drg text,
+    drgversion text,
+    revcode text,
+    hcpcs text,
+    modifier text,
+    modifier2 text,
+    srcpos text,
+    pos text,
+    srcspecialty text,
+    specialty text,
+    encounterflag text,
+    providerid text,
+    providerzip text,
+    providercounty text,
+    medicareid text,
+    billtype text,
+    admitsource text,
+    admittype text,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    cob double precision,
+    copay double precision,
+    coinsurance double precision,
+    deductible double precision,
+    patientpay double precision,
+    days double precision,
+    units double precision,
+    dischargestatus text,
+    icdversion text,
+    admitdiag text,
+    icddiag1 text,
+    icddiag2 text,
+    icddiag3 text,
+    icddiag4 text,
+    icddiag5 text,
+    icddiag6 text,
+    icddiag7 text,
+    icddiag8 text,
+    icddiag9 text,
+    icddiag10 text,
+    icddiag11 text,
+    icddiag12 text,
+    icddiag13 text,
+    icddiag14 text,
+    icddiag15 text,
+    poa1 text,
+    poa2 text,
+    poa3 text,
+    poa4 text,
+    poa5 text,
+    poa6 text,
+    poa7 text,
+    poa8 text,
+    poa9 text,
+    poa10 text,
+    poa11 text,
+    poa12 text,
+    poa13 text,
+    poa14 text,
+    poa15 text,
+    icdproc1 text,
+    icdproc2 text,
+    icdproc3 text,
+    icdproc4 text,
+    icdproc5 text,
+    icdproc6 text,
+    icdproc7 text,
+    icdproc8 text,
+    icdproc9 text,
+    icdproc10 text,
+    icdproc11 text,
+    icdproc12 text,
+    icdproc13 text,
+    icdproc14 text,
+    icdproc15 text,
+    riskpool text,
+    oon text,
+    srclob text,
+    lob text,
+    srcproduct text,
+    product text,
+    groupid text,
+    zip text,
+    county text,
+    memberstatus text,
+    userdefpop1 text,
+    userdefpop2 text,
+    userdefpop3 text,
+    userdefnum1 double precision,
+    userdefnum2 double precision,
+    userdefnum3 double precision,
+    yearmo text,
+    paidmo text,
+    state text,
+    msa text,
+    exclusioncode text,
+    partialyeargroup double precision,
+    medicarecovered double precision,
+    hcgindicator text,
+    memberageband text,
+    contractageband text,
+    hcgageband text,
+    demographicgroup text,
+    industry text,
+    pcp text,
+    managedpopulation text,
+    ms_drg text,
+    cms_errorcode text,
+    caseadmitid text,
+    mr_line text,
+    mr_line_det text,
+    mr_line_case text,
+    pbp_line text,
+    ma_line text,
+    ma_line_det text,
+    spec_type text,
+    facility_case_id text,
+    mr_cases_admits double precision,
+    mr_units_days double precision,
+    mr_procs double precision,
+    mr_cases_admits_patientpay double precision,
+    mr_units_days_patientpay double precision,
+    mr_procs_patientpay double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mr_copay double precision,
+    mr_coinsurance double precision,
+    mr_deductible double precision,
+    mr_patientpay double precision,
+    pbp_cases_admits double precision,
+    pbp_cases_admits_patientpay double precision
+);
+
+
+ALTER TABLE hop_ckclm OWNER TO "aaron.burgess";
+
+--
+-- Name: hop_ckclm_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE hop_ckclm_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hop_ckclm_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: hop_ckclm_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE hop_ckclm_id_seq OWNED BY hop_ckclm.id;
+
+
+--
+-- Name: hop_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE hop_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hop_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: hop_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE hop_id_seq OWNED BY hop.id;
+
+
+--
+-- Name: hop_map; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE hop_map (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    cat text,
+    revcode text,
+    hcpcs text,
+    mr_line_case text,
+    pbp_line text,
+    medicarecovered double precision,
+    hcgindicator text,
+    num_recs double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    units double precision,
+    mr_cases_admits double precision,
+    mr_units_days double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    pbp_cases_admits double precision
+);
+
+
+ALTER TABLE hop_map OWNER TO "aaron.burgess";
+
+--
+-- Name: hop_map_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE hop_map_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hop_map_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: hop_map_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE hop_map_id_seq OWNED BY hop_map.id;
+
+
+--
+-- Name: lostop5; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE lostop5 (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    claimid text,
+    records double precision,
+    mr_units_days double precision,
+    mr_billed double precision,
+    mr_allowed double precision
+);
+
+
+ALTER TABLE lostop5 OWNER TO "aaron.burgess";
+
+--
+-- Name: lostop5_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE lostop5_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE lostop5_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: lostop5_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE lostop5_id_seq OWNED BY lostop5.id;
+
+
+--
+-- Name: phy_map; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE phy_map (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    hcpcs text,
+    mr_line_case text,
+    pbp_line text,
+    medicarecovered double precision,
+    hcgindicator text,
+    num_recs double precision,
+    mr_units_days double precision,
+    mr_cases_admits double precision,
+    mr_procs double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    units double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    pbp_cases_admits double precision
+);
+
+
+ALTER TABLE phy_map OWNER TO "aaron.burgess";
+
+--
+-- Name: phy_map_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE phy_map_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE phy_map_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: phy_map_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE phy_map_id_seq OWNED BY phy_map.id;
+
+
+--
+-- Name: recon_babiesadded; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_babiesadded (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    yearmo text,
+    i21b double precision,
+    i22b double precision,
+    i23 double precision,
+    i24 double precision,
+    total double precision,
+    babymmrecords double precision,
+    pct_babiesadded double precision
+);
+
+
+ALTER TABLE recon_babiesadded OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_babiesadded_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_babiesadded_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_babiesadded_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_babiesadded_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_babiesadded_id_seq OWNED BY recon_babiesadded.id;
+
+
+--
+-- Name: recon_clmlob; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_clmlob (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    eligibility text,
+    srclob text,
+    lob text,
+    claimlines double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mem double precision,
+    sub double precision
+);
+
+
+ALTER TABLE recon_clmlob OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_clmlob_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_clmlob_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_clmlob_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_clmlob_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_clmlob_id_seq OWNED BY recon_clmlob.id;
+
+
+--
+-- Name: recon_clmlobproduct; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_clmlobproduct (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    eligibility text,
+    lob text,
+    product text,
+    claimlines double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mem double precision,
+    sub double precision
+);
+
+
+ALTER TABLE recon_clmlobproduct OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_clmlobproduct_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_clmlobproduct_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_clmlobproduct_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_clmlobproduct_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_clmlobproduct_id_seq OWNED BY recon_clmlobproduct.id;
+
+
+--
+-- Name: recon_clmproduct; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_clmproduct (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    eligibility text,
+    srcproduct text,
+    product text,
+    claimlines double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mem double precision,
+    sub double precision
+);
+
+
+ALTER TABLE recon_clmproduct OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_clmproduct_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_clmproduct_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_clmproduct_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_clmproduct_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_clmproduct_id_seq OWNED BY recon_clmproduct.id;
+
+
+--
+-- Name: recon_clmsrecdist; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_clmsrecdist (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    dist double precision,
+    id_cnt double precision
+);
+
+
+ALTER TABLE recon_clmsrecdist OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_clmsrecdist_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_clmsrecdist_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_clmsrecdist_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_clmsrecdist_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_clmsrecdist_id_seq OWNED BY recon_clmsrecdist.id;
+
+
+--
+-- Name: recon_coding; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_coding (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    source text,
+    revcode_validation double precision,
+    hcpcs_validation double precision,
+    drg_validation double precision,
+    diag_validation double precision,
+    proc_validation double precision,
+    records double precision
+);
+
+
+ALTER TABLE recon_coding OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_coding_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_coding_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_coding_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_coding_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_coding_id_seq OWNED BY recon_coding.id;
+
+
+--
+-- Name: recon_config; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_config (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    ord double precision,
+    config_type text,
+    config_value text
+);
+
+
+ALTER TABLE recon_config OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_config_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_config_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_config_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_config_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_config_id_seq OWNED BY recon_config.id;
+
+
+--
+-- Name: recon_groupercountinput; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_groupercountinput (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    total double precision,
+    diagcount double precision,
+    proccount double precision,
+    poay double precision,
+    poan double precision,
+    poau double precision,
+    poaw double precision,
+    poar double precision
+);
+
+
+ALTER TABLE recon_groupercountinput OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_groupercountinput_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_groupercountinput_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_groupercountinput_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_groupercountinput_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_groupercountinput_id_seq OWNED BY recon_groupercountinput.id;
+
+
+--
+-- Name: recon_grouperinput; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_grouperinput (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    gender text,
+    dischargestatus text,
+    records double precision
+);
+
+
+ALTER TABLE recon_grouperinput OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_grouperinput_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_grouperinput_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_grouperinput_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_grouperinput_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_grouperinput_id_seq OWNED BY recon_grouperinput.id;
+
+
+--
+-- Name: recon_groupid; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_groupid (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    mediansubmm integer,
+    groupsizecat integer,
+    lob text,
+    product text,
+    totalmm integer,
+    nbrmbrs integer,
+    nbrcntrcts integer,
+    nbrgrpids integer,
+    avgcntrctsz double precision
+);
+
+
+ALTER TABLE recon_groupid OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_groupid_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_groupid_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_groupid_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_groupid_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_groupid_id_seq OWNED BY recon_groupid.id;
+
+
+--
+-- Name: recon_inpmed; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_inpmed (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    yearmo text,
+    records double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    patientpay double precision,
+    cob double precision,
+    days double precision,
+    units double precision
+);
+
+
+ALTER TABLE recon_inpmed OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_inpmed_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_inpmed_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_inpmed_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_inpmed_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_inpmed_id_seq OWNED BY recon_inpmed.id;
+
+
+--
+-- Name: recon_inpmm; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_inpmm (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    yearmo text,
+    records double precision,
+    medical double precision,
+    rx double precision,
+    vision double precision,
+    dental double precision,
+    premium double precision,
+    premiummedical double precision,
+    premiumdrug double precision,
+    premiumvision double precision,
+    premiumdental double precision,
+    capitation double precision,
+    capitation1 double precision,
+    capitation2 double precision,
+    capitation3 double precision,
+    capitation4 double precision,
+    capitation5 double precision,
+    expense double precision,
+    expense1 double precision,
+    expense2 double precision,
+    expense3 double precision,
+    expense4 double precision,
+    expense5 double precision,
+    agesex double precision,
+    riskscore double precision
+);
+
+
+ALTER TABLE recon_inpmm OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_inpmm_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_inpmm_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_inpmm_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_inpmm_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_inpmm_id_seq OWNED BY recon_inpmm.id;
+
+
+--
+-- Name: recon_inppatlob; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_inppatlob (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    lob text,
+    admits double precision,
+    los double precision,
+    billed double precision,
+    allowed double precision
+);
+
+
+ALTER TABLE recon_inppatlob OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_inppatlob_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_inppatlob_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_inppatlob_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_inppatlob_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_inppatlob_id_seq OWNED BY recon_inppatlob.id;
+
+
+--
+-- Name: recon_inprx; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_inprx (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    yearmo text,
+    records double precision,
+    ingredientcost double precision,
+    dispensingfee double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    patientpay double precision,
+    cob double precision
+);
+
+
+ALTER TABLE recon_inprx OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_inprx_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_inprx_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_inprx_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_inprx_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_inprx_id_seq OWNED BY recon_inprx.id;
+
+
+--
+-- Name: recon_invdiags; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_invdiags (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    source text,
+    icddiag text,
+    icdversion text,
+    records double precision,
+    mr_billed double precision
+);
+
+
+ALTER TABLE recon_invdiags OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invdiags_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_invdiags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_invdiags_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invdiags_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_invdiags_id_seq OWNED BY recon_invdiags.id;
+
+
+--
+-- Name: recon_invdrg; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_invdrg (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    source text,
+    drg text,
+    drgversion text,
+    records double precision,
+    mr_billed double precision
+);
+
+
+ALTER TABLE recon_invdrg OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invdrg_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_invdrg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_invdrg_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invdrg_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_invdrg_id_seq OWNED BY recon_invdrg.id;
+
+
+--
+-- Name: recon_invhcpcs; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_invhcpcs (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    source text,
+    hcpcs text,
+    records double precision,
+    mr_billed double precision
+);
+
+
+ALTER TABLE recon_invhcpcs OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invhcpcs_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_invhcpcs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_invhcpcs_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invhcpcs_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_invhcpcs_id_seq OWNED BY recon_invhcpcs.id;
+
+
+--
+-- Name: recon_invprocs; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_invprocs (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    source text,
+    icdproc text,
+    icdversion text,
+    records double precision,
+    mr_billed double precision
+);
+
+
+ALTER TABLE recon_invprocs OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invprocs_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_invprocs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_invprocs_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invprocs_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_invprocs_id_seq OWNED BY recon_invprocs.id;
+
+
+--
+-- Name: recon_invrevenue; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_invrevenue (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    source text,
+    revcode text,
+    records double precision,
+    mr_billed double precision
+);
+
+
+ALTER TABLE recon_invrevenue OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invrevenue_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_invrevenue_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_invrevenue_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_invrevenue_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_invrevenue_id_seq OWNED BY recon_invrevenue.id;
+
+
+--
+-- Name: recon_outmed; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_outmed (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    yearmo text,
+    encounterflag text,
+    hcgindicator text,
+    exclusioncode text,
+    partialyeargroup double precision,
+    records double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    cob double precision,
+    patientpay double precision,
+    days double precision,
+    units double precision,
+    mr_cases_admits double precision,
+    mr_units_days double precision,
+    mr_procs double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mr_patientpay double precision,
+    claimtype text
+);
+
+
+ALTER TABLE recon_outmed OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outmed_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_outmed_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_outmed_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outmed_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_outmed_id_seq OWNED BY recon_outmed.id;
+
+
+--
+-- Name: recon_outmedpos; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_outmedpos (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    srcpos text,
+    pos text,
+    records double precision,
+    mr_billed double precision,
+    mr_allowed double precision
+);
+
+
+ALTER TABLE recon_outmedpos OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outmedpos_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_outmedpos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_outmedpos_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outmedpos_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_outmedpos_id_seq OWNED BY recon_outmedpos.id;
+
+
+--
+-- Name: recon_outmedspecialty; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_outmedspecialty (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    srcspecialty text,
+    specialty text,
+    records double precision,
+    mr_billed double precision,
+    mr_allowed double precision
+);
+
+
+ALTER TABLE recon_outmedspecialty OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outmedspecialty_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_outmedspecialty_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_outmedspecialty_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outmedspecialty_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_outmedspecialty_id_seq OWNED BY recon_outmedspecialty.id;
+
+
+--
+-- Name: recon_outmm; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_outmm (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    hcgindicator text,
+    exclusioncode text,
+    partialyeargroup double precision,
+    yearmo text,
+    records double precision,
+    medical double precision,
+    rx double precision,
+    vision double precision,
+    dental double precision
+);
+
+
+ALTER TABLE recon_outmm OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outmm_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_outmm_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_outmm_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outmm_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_outmm_id_seq OWNED BY recon_outmm.id;
+
+
+--
+-- Name: recon_outrx; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_outrx (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    hcgindicator text,
+    exclusioncode text,
+    partialyeargroup double precision,
+    yearmo text,
+    records double precision,
+    mr_billed double precision,
+    mr_allowed double precision,
+    mr_paid double precision,
+    mr_patientpay double precision,
+    mr_units_days double precision,
+    mr_procs double precision,
+    billed double precision,
+    allowed double precision,
+    paid double precision,
+    patientpay double precision,
+    cob double precision,
+    units double precision
+);
+
+
+ALTER TABLE recon_outrx OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outrx_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_outrx_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_outrx_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_outrx_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_outrx_id_seq OWNED BY recon_outrx.id;
+
+
+--
+-- Name: recon_revdistr; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_revdistr (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    revcode text,
+    revcode_desc text,
+    records double precision,
+    days double precision,
+    mr_units_days double precision,
+    mr_billed double precision
+);
+
+
+ALTER TABLE recon_revdistr OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_revdistr_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_revdistr_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_revdistr_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_revdistr_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_revdistr_id_seq OWNED BY recon_revdistr.id;
+
+
+--
+-- Name: recon_ungroupable; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE recon_ungroupable (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    ms_drg text,
+    cms_errorcode text,
+    records double precision
+);
+
+
+ALTER TABLE recon_ungroupable OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_ungroupable_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE recon_ungroupable_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE recon_ungroupable_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: recon_ungroupable_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE recon_ungroupable_id_seq OWNED BY recon_ungroupable.id;
+
+
+--
+-- Name: refmr_line; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE refmr_line (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    mr_line text,
+    mr_line_desc text,
+    mr_line_desc1 text,
+    mr_line_desc2 text,
+    mr_line_desc3 text,
+    costmodel_util text,
+    bt_util text,
+    mcrm_summary text,
+    mcrm_summary_detail text,
+    version text,
+    any_table double precision,
+    phy double precision,
+    prev double precision,
+    allov double precision,
+    ovlite_wopt double precision,
+    ovlite double precision,
+    t11a double precision,
+    table_1a double precision,
+    table_1b double precision,
+    table_1c double precision,
+    table_2a double precision,
+    table_2b double precision,
+    table_2c double precision,
+    table_3a double precision,
+    table_3b double precision,
+    table_3c double precision,
+    table_4a double precision,
+    table_4b double precision,
+    table_4c double precision,
+    table_5a double precision,
+    table_5b double precision,
+    table_5c double precision,
+    table_6a double precision,
+    table_6b double precision,
+    table_6c double precision,
+    table_7 double precision,
+    table_8 double precision,
+    table_9 double precision,
+    table_10 double precision,
+    table_11a double precision,
+    table_11b double precision,
+    table_12 double precision,
+    table_13a double precision,
+    table_13b double precision,
+    table_13c double precision,
+    table_14 double precision,
+    table_15 double precision,
+    table_16a double precision,
+    table_16b double precision,
+    table_16d double precision,
+    table_16e double precision,
+    table_16f double precision,
+    table_17a double precision,
+    table_17b double precision,
+    table_17c double precision,
+    table_18a double precision,
+    table_18b double precision,
+    table_19a double precision,
+    table_19b double precision,
+    table_19c double precision,
+    table_20 double precision,
+    table_21 double precision,
+    table_22 double precision,
+    table_23 double precision,
+    table_24 double precision
+);
+
+
+ALTER TABLE refmr_line OWNER TO "aaron.burgess";
+
+--
+-- Name: refmr_line_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE refmr_line_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE refmr_line_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: refmr_line_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE refmr_line_id_seq OWNED BY refmr_line.id;
+
+
+--
+-- Name: refmr_pos; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE refmr_pos (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    pos text,
+    pos_desc text,
+    pos_surg text,
+    f_nf text,
+    pos_type text,
+    pbp_line text,
+    pbp_line_desc text,
+    version text
+);
+
+
+ALTER TABLE refmr_pos OWNER TO "aaron.burgess";
+
+--
+-- Name: refmr_pos_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE refmr_pos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE refmr_pos_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: refmr_pos_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE refmr_pos_id_seq OWNED BY refmr_pos.id;
+
+
+--
+-- Name: refmr_spec; Type: TABLE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE TABLE refmr_spec (
+    id integer NOT NULL,
+    project_id text NOT NULL,
+    specialty text,
+    specialty_desc text,
+    csspec text,
+    csspec_desc text,
+    type text,
+    pbp_line text,
+    pbp_line_desc text,
+    version text
+);
+
+
+ALTER TABLE refmr_spec OWNER TO "aaron.burgess";
+
+--
+-- Name: refmr_spec_id_seq; Type: SEQUENCE; Schema: project_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE refmr_spec_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE refmr_spec_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: refmr_spec_id_seq; Type: SEQUENCE OWNED BY; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE refmr_spec_id_seq OWNED BY refmr_spec.id;
+
+
+SET search_path = reference_data, pg_catalog;
+
+--
+-- Name: admitsrc; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE admitsrc (
+    id integer NOT NULL,
+    admitsrc text,
+    admitsrc_desc text,
+    admitsrc_nb_desc text,
+    dtl_desc1 text,
+    version text
+);
+
+
+ALTER TABLE admitsrc OWNER TO "aaron.burgess";
+
+--
+-- Name: admitsrc_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE admitsrc_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE admitsrc_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: admitsrc_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE admitsrc_id_seq OWNED BY admitsrc.id;
+
+
+--
+-- Name: admittype; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE admittype (
+    id integer NOT NULL,
+    admittype text,
+    admittype_desc text,
+    version text
+);
+
+
+ALTER TABLE admittype OWNER TO "aaron.burgess";
+
+--
+-- Name: admittype_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE admittype_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE admittype_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: admittype_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE admittype_id_seq OWNED BY admittype.id;
+
+
+--
+-- Name: ap; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ap (
+    id integer NOT NULL,
+    drg text,
+    drg_desc text,
+    mdc text,
+    mr_line text,
+    mr_line_desc text,
+    year_deleted text,
+    version text
+);
+
+
+ALTER TABLE ap OWNER TO "aaron.burgess";
+
+--
+-- Name: ap_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE ap_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE ap_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: ap_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE ap_id_seq OWNED BY ap.id;
+
+
+--
+-- Name: apr; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE apr (
+    id integer NOT NULL,
+    drg text,
+    drg_desc text,
+    mdc text,
+    mr_line text,
+    mr_line_desc text,
+    year_deleted text,
+    version text
+);
+
+
+ALTER TABLE apr OWNER TO "aaron.burgess";
+
+--
+-- Name: apr_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE apr_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE apr_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: apr_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE apr_id_seq OWNED BY apr.id;
+
+
+--
+-- Name: billtype; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE billtype (
+    id integer NOT NULL,
+    billtype text,
+    factype_desc text,
+    billclass_desc text,
+    freq_desc text,
+    version text
+);
+
+
+ALTER TABLE billtype OWNER TO "aaron.burgess";
+
+--
+-- Name: billtype_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE billtype_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE billtype_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: billtype_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE billtype_id_seq OWNED BY billtype.id;
+
+
+--
+-- Name: cdt; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE cdt (
+    id integer NOT NULL,
+    cdt text,
+    ada_description text,
+    dcg_cat text,
+    dcg_cat_desc text,
+    dcg_class text,
+    dcg_class_desc text,
+    year_deleted text,
+    version text
+);
+
+
+ALTER TABLE cdt OWNER TO "aaron.burgess";
+
+--
+-- Name: cdt_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE cdt_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cdt_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: cdt_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE cdt_id_seq OWNED BY cdt.id;
+
+
+--
+-- Name: county; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE county (
+    id integer NOT NULL,
+    state text,
+    st text,
+    msa_code text,
+    st_msa text,
+    st_msa_2014 text,
+    msa_name text,
+    fips_code text,
+    ssa_code text,
+    ansi_code text,
+    hcg_use text,
+    county text,
+    under_age_65_pop text,
+    ages_65_and_over_pop text,
+    total_pop text,
+    version text
+);
+
+
+ALTER TABLE county OWNER TO "aaron.burgess";
+
+--
+-- Name: county_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE county_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE county_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: county_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE county_id_seq OWNED BY county.id;
+
+
+--
+-- Name: cpttoicd9; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE cpttoicd9 (
+    id integer NOT NULL,
+    cpt text,
+    icd9_1 text,
+    icd9_2 text,
+    tbl text,
+    "desc" text,
+    version text
+);
+
+
+ALTER TABLE cpttoicd9 OWNER TO "aaron.burgess";
+
+--
+-- Name: cpttoicd9_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE cpttoicd9_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cpttoicd9_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: cpttoicd9_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE cpttoicd9_id_seq OWNED BY cpttoicd9.id;
+
+
+--
+-- Name: dcg_cat; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE dcg_cat (
+    id integer NOT NULL,
+    dcg_cat text,
+    dcg_class text,
+    dcg_category_description text,
+    version text
+);
+
+
+ALTER TABLE dcg_cat OWNER TO "aaron.burgess";
+
+--
+-- Name: dcg_cat_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE dcg_cat_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dcg_cat_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: dcg_cat_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE dcg_cat_id_seq OWNED BY dcg_cat.id;
+
+
+--
+-- Name: dcg_class; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE dcg_class (
+    id integer NOT NULL,
+    dcg_class text,
+    class_description text,
+    version text
+);
+
+
+ALTER TABLE dcg_class OWNER TO "aaron.burgess";
+
+--
+-- Name: dcg_class_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE dcg_class_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dcg_class_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: dcg_class_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE dcg_class_id_seq OWNED BY dcg_class.id;
+
+
+--
+-- Name: dischstat; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE dischstat (
+    id integer NOT NULL,
+    dischargestatus text,
+    dischargestatus_desc text,
+    version text
+);
+
+
+ALTER TABLE dischstat OWNER TO "aaron.burgess";
+
+--
+-- Name: dischstat_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE dischstat_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE dischstat_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: dischstat_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE dischstat_id_seq OWNED BY dischstat.id;
+
+
+--
+-- Name: drg; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE drg (
+    id integer NOT NULL,
+    drg text,
+    drg_desc text,
+    mdc text,
+    mr_line text,
+    mr_line_desc text,
+    version text
+);
+
+
+ALTER TABLE drg OWNER TO "aaron.burgess";
+
+--
+-- Name: drg_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE drg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE drg_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: drg_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE drg_id_seq OWNED BY drg.id;
+
+
+--
+-- Name: family; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE family (
+    id integer NOT NULL,
+    familyid text,
+    family0 text,
+    family1 text,
+    family2 text,
+    version text
+);
+
+
+ALTER TABLE family OWNER TO "aaron.burgess";
+
+--
+-- Name: family_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE family_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE family_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: family_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE family_id_seq OWNED BY family.id;
+
+
+--
+-- Name: hcpcs; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE hcpcs (
+    id integer NOT NULL,
+    proc text,
+    proc_desc text,
+    mr_line text,
+    mr_line_desc text,
+    mr_line_proc2hop text,
+    mr_line_proc2hop_desc text,
+    ppaca_mr_line text,
+    ppaca_mr_line_desc text,
+    ppaca_mr_line_proc2hop text,
+    ppaca_mr_line_proc2hop_desc text,
+    ppaca_measure text,
+    ppaca_age text,
+    ppaca_gender text,
+    ppaca_diagnosis text,
+    ppaca_hcpcs text,
+    family text,
+    family_description text,
+    phy_exam_rel text,
+    mhsa_proc text,
+    pbp_line text,
+    pbp_desc text,
+    pbp_prev text,
+    pbp_prev_desc text,
+    pbp_proc2hop text,
+    pbp_proc2hop_desc text,
+    year_added text,
+    year_deleted text,
+    version text
+);
+
+
+ALTER TABLE hcpcs OWNER TO "aaron.burgess";
+
+--
+-- Name: hcpcs_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE hcpcs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hcpcs_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: hcpcs_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE hcpcs_id_seq OWNED BY hcpcs.id;
+
+
+--
+-- Name: hsa_hrr; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE hsa_hrr (
+    id integer NOT NULL,
+    zip5 text,
+    hsanum text,
+    hsacity text,
+    hsastate text,
+    hrrnum text,
+    hrrcity text,
+    hrrstate text,
+    version text
+);
+
+
+ALTER TABLE hsa_hrr OWNER TO "aaron.burgess";
+
+--
+-- Name: hsa_hrr_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE hsa_hrr_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hsa_hrr_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: hsa_hrr_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE hsa_hrr_id_seq OWNED BY hsa_hrr.id;
+
+
+--
+-- Name: icd10diag; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE icd10diag (
+    id integer NOT NULL,
+    diag text,
+    diag_desc text,
+    mr_line text,
+    mr_line_desc text,
+    year_added text,
+    year_dropped text,
+    ppaca_diagnosis text,
+    version text
+);
+
+
+ALTER TABLE icd10diag OWNER TO "aaron.burgess";
+
+--
+-- Name: icd10diag_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE icd10diag_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE icd10diag_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: icd10diag_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE icd10diag_id_seq OWNED BY icd10diag.id;
+
+
+--
+-- Name: icd10proc; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE icd10proc (
+    id integer NOT NULL,
+    icd10proc text,
+    proc_desc text,
+    mr_line text,
+    mr_line_desc text,
+    year_added text,
+    year_dropped text,
+    version text
+);
+
+
+ALTER TABLE icd10proc OWNER TO "aaron.burgess";
+
+--
+-- Name: icd10proc_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE icd10proc_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE icd10proc_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: icd10proc_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE icd10proc_id_seq OWNED BY icd10proc.id;
+
+
+SET search_path = project_data, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY allowedtop5 ALTER COLUMN id SET DEFAULT nextval('allowedtop5_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY caseclaimmemcounts ALTER COLUMN id SET DEFAULT nextval('caseclaimmemcounts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY dmrspec ALTER COLUMN id SET DEFAULT nextval('dmrspec_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hip ALTER COLUMN id SET DEFAULT nextval('hip_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hip_ckclm ALTER COLUMN id SET DEFAULT nextval('hip_ckclm_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hip_map ALTER COLUMN id SET DEFAULT nextval('hip_map_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hop ALTER COLUMN id SET DEFAULT nextval('hop_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hop_ckclm ALTER COLUMN id SET DEFAULT nextval('hop_ckclm_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hop_map ALTER COLUMN id SET DEFAULT nextval('hop_map_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY lostop5 ALTER COLUMN id SET DEFAULT nextval('lostop5_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY phy_map ALTER COLUMN id SET DEFAULT nextval('phy_map_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_babiesadded ALTER COLUMN id SET DEFAULT nextval('recon_babiesadded_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_clmlob ALTER COLUMN id SET DEFAULT nextval('recon_clmlob_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_clmlobproduct ALTER COLUMN id SET DEFAULT nextval('recon_clmlobproduct_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_clmproduct ALTER COLUMN id SET DEFAULT nextval('recon_clmproduct_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_clmsrecdist ALTER COLUMN id SET DEFAULT nextval('recon_clmsrecdist_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_coding ALTER COLUMN id SET DEFAULT nextval('recon_coding_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_config ALTER COLUMN id SET DEFAULT nextval('recon_config_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_groupercountinput ALTER COLUMN id SET DEFAULT nextval('recon_groupercountinput_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_grouperinput ALTER COLUMN id SET DEFAULT nextval('recon_grouperinput_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_groupid ALTER COLUMN id SET DEFAULT nextval('recon_groupid_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_inpmed ALTER COLUMN id SET DEFAULT nextval('recon_inpmed_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_inpmm ALTER COLUMN id SET DEFAULT nextval('recon_inpmm_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_inppatlob ALTER COLUMN id SET DEFAULT nextval('recon_inppatlob_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_inprx ALTER COLUMN id SET DEFAULT nextval('recon_inprx_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invdiags ALTER COLUMN id SET DEFAULT nextval('recon_invdiags_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invdrg ALTER COLUMN id SET DEFAULT nextval('recon_invdrg_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invhcpcs ALTER COLUMN id SET DEFAULT nextval('recon_invhcpcs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invprocs ALTER COLUMN id SET DEFAULT nextval('recon_invprocs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invrevenue ALTER COLUMN id SET DEFAULT nextval('recon_invrevenue_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outmed ALTER COLUMN id SET DEFAULT nextval('recon_outmed_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outmedpos ALTER COLUMN id SET DEFAULT nextval('recon_outmedpos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outmedspecialty ALTER COLUMN id SET DEFAULT nextval('recon_outmedspecialty_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outmm ALTER COLUMN id SET DEFAULT nextval('recon_outmm_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outrx ALTER COLUMN id SET DEFAULT nextval('recon_outrx_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_revdistr ALTER COLUMN id SET DEFAULT nextval('recon_revdistr_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_ungroupable ALTER COLUMN id SET DEFAULT nextval('recon_ungroupable_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY refmr_line ALTER COLUMN id SET DEFAULT nextval('refmr_line_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY refmr_pos ALTER COLUMN id SET DEFAULT nextval('refmr_pos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY refmr_spec ALTER COLUMN id SET DEFAULT nextval('refmr_spec_id_seq'::regclass);
+
+
+SET search_path = reference_data, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY admitsrc ALTER COLUMN id SET DEFAULT nextval('admitsrc_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY admittype ALTER COLUMN id SET DEFAULT nextval('admittype_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ap ALTER COLUMN id SET DEFAULT nextval('ap_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY apr ALTER COLUMN id SET DEFAULT nextval('apr_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY billtype ALTER COLUMN id SET DEFAULT nextval('billtype_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY cdt ALTER COLUMN id SET DEFAULT nextval('cdt_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY county ALTER COLUMN id SET DEFAULT nextval('county_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY cpttoicd9 ALTER COLUMN id SET DEFAULT nextval('cpttoicd9_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY dcg_cat ALTER COLUMN id SET DEFAULT nextval('dcg_cat_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY dcg_class ALTER COLUMN id SET DEFAULT nextval('dcg_class_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY dischstat ALTER COLUMN id SET DEFAULT nextval('dischstat_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY drg ALTER COLUMN id SET DEFAULT nextval('drg_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY family ALTER COLUMN id SET DEFAULT nextval('family_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hcpcs ALTER COLUMN id SET DEFAULT nextval('hcpcs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hsa_hrr ALTER COLUMN id SET DEFAULT nextval('hsa_hrr_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd10diag ALTER COLUMN id SET DEFAULT nextval('icd10diag_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd10proc ALTER COLUMN id SET DEFAULT nextval('icd10proc_id_seq'::regclass);
+
+
+SET search_path = project_data, pg_catalog;
+
+--
+-- Name: allowedtop5_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY allowedtop5
+    ADD CONSTRAINT allowedtop5_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: caseclaimmemcounts_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY caseclaimmemcounts
+    ADD CONSTRAINT caseclaimmemcounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dmrspec_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY dmrspec
+    ADD CONSTRAINT dmrspec_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hip_ckclm_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hip_ckclm
+    ADD CONSTRAINT hip_ckclm_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hip_map_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hip_map
+    ADD CONSTRAINT hip_map_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hip_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hip
+    ADD CONSTRAINT hip_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hop_ckclm_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hop_ckclm
+    ADD CONSTRAINT hop_ckclm_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hop_map_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hop_map
+    ADD CONSTRAINT hop_map_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hop_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hop
+    ADD CONSTRAINT hop_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lostop5_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY lostop5
+    ADD CONSTRAINT lostop5_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: phy_map_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY phy_map
+    ADD CONSTRAINT phy_map_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_babiesadded_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_babiesadded
+    ADD CONSTRAINT recon_babiesadded_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_clmlob_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_clmlob
+    ADD CONSTRAINT recon_clmlob_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_clmlobproduct_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_clmlobproduct
+    ADD CONSTRAINT recon_clmlobproduct_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_clmproduct_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_clmproduct
+    ADD CONSTRAINT recon_clmproduct_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_clmsrecdist_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_clmsrecdist
+    ADD CONSTRAINT recon_clmsrecdist_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_coding_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_coding
+    ADD CONSTRAINT recon_coding_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_config_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_config
+    ADD CONSTRAINT recon_config_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_groupercountinput_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_groupercountinput
+    ADD CONSTRAINT recon_groupercountinput_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_grouperinput_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_grouperinput
+    ADD CONSTRAINT recon_grouperinput_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_groupid_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_groupid
+    ADD CONSTRAINT recon_groupid_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_inpmed_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_inpmed
+    ADD CONSTRAINT recon_inpmed_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_inpmm_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_inpmm
+    ADD CONSTRAINT recon_inpmm_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_inppatlob_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_inppatlob
+    ADD CONSTRAINT recon_inppatlob_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_inprx_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_inprx
+    ADD CONSTRAINT recon_inprx_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_invdiags_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invdiags
+    ADD CONSTRAINT recon_invdiags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_invdrg_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invdrg
+    ADD CONSTRAINT recon_invdrg_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_invhcpcs_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invhcpcs
+    ADD CONSTRAINT recon_invhcpcs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_invprocs_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invprocs
+    ADD CONSTRAINT recon_invprocs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_invrevenue_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_invrevenue
+    ADD CONSTRAINT recon_invrevenue_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_outmed_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outmed
+    ADD CONSTRAINT recon_outmed_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_outmedpos_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outmedpos
+    ADD CONSTRAINT recon_outmedpos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_outmedspecialty_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outmedspecialty
+    ADD CONSTRAINT recon_outmedspecialty_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_outmm_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outmm
+    ADD CONSTRAINT recon_outmm_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_outrx_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_outrx
+    ADD CONSTRAINT recon_outrx_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_revdistr_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_revdistr
+    ADD CONSTRAINT recon_revdistr_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: recon_ungroupable_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY recon_ungroupable
+    ADD CONSTRAINT recon_ungroupable_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: refmr_line_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY refmr_line
+    ADD CONSTRAINT refmr_line_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: refmr_pos_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY refmr_pos
+    ADD CONSTRAINT refmr_pos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: refmr_spec_pkey; Type: CONSTRAINT; Schema: project_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY refmr_spec
+    ADD CONSTRAINT refmr_spec_pkey PRIMARY KEY (id);
+
+
+SET search_path = reference_data, pg_catalog;
+
+--
+-- Name: admitsrc_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY admitsrc
+    ADD CONSTRAINT admitsrc_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admittype_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY admittype
+    ADD CONSTRAINT admittype_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ap_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ap
+    ADD CONSTRAINT ap_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: apr_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY apr
+    ADD CONSTRAINT apr_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: billtype_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY billtype
+    ADD CONSTRAINT billtype_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cdt_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY cdt
+    ADD CONSTRAINT cdt_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: county_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY county
+    ADD CONSTRAINT county_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cpttoicd9_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY cpttoicd9
+    ADD CONSTRAINT cpttoicd9_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dcg_cat_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY dcg_cat
+    ADD CONSTRAINT dcg_cat_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dcg_class_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY dcg_class
+    ADD CONSTRAINT dcg_class_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dischstat_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY dischstat
+    ADD CONSTRAINT dischstat_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drg_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY drg
+    ADD CONSTRAINT drg_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: family_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY family
+    ADD CONSTRAINT family_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hcpcs_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hcpcs
+    ADD CONSTRAINT hcpcs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hsa_hrr_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY hsa_hrr
+    ADD CONSTRAINT hsa_hrr_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: icd10diag_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd10diag
+    ADD CONSTRAINT icd10diag_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: icd10proc_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd10proc
+    ADD CONSTRAINT icd10proc_pkey PRIMARY KEY (id);
 
 
 --
