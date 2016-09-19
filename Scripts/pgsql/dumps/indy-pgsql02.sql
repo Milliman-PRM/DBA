@@ -6117,6 +6117,923 @@ ALTER TABLE icd10proc_id_seq OWNER TO "aaron.burgess";
 ALTER SEQUENCE icd10proc_id_seq OWNED BY icd10proc.id;
 
 
+--
+-- Name: icd9diag; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE icd9diag (
+    id integer NOT NULL,
+    diag text,
+    diag_desc text,
+    mr_line text,
+    mr_line_desc text,
+    year_added text,
+    year_dropped text,
+    ppaca_diagnosis text,
+    version text
+);
+
+
+ALTER TABLE icd9diag OWNER TO "aaron.burgess";
+
+--
+-- Name: icd9diag_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE icd9diag_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE icd9diag_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: icd9diag_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE icd9diag_id_seq OWNED BY icd9diag.id;
+
+
+--
+-- Name: icd9proc; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE icd9proc (
+    id integer NOT NULL,
+    icd9proc text,
+    icd9proc_desc text,
+    mr_line text,
+    mr_line_desc text,
+    year_added text,
+    year_dropped text,
+    version text
+);
+
+
+ALTER TABLE icd9proc OWNER TO "aaron.burgess";
+
+--
+-- Name: icd9proc_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE icd9proc_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE icd9proc_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: icd9proc_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE icd9proc_id_seq OWNED BY icd9proc.id;
+
+
+--
+-- Name: icd9tocpt; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE icd9tocpt (
+    id integer NOT NULL,
+    icd9 text,
+    cpt text,
+    version text
+);
+
+
+ALTER TABLE icd9tocpt OWNER TO "aaron.burgess";
+
+--
+-- Name: icd9tocpt_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE icd9tocpt_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE icd9tocpt_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: icd9tocpt_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE icd9tocpt_id_seq OWNED BY icd9tocpt.id;
+
+
+--
+-- Name: line; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE line (
+    id integer NOT NULL,
+    mr_line text,
+    mr_line_desc text,
+    mr_line_desc1 text,
+    mr_line_desc2 text,
+    mr_line_desc3 text,
+    costmodel_util text,
+    bt_util text,
+    mcrm_summary text,
+    mcrm_summary_detail text,
+    version text,
+    any_table text,
+    phy text,
+    prev text,
+    allov text,
+    ovlite_wopt text,
+    ovlite text,
+    t11a text,
+    table_1a text,
+    table_1b text,
+    table_1c text,
+    table_2a text,
+    table_2b text,
+    table_2c text,
+    table_3a text,
+    table_3b text,
+    table_3c text,
+    table_4a text,
+    table_4b text,
+    table_4c text,
+    table_5a text,
+    table_5b text,
+    table_5c text,
+    table_6a text,
+    table_6b text,
+    table_6c text,
+    table_7 text,
+    table_8 text,
+    table_9 text,
+    table_10 text,
+    table_11a text,
+    table_11b text,
+    table_12 text,
+    table_13a text,
+    table_13b text,
+    table_13c text,
+    table_14 text,
+    table_15 text,
+    table_16a text,
+    table_16b text,
+    table_16d text,
+    table_16e text,
+    table_16f text,
+    table_17a text,
+    table_17b text,
+    table_17c text,
+    table_18a text,
+    table_18b text,
+    table_19a text,
+    table_19b text,
+    table_19c text,
+    table_20 text,
+    table_21 text,
+    table_22 text,
+    table_23 text,
+    table_24 text
+);
+
+
+ALTER TABLE line OWNER TO "aaron.burgess";
+
+--
+-- Name: line_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE line_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE line_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: line_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE line_id_seq OWNED BY line.id;
+
+
+--
+-- Name: line_short; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE line_short (
+    id integer NOT NULL,
+    mr_line text,
+    mr_line_desc text,
+    mr_line_desc1 text,
+    mr_line_desc2 text,
+    mr_line_desc3 text,
+    costmodel_util text,
+    bt_util text,
+    mcrm_summary text,
+    mcrm_summary_detail text,
+    version text
+);
+
+
+ALTER TABLE line_short OWNER TO "aaron.burgess";
+
+--
+-- Name: line_short_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE line_short_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE line_short_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: line_short_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE line_short_id_seq OWNED BY line_short.id;
+
+
+--
+-- Name: ma_line; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ma_line (
+    id integer NOT NULL,
+    ma_line text,
+    ma_line_det text,
+    ma_line_desc text,
+    ma_line_det_desc text,
+    version text
+);
+
+
+ALTER TABLE ma_line OWNER TO "aaron.burgess";
+
+--
+-- Name: ma_line_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE ma_line_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE ma_line_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: ma_line_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE ma_line_id_seq OWNED BY ma_line.id;
+
+
+--
+-- Name: mdc; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE mdc (
+    id integer NOT NULL,
+    mdc text,
+    mdc_desc text,
+    version text
+);
+
+
+ALTER TABLE mdc OWNER TO "aaron.burgess";
+
+--
+-- Name: mdc_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE mdc_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE mdc_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: mdc_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE mdc_id_seq OWNED BY mdc.id;
+
+
+--
+-- Name: mod; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE mod (
+    id integer NOT NULL,
+    mod text,
+    mod_desc text,
+    mod_cat text,
+    mod_fac text,
+    year_added text,
+    year_dropped text,
+    version text
+);
+
+
+ALTER TABLE mod OWNER TO "aaron.burgess";
+
+--
+-- Name: mod_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE mod_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE mod_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: mod_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE mod_id_seq OWNED BY mod.id;
+
+
+--
+-- Name: msa_pop; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE msa_pop (
+    id integer NOT NULL,
+    state text,
+    st text,
+    statefips text,
+    msa_code text,
+    st_msa text,
+    st_msa_2014 text,
+    msaname text,
+    under_age_65_pop text,
+    ages_65_and_over_pop text,
+    total_pop text,
+    version text
+);
+
+
+ALTER TABLE msa_pop OWNER TO "aaron.burgess";
+
+--
+-- Name: msa_pop_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE msa_pop_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE msa_pop_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: msa_pop_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE msa_pop_id_seq OWNED BY msa_pop.id;
+
+
+--
+-- Name: msdrg; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE msdrg (
+    id integer NOT NULL,
+    drg text,
+    drg_desc text,
+    mdc text,
+    mr_line text,
+    mr_line_desc text,
+    year_deleted text,
+    version text
+);
+
+
+ALTER TABLE msdrg OWNER TO "aaron.burgess";
+
+--
+-- Name: msdrg_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE msdrg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE msdrg_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: msdrg_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE msdrg_id_seq OWNED BY msdrg.id;
+
+
+--
+-- Name: naics; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE naics (
+    id integer NOT NULL,
+    naics_2 text,
+    naics_2_desc text,
+    naics_3 text,
+    naics_3_desc text,
+    naics_4 text,
+    naics_4_desc text,
+    naics_5 text,
+    naics_5_desc text,
+    naics text,
+    description text,
+    version text
+);
+
+
+ALTER TABLE naics OWNER TO "aaron.burgess";
+
+--
+-- Name: naics_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE naics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE naics_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: naics_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE naics_id_seq OWNED BY naics.id;
+
+
+--
+-- Name: ndc_spec; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ndc_spec (
+    id integer NOT NULL,
+    ndc text,
+    drug_name text,
+    year_added text,
+    version text
+);
+
+
+ALTER TABLE ndc_spec OWNER TO "aaron.burgess";
+
+--
+-- Name: ndc_spec_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE ndc_spec_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE ndc_spec_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: ndc_spec_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE ndc_spec_id_seq OWNED BY ndc_spec.id;
+
+
+--
+-- Name: pbp_line; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE pbp_line (
+    id integer NOT NULL,
+    pbp_line text,
+    pbp_line_desc text,
+    medicarecovered text,
+    pbp_2010 text,
+    pbp_2011 text,
+    pbp_2012 text,
+    pbp_2013 text,
+    pbp_2014 text,
+    pbp_2015 text,
+    ma_line text,
+    ma_line_det text,
+    version text
+);
+
+
+ALTER TABLE pbp_line OWNER TO "aaron.burgess";
+
+--
+-- Name: pbp_line_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE pbp_line_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE pbp_line_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: pbp_line_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE pbp_line_id_seq OWNED BY pbp_line.id;
+
+
+--
+-- Name: pos; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE pos (
+    id integer NOT NULL,
+    pos text,
+    pos_desc text,
+    pos_surg text,
+    f_nf text,
+    pos_type text,
+    pbp_line text,
+    pbp_line_desc text,
+    version text
+);
+
+
+ALTER TABLE pos OWNER TO "aaron.burgess";
+
+--
+-- Name: pos_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE pos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE pos_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: pos_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE pos_id_seq OWNED BY pos.id;
+
+
+--
+-- Name: rev; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE rev (
+    id integer NOT NULL,
+    rev text,
+    rev_desc text,
+    mr_line_det text,
+    mr_line_det_desc text,
+    mr_line text,
+    mr_line_desc text,
+    pbp_line text,
+    pbp_line_desc text,
+    pbp_logic text,
+    ilocold text,
+    iloc text,
+    year_dropped text,
+    version text
+);
+
+
+ALTER TABLE rev OWNER TO "aaron.burgess";
+
+--
+-- Name: rev_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE rev_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE rev_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: rev_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE rev_id_seq OWNED BY rev.id;
+
+
+--
+-- Name: sic; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE sic (
+    id integer NOT NULL,
+    sic text,
+    description text,
+    version text
+);
+
+
+ALTER TABLE sic OWNER TO "aaron.burgess";
+
+--
+-- Name: sic_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE sic_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE sic_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: sic_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE sic_id_seq OWNED BY sic.id;
+
+
+--
+-- Name: spec; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE spec (
+    id integer NOT NULL,
+    specialty text,
+    specialty_desc text,
+    csspec text,
+    csspec_desc text,
+    type text,
+    pbp_line text,
+    pbp_line_desc text,
+    version text
+);
+
+
+ALTER TABLE spec OWNER TO "aaron.burgess";
+
+--
+-- Name: spec_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE spec_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE spec_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: spec_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE spec_id_seq OWNED BY spec.id;
+
+
+--
+-- Name: tax_spec_xwalk; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE tax_spec_xwalk (
+    id integer NOT NULL,
+    taxonomy_code text,
+    type text,
+    classification text,
+    specialization text,
+    milliman_specialty text,
+    milliman_specialty_desc text,
+    version text
+);
+
+
+ALTER TABLE tax_spec_xwalk OWNER TO "aaron.burgess";
+
+--
+-- Name: tax_spec_xwalk_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE tax_spec_xwalk_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tax_spec_xwalk_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: tax_spec_xwalk_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE tax_spec_xwalk_id_seq OWNED BY tax_spec_xwalk.id;
+
+
+--
+-- Name: tri; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE tri (
+    id integer NOT NULL,
+    drg text,
+    drg_desc text,
+    mdc text,
+    mr_line text,
+    mr_line_desc text,
+    year_deleted text,
+    version text
+);
+
+
+ALTER TABLE tri OWNER TO "aaron.burgess";
+
+--
+-- Name: tri_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE tri_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tri_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: tri_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE tri_id_seq OWNED BY tri.id;
+
+
+--
+-- Name: zip; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE zip (
+    id integer NOT NULL,
+    zip5 text,
+    zip3 text,
+    city text,
+    county text,
+    countyfips text,
+    st text,
+    state text,
+    statefips text,
+    fips_code text,
+    msacode text,
+    fullmsaname text,
+    st_msa text,
+    multicounty text,
+    stateansi text,
+    countyansi text,
+    ansi_code text,
+    population text,
+    carrier text,
+    locality text,
+    urban_rural_ind text,
+    hsanum text,
+    hsacity text,
+    hsastate text,
+    hrrnum text,
+    hrrcity text,
+    hrrstate text,
+    version text
+);
+
+
+ALTER TABLE zip OWNER TO "aaron.burgess";
+
+--
+-- Name: zip_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE zip_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE zip_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: zip_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE zip_id_seq OWNED BY zip.id;
+
+
+--
+-- Name: ziptomsa; Type: TABLE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ziptomsa (
+    id integer NOT NULL,
+    zip5 text,
+    zip3 text,
+    po_name text,
+    county text,
+    countyfips text,
+    countyansi text,
+    st text,
+    state text,
+    statefips text,
+    stateansi text,
+    fullmsaname text,
+    fullmsacode text,
+    msaname text,
+    msacode text,
+    st_msa text,
+    multicounty text,
+    hcg_use text,
+    st_msa_2014 text,
+    version text
+);
+
+
+ALTER TABLE ziptomsa OWNER TO "aaron.burgess";
+
+--
+-- Name: ziptomsa_id_seq; Type: SEQUENCE; Schema: reference_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE ziptomsa_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE ziptomsa_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: ziptomsa_id_seq; Type: SEQUENCE OWNED BY; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE ziptomsa_id_seq OWNED BY ziptomsa.id;
+
+
 SET search_path = project_data, pg_catalog;
 
 --
@@ -6518,6 +7435,153 @@ ALTER TABLE ONLY icd10diag ALTER COLUMN id SET DEFAULT nextval('icd10diag_id_seq
 --
 
 ALTER TABLE ONLY icd10proc ALTER COLUMN id SET DEFAULT nextval('icd10proc_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd9diag ALTER COLUMN id SET DEFAULT nextval('icd9diag_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd9proc ALTER COLUMN id SET DEFAULT nextval('icd9proc_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd9tocpt ALTER COLUMN id SET DEFAULT nextval('icd9tocpt_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY line ALTER COLUMN id SET DEFAULT nextval('line_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY line_short ALTER COLUMN id SET DEFAULT nextval('line_short_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ma_line ALTER COLUMN id SET DEFAULT nextval('ma_line_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY mdc ALTER COLUMN id SET DEFAULT nextval('mdc_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY mod ALTER COLUMN id SET DEFAULT nextval('mod_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY msa_pop ALTER COLUMN id SET DEFAULT nextval('msa_pop_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY msdrg ALTER COLUMN id SET DEFAULT nextval('msdrg_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY naics ALTER COLUMN id SET DEFAULT nextval('naics_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ndc_spec ALTER COLUMN id SET DEFAULT nextval('ndc_spec_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY pbp_line ALTER COLUMN id SET DEFAULT nextval('pbp_line_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY pos ALTER COLUMN id SET DEFAULT nextval('pos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY rev ALTER COLUMN id SET DEFAULT nextval('rev_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY sic ALTER COLUMN id SET DEFAULT nextval('sic_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY spec ALTER COLUMN id SET DEFAULT nextval('spec_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY tax_spec_xwalk ALTER COLUMN id SET DEFAULT nextval('tax_spec_xwalk_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY tri ALTER COLUMN id SET DEFAULT nextval('tri_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY zip ALTER COLUMN id SET DEFAULT nextval('zip_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ziptomsa ALTER COLUMN id SET DEFAULT nextval('ziptomsa_id_seq'::regclass);
 
 
 SET search_path = project_data, pg_catalog;
@@ -6978,6 +8042,174 @@ ALTER TABLE ONLY icd10diag
 
 ALTER TABLE ONLY icd10proc
     ADD CONSTRAINT icd10proc_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: icd9diag_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd9diag
+    ADD CONSTRAINT icd9diag_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: icd9proc_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd9proc
+    ADD CONSTRAINT icd9proc_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: icd9tocpt_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY icd9tocpt
+    ADD CONSTRAINT icd9tocpt_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: line_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY line
+    ADD CONSTRAINT line_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: line_short_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY line_short
+    ADD CONSTRAINT line_short_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ma_line_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ma_line
+    ADD CONSTRAINT ma_line_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mdc_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY mdc
+    ADD CONSTRAINT mdc_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mod_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY mod
+    ADD CONSTRAINT mod_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: msa_pop_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY msa_pop
+    ADD CONSTRAINT msa_pop_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: msdrg_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY msdrg
+    ADD CONSTRAINT msdrg_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: naics_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY naics
+    ADD CONSTRAINT naics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ndc_spec_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ndc_spec
+    ADD CONSTRAINT ndc_spec_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pbp_line_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY pbp_line
+    ADD CONSTRAINT pbp_line_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pos_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY pos
+    ADD CONSTRAINT pos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rev_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY rev
+    ADD CONSTRAINT rev_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sic_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY sic
+    ADD CONSTRAINT sic_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: spec_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY spec
+    ADD CONSTRAINT spec_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tax_spec_xwalk_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY tax_spec_xwalk
+    ADD CONSTRAINT tax_spec_xwalk_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tri_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY tri
+    ADD CONSTRAINT tri_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: zip_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY zip
+    ADD CONSTRAINT zip_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ziptomsa_pkey; Type: CONSTRAINT; Schema: reference_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ziptomsa
+    ADD CONSTRAINT ziptomsa_pkey PRIMARY KEY (id);
 
 
 --
