@@ -1986,7 +1986,8 @@ CREATE FUNCTION test_view_qvauditlog_containment() RETURNS boolean
             			on qvauditlog.fk_user_id = view_session_log.userid
             			   and qvauditlog.fk_group_id = view_session_log.groupid
             			   and qvauditlog.fk_report_id = view_session_log.reportid
-            			   and qvauditlog.useraccessdatetime <@ tstzrange(session_start_time, session_start_time + session_duration)
+            			   and qvauditlog.useraccessdatetime >= session_start_time
+                           and qvauditlog.useraccessdatetime <= session_start_time + session_duration
 
             group by qvauditlog.id
 
@@ -2014,7 +2015,8 @@ CREATE FUNCTION test_view_qvauditlog_entries_included() RETURNS boolean
             			on qvauditlog.fk_user_id = view_session_log.userid
             			   and qvauditlog.fk_group_id = view_session_log.groupid
             			   and qvauditlog.fk_report_id = view_session_log.reportid
-            			   and qvauditlog.useraccessdatetime <@ tstzrange(session_start_time, session_start_time + session_duration)
+            			   and qvauditlog.useraccessdatetime >= session_start_time
+                           and qvauditlog.useraccessdatetime <= session_start_time + session_duration
 
             where view_session_log.sessionid is null) / (select count(*) * 1.0 as overall_count from qvauditlog) < 0.002 as portion_unmatched$$;
 
@@ -2529,7 +2531,8 @@ CREATE VIEW view_activity_log WITH (security_barrier='true') AS
             view_session_log.userid,
             view_session_log.groupid,
             view_session_log.reportid,
-            tstzrange(view_session_log.session_start_time, (view_session_log.session_start_time + view_session_log.session_duration), '[]'::text) AS session_range
+            view_session_log.session_start_time,
+            view_session_log.session_duration
            FROM view_session_log
         )
  SELECT sessions.sessionid,
@@ -2542,7 +2545,7 @@ CREATE VIEW view_activity_log WITH (security_barrier='true') AS
         END AS event_message
    FROM ((qvauditlog log
      LEFT JOIN fetch_names ON (((log.id = fetch_names.id) AND (fetch_names.longest_name = true))))
-     JOIN sessions ON (((log.fk_user_id = sessions.userid) AND (log.fk_group_id = sessions.groupid) AND (log.fk_report_id = sessions.reportid) AND (log.useraccessdatetime <@ sessions.session_range))));
+     JOIN sessions ON (((log.fk_user_id = sessions.userid) AND (log.fk_group_id = sessions.groupid) AND (log.fk_report_id = sessions.reportid) AND (log.useraccessdatetime >= sessions.session_start_time) AND (log.useraccessdatetime <= (sessions.session_start_time + sessions.session_duration)))));
 
 
 ALTER TABLE view_activity_log OWNER TO "indy_ePHI_SystemReporting";
