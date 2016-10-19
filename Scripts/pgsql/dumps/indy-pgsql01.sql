@@ -1955,6 +1955,42 @@ $$;
 ALTER FUNCTION public.report_type_update() OWNER TO "indy_ePHI_SystemReporting";
 
 --
+-- Name: test_iislog_updated(); Type: FUNCTION; Schema: public; Owner: michael.reisz
+--
+
+CREATE FUNCTION test_iislog_updated() RETURNS boolean
+    LANGUAGE sql
+    AS $$select max(adddate) > current_timestamp - interval '2 days' as pass_test
+            		from iislog$$;
+
+
+ALTER FUNCTION public.test_iislog_updated() OWNER TO "michael.reisz";
+
+--
+-- Name: test_qvauditlog_updated(); Type: FUNCTION; Schema: public; Owner: michael.reisz
+--
+
+CREATE FUNCTION test_qvauditlog_updated() RETURNS boolean
+    LANGUAGE sql
+    AS $$select max(adddate) > current_timestamp - interval '2 days' as pass_test
+            		from qvauditlog$$;
+
+
+ALTER FUNCTION public.test_qvauditlog_updated() OWNER TO "michael.reisz";
+
+--
+-- Name: test_qvsessionlog_updated(); Type: FUNCTION; Schema: public; Owner: michael.reisz
+--
+
+CREATE FUNCTION test_qvsessionlog_updated() RETURNS boolean
+    LANGUAGE sql
+    AS $$select max(adddate) > current_timestamp - interval '2 days' as pass_test
+            		from qvsessionlog$$;
+
+
+ALTER FUNCTION public.test_qvsessionlog_updated() OWNER TO "michael.reisz";
+
+--
 -- Name: test_view_group_record_count(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
@@ -2000,7 +2036,7 @@ ALTER FUNCTION public.test_view_qvauditlog_containment() OWNER TO "indy_ePHI_Sys
 -- Name: FUNCTION test_view_qvauditlog_containment(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-COMMENT ON FUNCTION test_view_qvauditlog_containment() IS 'Returns true if zero records in qvauditlog can be contained by multiple records in view_session_log';
+COMMENT ON FUNCTION test_view_qvauditlog_containment() IS 'Returns true if qvsessionlog contains records added within the last 2 days';
 
 
 --
