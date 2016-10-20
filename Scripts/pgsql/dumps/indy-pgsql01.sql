@@ -1967,6 +1967,13 @@ CREATE FUNCTION test_iislog_updated() RETURNS boolean
 ALTER FUNCTION public.test_iislog_updated() OWNER TO "michael.reisz";
 
 --
+-- Name: FUNCTION test_iislog_updated(); Type: COMMENT; Schema: public; Owner: michael.reisz
+--
+
+COMMENT ON FUNCTION test_iislog_updated() IS 'Returns true if iislog contains records added within the last 2 days';
+
+
+--
 -- Name: test_qvauditlog_updated(); Type: FUNCTION; Schema: public; Owner: michael.reisz
 --
 
@@ -1979,6 +1986,13 @@ CREATE FUNCTION test_qvauditlog_updated() RETURNS boolean
 ALTER FUNCTION public.test_qvauditlog_updated() OWNER TO "michael.reisz";
 
 --
+-- Name: FUNCTION test_qvauditlog_updated(); Type: COMMENT; Schema: public; Owner: michael.reisz
+--
+
+COMMENT ON FUNCTION test_qvauditlog_updated() IS 'Returns true if qvauditlog contains records added within the last 2 days';
+
+
+--
 -- Name: test_qvsessionlog_updated(); Type: FUNCTION; Schema: public; Owner: michael.reisz
 --
 
@@ -1989,6 +2003,13 @@ CREATE FUNCTION test_qvsessionlog_updated() RETURNS boolean
 
 
 ALTER FUNCTION public.test_qvsessionlog_updated() OWNER TO "michael.reisz";
+
+--
+-- Name: FUNCTION test_qvsessionlog_updated(); Type: COMMENT; Schema: public; Owner: michael.reisz
+--
+
+COMMENT ON FUNCTION test_qvsessionlog_updated() IS 'Returns true if qvsessionlog contains records added within the last 2 days';
+
 
 --
 -- Name: test_view_group_record_count(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
@@ -2036,7 +2057,7 @@ ALTER FUNCTION public.test_view_qvauditlog_containment() OWNER TO "indy_ePHI_Sys
 -- Name: FUNCTION test_view_qvauditlog_containment(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-COMMENT ON FUNCTION test_view_qvauditlog_containment() IS 'Returns true if qvsessionlog contains records added within the last 2 days';
+COMMENT ON FUNCTION test_view_qvauditlog_containment() IS 'Returns true if zero records in qvauditlog can be contained by multiple records in view_session_log';
 
 
 --
@@ -2054,7 +2075,7 @@ CREATE FUNCTION test_view_qvauditlog_entries_included() RETURNS boolean
             			   and qvauditlog.useraccessdatetime >= session_start_time
                            and qvauditlog.useraccessdatetime <= session_start_time + session_duration
 
-            where view_session_log.sessionid is null) / (select count(*) * 1.0 as overall_count from qvauditlog) < 0.002 as portion_unmatched$$;
+            where view_session_log.sessionid is null) / (select count(*) * 1.0 as overall_count from qvauditlog) < 0.005 as portion_unmatched$$;
 
 
 ALTER FUNCTION public.test_view_qvauditlog_entries_included() OWNER TO "indy_ePHI_SystemReporting";
@@ -2475,20 +2496,25 @@ CREATE VIEW view_session_log AS
                 END, '[]'::text) AS sessionrange,
             qvsessionlog.fk_user_id,
             qvsessionlog.fk_group_id,
-            qvsessionlog.fk_report_id
+            qvsessionlog.fk_report_id,
+            qvsessionlog.useraccessdatetime
            FROM qvsessionlog
-          ORDER BY qvsessionlog.fk_user_id, qvsessionlog.fk_group_id, qvsessionlog.fk_report_id, (tstzrange(qvsessionlog.useraccessdatetime,
-                CASE
-                    WHEN ((qvsessionlog.sessionendreason)::text = 'SESSIONTIMEOUT'::text) THEN ((qvsessionlog.useraccessdatetime + (qvsessionlog.sessionduration)::interval) - '00:30:00'::interval)
-                    ELSE (qvsessionlog.useraccessdatetime + (qvsessionlog.sessionduration)::interval)
-                END, '[]'::text))
+          ORDER BY qvsessionlog.fk_user_id, qvsessionlog.fk_group_id, qvsessionlog.fk_report_id, qvsessionlog.useraccessdatetime
         ), merged_sessions AS (
          SELECT sessions.fk_user_id,
             sessions.fk_group_id,
             sessions.fk_report_id,
             merge_ranges(array_agg(sessions.sessionrange)) AS mergedrange
-           FROM sessions
+           FROM ( SELECT sessions_1.id,
+                    sessions_1.sessionrange,
+                    sessions_1.fk_user_id,
+                    sessions_1.fk_group_id,
+                    sessions_1.fk_report_id,
+                    sessions_1.useraccessdatetime
+                   FROM sessions sessions_1
+                  ORDER BY sessions_1.fk_user_id, sessions_1.fk_group_id, sessions_1.fk_report_id, sessions_1.useraccessdatetime) sessions
           GROUP BY sessions.fk_user_id, sessions.fk_group_id, sessions.fk_report_id
+          ORDER BY sessions.fk_user_id, sessions.fk_group_id, sessions.fk_report_id
         ), dataset AS (
          SELECT min(sessions.id) AS first_session,
             max(sessions.id) AS last_session,
@@ -2504,21 +2530,22 @@ CREATE VIEW view_session_log AS
  SELECT dataset.first_session AS sessionid,
     dataset.included_sessions,
         CASE
-            WHEN ((report.reportname)::text ~~ '%CARE COORDINATOR REPORT%'::text) THEN 'Care Coordinator Report'::text
-            WHEN ((report.reportname)::text ~~ '%COST MODEL DASHBOARD%'::text) THEN 'Cost Model Dashboard'::text
-            WHEN ((report.reportname)::text ~~ '%PRCA%'::text) THEN 'PRCA Report'::text
-            WHEN ((report.reportname)::text ~~ '%LIVE BPCI - CAM%'::text) THEN 'Live BPCI - CAM'::text
-            WHEN ((report.reportname)::text ~~ '%LIVE BPCI - CJR%'::text) THEN 'Live BPCI - CJR'::text
-            WHEN ((report.reportname)::text ~~ '%LIVE BPCI - PREMIER%'::text) THEN 'Live BPCI - Premier'::text
-            WHEN ((report.reportname)::text ~~ '%LIVE BPCI - USPI%'::text) THEN 'Live BPCI - USPI'::text
-            WHEN ((report.reportname)::text ~~ '%OHIO FINANCIAL DASHBOARD%'::text) THEN 'Ohio Financial Dashboard'::text
-            WHEN ((report.reportname)::text ~~ '%CAPITATION DASHBOARD%'::text) THEN 'Capitation Dashboard'::text
-            WHEN ((report.reportname)::text ~~ '%ENCOUNTER QUALITY DASHBOARD%'::text) THEN 'Encounter Quality Dashboard'::text
-            WHEN ((report.reportname)::text ~~ '%PIHP SUBMITTED ENCOUNTER DASHBOARD%'::text) THEN 'PIHP Submitted Encounter Dashboard'::text
-            WHEN ((report.reportname)::text ~~ '%GAP.QVW%'::text) THEN 'GAP'::text
-            WHEN ((report.reportname)::text ~~ '%SOC WC%'::text) THEN 'SOC WC'::text
-            WHEN ((report.reportname)::text ~~ '%LOAD TABLES DVW.QVW'::text) THEN 'Load Tables DVW'::text
-            WHEN ((report.reportname)::text ~~ '%VERMONT POC.QVW'::text) THEN 'Vermont PoC'::text
+            WHEN (lastsession.document ~~ '%CARE COORDINATOR REPORT%'::text) THEN 'Care Coordinator Report'::text
+            WHEN (lastsession.document ~~ '%COST MODEL DASHBOARD%'::text) THEN 'Cost Model Dashboard'::text
+            WHEN (lastsession.document ~~ '%PRCA%'::text) THEN 'PRCA Report'::text
+            WHEN (lastsession.document ~~ '%LIVE BPCI - CAM%'::text) THEN 'Live BPCI - CAM'::text
+            WHEN (lastsession.document ~~ '%LIVE BPCI - CJR%'::text) THEN 'Live BPCI - CJR'::text
+            WHEN (lastsession.document ~~ '%LIVE BPCI - PREMIER%'::text) THEN 'Live BPCI - Premier'::text
+            WHEN (lastsession.document ~~ '%LIVE BPCI - USPI%'::text) THEN 'Live BPCI - USPI'::text
+            WHEN (lastsession.document ~~ '%LIVE - OCM REPORTING%'::text) THEN 'Live - OCM Reporting'::text
+            WHEN (lastsession.document ~~ '%OHIO FINANCIAL DASHBOARD%'::text) THEN 'Ohio Financial Dashboard'::text
+            WHEN (lastsession.document ~~ '%CAPITATION DASHBOARD%'::text) THEN 'Capitation Dashboard'::text
+            WHEN (lastsession.document ~~ '%ENCOUNTER QUALITY DASHBOARD%'::text) THEN 'Encounter Quality Dashboard'::text
+            WHEN (lastsession.document ~~ '%PIHP SUBMITTED ENCOUNTER DASHBOARD%'::text) THEN 'PIHP Submitted Encounter Dashboard'::text
+            WHEN (lastsession.document ~~ '%GAP.QVW%'::text) THEN 'GAP'::text
+            WHEN (lastsession.document ~~ '%SOC WC%'::text) THEN 'SOC WC'::text
+            WHEN (lastsession.document ~~ '%LOAD TABLES DVW.QVW'::text) THEN 'Load Tables DVW'::text
+            WHEN (lastsession.document ~~ '%VERMONT POC.QVW'::text) THEN 'Vermont PoC'::text
             ELSE 'Other/Unknown'::text
         END AS document_type,
     lower(dataset.mergedrange) AS session_start_time,
@@ -2534,6 +2561,7 @@ CREATE VIEW view_session_log AS
         CASE
             WHEN (upper((lastsession.browser)::text) ~~ '%CHROME%'::text) THEN 'Chrome'::character varying
             WHEN (upper((lastsession.browser)::text) ~~ '%GECKO%'::text) THEN (replace((lastsession.browser)::text, 'GECKO'::text, 'Firefox'::text))::character varying
+            WHEN ((lastsession.browser)::text = 'MSIE illa/5.0'::text) THEN 'MSIE 11.0'::character varying
             WHEN ((lastsession.browser)::text = 'msie'::text) THEN 'MSIE'::character varying
             WHEN ((lastsession.browser)::text = 'safari'::text) THEN 'Safari'::character varying
             WHEN ((lastsession.browser)::text = ANY ((ARRAY[''::character varying, NULL::character varying])::text[])) THEN 'Unknown'::character varying
@@ -2610,6 +2638,7 @@ CREATE VIEW view_group AS
                 WHEN (("group".groupname)::text ~~ '%USPI'::text) THEN 'USPI'::text
                 WHEN (("group".groupname)::text ~~ '%CAM'::text) THEN 'CAM'::text
                 WHEN (("group".groupname)::text ~~ '%CJR'::text) THEN 'CJR'::text
+                WHEN (("group".groupname)::text ~~ '%OCM REPORTING%'::text) THEN 'OCM'::text
                 ELSE 'Other/Unknown'::text
             END
             ELSE 'Unknown'::text
