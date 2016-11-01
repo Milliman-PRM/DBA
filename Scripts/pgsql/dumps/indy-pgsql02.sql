@@ -399,6 +399,7 @@ GRANT "Indy_ePHI_0273PRI" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273PRI" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273PRI" TO "kelsie.stevenson" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273PRI" TO "michael.reisz" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273PRI" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273SCH" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273SCH" TO "david.pierce" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273SCH" TO "jason.altieri" GRANTED BY postgres;
@@ -584,6 +585,7 @@ CREATE DATABASE "Roche_Medicare_Reimbursement_Develop" WITH TEMPLATE = template0
 REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" FROM PUBLIC;
 REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" FROM "indy_ePHI_SystemReporting";
 GRANT ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" TO "indy_ePHI_SystemReporting";
+CREATE DATABASE bwtest WITH TEMPLATE = template0 OWNER = indy_jenkins_no_ephi;
 CREATE DATABASE grouper_analytics WITH TEMPLATE = template0 OWNER = "aaron.burgess";
 CREATE DATABASE prm_know WITH TEMPLATE = template0 OWNER = "aaron.burgess";
 CREATE DATABASE systemreporting WITH TEMPLATE = template0 OWNER = "ben.wyatt";
@@ -3366,6 +3368,53 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT A
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON TABLES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON TABLES  FROM "brad.teach";
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect bwtest
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
