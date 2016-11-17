@@ -2075,7 +2075,7 @@ CREATE FUNCTION test_view_qvauditlog_entries_included() RETURNS boolean
             			   and qvauditlog.useraccessdatetime >= session_start_time
                            and qvauditlog.useraccessdatetime <= session_start_time + session_duration
 
-            where view_session_log.sessionid is null) / (select count(*) * 1.0 as overall_count from qvauditlog) < 0.005 as portion_unmatched$$;
+            where view_session_log.sessionid is null) / (select count(*) * 1.0 as overall_count from qvauditlog) < 0.01 as portion_unmatched$$;
 
 
 ALTER FUNCTION public.test_view_qvauditlog_entries_included() OWNER TO "indy_ePHI_SystemReporting";
@@ -2084,7 +2084,7 @@ ALTER FUNCTION public.test_view_qvauditlog_entries_included() OWNER TO "indy_ePH
 -- Name: FUNCTION test_view_qvauditlog_entries_included(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
-COMMENT ON FUNCTION test_view_qvauditlog_entries_included() IS 'Returns true if fewer than 0.2% of qvauditlog records do not correspond to a view_session_log record';
+COMMENT ON FUNCTION test_view_qvauditlog_entries_included() IS 'Returns true if fewer than 1% of qvauditlog records do not correspond to a view_session_log record';
 
 
 --
