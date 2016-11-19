@@ -2530,8 +2530,9 @@ CREATE VIEW view_session_log AS
  SELECT dataset.first_session AS sessionid,
     dataset.included_sessions,
         CASE
-            WHEN (lastsession.document ~~ '%CARE COORDINATOR REPORT%'::text) THEN 'Care Coordinator Report'::text
-            WHEN (lastsession.document ~~ '%COST MODEL DASHBOARD%'::text) THEN 'Cost Model Dashboard'::text
+            WHEN ((lastsession.document ~~ '%CARE COORDINATOR REPORT%'::text) OR (lastsession.document ~~ '%\CCR\%'::text)) THEN 'Care Coordinator Report'::text
+            WHEN ((lastsession.document ~~ '%CARE GIVER CHECKLIST%'::text) OR (lastsession.document ~~ '%\CGC\%'::text)) THEN 'Caregivers Checklist'::text
+            WHEN ((lastsession.document ~~ '%COST MODEL DASHBOARD%'::text) OR (lastsession.document ~~ '%\CMD\%'::text)) THEN 'Cost Model Dashboard'::text
             WHEN (lastsession.document ~~ '%PRCA%'::text) THEN 'PRCA Report'::text
             WHEN (lastsession.document ~~ '%LIVE BPCI - CAM%'::text) THEN 'Live BPCI - CAM'::text
             WHEN (lastsession.document ~~ '%LIVE BPCI - CJR%'::text) THEN 'Live BPCI - CJR'::text
