@@ -209,6 +209,8 @@ CREATE ROLE ldap_groups;
 ALTER ROLE ldap_groups WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS VALID UNTIL 'infinity';
 CREATE ROLE ldap_users;
 ALTER ROLE ldap_users WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS VALID UNTIL 'infinity';
+CREATE ROLE luigi_admins;
+ALTER ROLE luigi_admins WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "michael.reisz";
 ALTER ROLE "michael.reisz" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "nicholas.zenobi";
@@ -579,6 +581,7 @@ GRANT ldap_users TO "steve.gredell" GRANTED BY postgres;
 GRANT ldap_users TO "surjit.malhi" GRANTED BY postgres;
 GRANT ldap_users TO "tom.puckett" GRANTED BY postgres;
 GRANT ldap_users TO "van.nanney" GRANTED BY postgres;
+GRANT luigi_admins TO "ben.wyatt" GRANTED BY "ben.wyatt";
 
 
 --
@@ -608,6 +611,7 @@ REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" FROM "indy_ePHI_Sy
 GRANT ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" TO "indy_ePHI_SystemReporting";
 CREATE DATABASE bwtest WITH TEMPLATE = template0 OWNER = indy_jenkins_no_ephi;
 CREATE DATABASE grouper_analytics WITH TEMPLATE = template0 OWNER = "aaron.burgess";
+CREATE DATABASE luigi_dev WITH TEMPLATE = template0 OWNER = luigi_admins;
 CREATE DATABASE prm_know WITH TEMPLATE = template0 OWNER = "aaron.burgess";
 CREATE DATABASE systemreporting WITH TEMPLATE = template0 OWNER = "ben.wyatt";
 CREATE DATABASE systemreporting_application WITH TEMPLATE = template0 OWNER = "indy_ePHI_SystemReporting";
@@ -8443,6 +8447,53 @@ ALTER TABLE ONLY zip
 
 ALTER TABLE ONLY ziptomsa
     ADD CONSTRAINT ziptomsa_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect luigi_dev
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
