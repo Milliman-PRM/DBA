@@ -272,6 +272,7 @@ GRANT "Indy_ePHI_0032SHN" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032SHN" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032SIH" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032SIH" TO "kelsie.stevenson" GRANTED BY postgres;
+GRANT "Indy_ePHI_0032TKC" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032UTH" TO "david.pierce" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032UTH" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032UTH" TO "michael.reisz" GRANTED BY postgres;
@@ -2127,6 +2128,46 @@ INHERITS (tiger.zip_state_loc);
 ALTER TABLE in_zip_state_loc OWNER TO "aaron.burgess";
 
 --
+-- Name: ny_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_zip_lookup_base (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.zip_lookup_base);
+ALTER TABLE ONLY ny_zip_lookup_base ALTER COLUMN state SET NOT NULL;
+ALTER TABLE ONLY ny_zip_lookup_base ALTER COLUMN county SET NOT NULL;
+ALTER TABLE ONLY ny_zip_lookup_base ALTER COLUMN city SET NOT NULL;
+ALTER TABLE ONLY ny_zip_lookup_base ALTER COLUMN statefp SET NOT NULL;
+
+
+ALTER TABLE ny_zip_lookup_base OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_zip_state; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_zip_state (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.zip_state);
+
+
+ALTER TABLE ny_zip_state OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_zip_state_loc (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.zip_state_loc);
+
+
+ALTER TABLE ny_zip_state_loc OWNER TO "aaron.burgess";
+
+--
 -- Name: or_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
 --
 
@@ -3050,6 +3091,30 @@ ALTER TABLE ONLY in_zip_state_loc
 
 ALTER TABLE ONLY in_zip_lookup_base
     ADD CONSTRAINT pk_in_zip_state_loc_city PRIMARY KEY (zip, state, county, city, statefp);
+
+
+--
+-- Name: pk_ny_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_zip_state
+    ADD CONSTRAINT pk_ny_zip_state PRIMARY KEY (zip, stusps);
+
+
+--
+-- Name: pk_ny_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_zip_state_loc
+    ADD CONSTRAINT pk_ny_zip_state_loc PRIMARY KEY (zip, stusps, place);
+
+
+--
+-- Name: pk_ny_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_zip_lookup_base
+    ADD CONSTRAINT pk_ny_zip_state_loc_city PRIMARY KEY (zip, state, county, city, statefp);
 
 
 --
@@ -3988,16 +4053,6 @@ GRANT ALL ON SCHEMA public TO postgres;
 REVOKE ALL ON SCHEMA tiger FROM PUBLIC;
 REVOKE ALL ON SCHEMA tiger FROM "aaron.burgess";
 GRANT ALL ON SCHEMA tiger TO "aaron.burgess";
-
-
---
--- Name: tiger_staging; Type: ACL; Schema: -; Owner: aaron.burgess
---
-
-REVOKE ALL ON SCHEMA tiger_staging FROM PUBLIC;
-REVOKE ALL ON SCHEMA tiger_staging FROM "aaron.burgess";
-GRANT ALL ON SCHEMA tiger_staging TO "aaron.burgess";
-GRANT CREATE ON SCHEMA tiger_staging TO geocoder_users;
 
 
 --
