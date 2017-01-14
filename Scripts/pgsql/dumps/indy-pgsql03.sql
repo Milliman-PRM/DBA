@@ -1055,6 +1055,39 @@ CREATE TABLE cached_routes (
 ALTER TABLE cached_routes OWNER TO "aaron.burgess";
 
 --
+-- Name: cascade_mem_address; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE cascade_mem_address (
+    id integer NOT NULL,
+    address text
+);
+
+
+ALTER TABLE cascade_mem_address OWNER TO "aaron.burgess";
+
+--
+-- Name: cascade_mem_address_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE cascade_mem_address_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cascade_mem_address_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: cascade_mem_address_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE cascade_mem_address_id_seq OWNED BY cascade_mem_address.id;
+
+
+--
 -- Name: client_name; Type: TABLE; Schema: geocoding_data; Owner: brandon.patterson
 --
 
@@ -1085,6 +1118,133 @@ ALTER TABLE client_name_id_seq OWNER TO "brandon.patterson";
 --
 
 ALTER SEQUENCE client_name_id_seq OWNED BY client_name.id;
+
+
+--
+-- Name: clover_avoidable_by_zip; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE clover_avoidable_by_zip (
+    id integer NOT NULL,
+    zip5 text,
+    total_cost double precision
+);
+
+
+ALTER TABLE clover_avoidable_by_zip OWNER TO "aaron.burgess";
+
+--
+-- Name: clover_avoidable_by_zip_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE clover_avoidable_by_zip_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE clover_avoidable_by_zip_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: clover_avoidable_by_zip_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE clover_avoidable_by_zip_id_seq OWNED BY clover_avoidable_by_zip.id;
+
+
+--
+-- Name: clover_zip_sum_geom; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE clover_zip_sum_geom (
+    id integer,
+    the_geom public.geometry(MultiPolygon,4269),
+    zcta5ce10 character varying(5),
+    geoid10 character varying(5),
+    classfp10 character varying(2),
+    mtfcc10 character varying(5),
+    funcstat10 character varying(1),
+    aland10 bigint,
+    awater10 bigint,
+    intptlat10 character varying(11),
+    intptlon10 character varying(12),
+    total_cost double precision
+);
+
+
+ALTER TABLE clover_zip_sum_geom OWNER TO "aaron.burgess";
+
+--
+-- Name: clover_by_zip_sum; Type: VIEW; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE VIEW clover_by_zip_sum AS
+ SELECT clover_zip_sum_geom.zcta5ce10 AS zipcode,
+        CASE
+            WHEN (clover_zip_sum_geom.total_cost IS NULL) THEN (0)::double precision
+            ELSE clover_zip_sum_geom.total_cost
+        END AS total_cost
+   FROM clover_zip_sum_geom;
+
+
+ALTER TABLE clover_by_zip_sum OWNER TO "aaron.burgess";
+
+--
+-- Name: clover_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE clover_zip_freq (
+    id integer NOT NULL,
+    zip5 text,
+    frequency integer
+);
+
+
+ALTER TABLE clover_zip_freq OWNER TO "aaron.burgess";
+
+--
+-- Name: clover_zip_freq_geom; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE TABLE clover_zip_freq_geom (
+    id integer,
+    the_geom public.geometry(MultiPolygon,4269),
+    zcta5ce10 character varying(5),
+    geoid10 character varying(5),
+    classfp10 character varying(2),
+    mtfcc10 character varying(5),
+    funcstat10 character varying(1),
+    aland10 bigint,
+    awater10 bigint,
+    intptlat10 character varying(11),
+    intptlon10 character varying(12),
+    frequency integer
+);
+
+
+ALTER TABLE clover_zip_freq_geom OWNER TO "aaron.burgess";
+
+--
+-- Name: clover_zip_freq_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE clover_zip_freq_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE clover_zip_freq_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: clover_zip_freq_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE clover_zip_freq_id_seq OWNED BY clover_zip_freq.id;
 
 
 --
@@ -1612,6 +1772,41 @@ ALTER TABLE quotes_id_seq OWNER TO "aaron.burgess";
 ALTER SEQUENCE quotes_id_seq OWNED BY quotes.id;
 
 
+SET search_path = public, pg_catalog;
+
+--
+-- Name: cascade_mem_address; Type: TABLE; Schema: public; Owner: aaron.burgess
+--
+
+CREATE TABLE cascade_mem_address (
+    id integer NOT NULL,
+    address text
+);
+
+
+ALTER TABLE cascade_mem_address OWNER TO "aaron.burgess";
+
+--
+-- Name: cascade_mem_address_id_seq; Type: SEQUENCE; Schema: public; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE cascade_mem_address_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cascade_mem_address_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: cascade_mem_address_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE cascade_mem_address_id_seq OWNED BY cascade_mem_address.id;
+
+
 SET search_path = tiger, pg_catalog;
 
 --
@@ -2128,6 +2323,362 @@ INHERITS (tiger.zip_state_loc);
 ALTER TABLE in_zip_state_loc OWNER TO "aaron.burgess";
 
 --
+-- Name: nj_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_addr (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.addr);
+
+
+ALTER TABLE nj_addr OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_bg; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_bg (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.bg);
+
+
+ALTER TABLE nj_bg OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_cousub; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_cousub (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.cousub);
+
+
+ALTER TABLE nj_cousub OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_edges; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_edges (
+    source integer,
+    target integer,
+    shape_length double precision
+)
+INHERITS (tiger.edges);
+
+
+ALTER TABLE nj_edges OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_edges_vertices_pgr (
+    id bigint NOT NULL,
+    cnt integer,
+    chk integer,
+    ein integer,
+    eout integer,
+    the_geom public.geometry(Point,4269)
+);
+
+
+ALTER TABLE nj_edges_vertices_pgr OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE nj_edges_vertices_pgr_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nj_edges_vertices_pgr_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE nj_edges_vertices_pgr_id_seq OWNED BY nj_edges_vertices_pgr.id;
+
+
+--
+-- Name: nj_faces; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_faces (
+)
+INHERITS (tiger.faces);
+
+
+ALTER TABLE nj_faces OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_featnames; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_featnames (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.featnames);
+
+
+ALTER TABLE nj_featnames OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_place; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_place (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.place);
+
+
+ALTER TABLE nj_place OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_tabblock; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_tabblock (
+)
+INHERITS (tiger.tabblock);
+
+
+ALTER TABLE nj_tabblock OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_tract; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_tract (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.tract);
+
+
+ALTER TABLE nj_tract OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_zcta5; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_zcta5 (
+)
+INHERITS (tiger.zcta5);
+
+
+ALTER TABLE nj_zcta5 OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_zip_lookup_base (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.zip_lookup_base);
+ALTER TABLE ONLY nj_zip_lookup_base ALTER COLUMN state SET NOT NULL;
+ALTER TABLE ONLY nj_zip_lookup_base ALTER COLUMN county SET NOT NULL;
+ALTER TABLE ONLY nj_zip_lookup_base ALTER COLUMN city SET NOT NULL;
+ALTER TABLE ONLY nj_zip_lookup_base ALTER COLUMN statefp SET NOT NULL;
+
+
+ALTER TABLE nj_zip_lookup_base OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_zip_state; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_zip_state (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.zip_state);
+
+
+ALTER TABLE nj_zip_state OWNER TO "aaron.burgess";
+
+--
+-- Name: nj_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE nj_zip_state_loc (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '34'::text))
+)
+INHERITS (tiger.zip_state_loc);
+
+
+ALTER TABLE nj_zip_state_loc OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_addr (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.addr);
+
+
+ALTER TABLE ny_addr OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_bg; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_bg (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.bg);
+
+
+ALTER TABLE ny_bg OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_cousub; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_cousub (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.cousub);
+
+
+ALTER TABLE ny_cousub OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_edges; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_edges (
+    source integer,
+    target integer,
+    shape_length double precision,
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.edges);
+
+
+ALTER TABLE ny_edges OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_edges_vertices_pgr (
+    id bigint NOT NULL,
+    cnt integer,
+    chk integer,
+    ein integer,
+    eout integer,
+    the_geom public.geometry(Point,4269)
+);
+
+
+ALTER TABLE ny_edges_vertices_pgr OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE SEQUENCE ny_edges_vertices_pgr_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE ny_edges_vertices_pgr_id_seq OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER SEQUENCE ny_edges_vertices_pgr_id_seq OWNED BY ny_edges_vertices_pgr.id;
+
+
+--
+-- Name: ny_faces; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_faces (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.faces);
+
+
+ALTER TABLE ny_faces OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_featnames; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_featnames (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.featnames);
+
+
+ALTER TABLE ny_featnames OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_place; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_place (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.place);
+
+
+ALTER TABLE ny_place OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_tabblock; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_tabblock (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.tabblock);
+
+
+ALTER TABLE ny_tabblock OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_tract; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_tract (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.tract);
+
+
+ALTER TABLE ny_tract OWNER TO "aaron.burgess";
+
+--
+-- Name: ny_zcta5; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE TABLE ny_zcta5 (
+    CONSTRAINT chk_statefp CHECK (((statefp)::text = '36'::text))
+)
+INHERITS (tiger.zcta5);
+
+
+ALTER TABLE ny_zcta5 OWNER TO "aaron.burgess";
+
+--
 -- Name: ny_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
 --
 
@@ -2394,10 +2945,31 @@ ALTER TABLE ONLY cached_geocodes ALTER COLUMN id SET DEFAULT nextval('cached_geo
 
 
 --
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY cascade_mem_address ALTER COLUMN id SET DEFAULT nextval('cascade_mem_address_id_seq'::regclass);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: brandon.patterson
 --
 
 ALTER TABLE ONLY client_name ALTER COLUMN id SET DEFAULT nextval('client_name_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY clover_avoidable_by_zip ALTER COLUMN id SET DEFAULT nextval('clover_avoidable_by_zip_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY clover_zip_freq ALTER COLUMN id SET DEFAULT nextval('clover_zip_freq_id_seq'::regclass);
 
 
 --
@@ -2442,6 +3014,15 @@ SET search_path = pierce, pg_catalog;
 --
 
 ALTER TABLE ONLY quotes ALTER COLUMN id SET DEFAULT nextval('quotes_id_seq'::regclass);
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY cascade_mem_address ALTER COLUMN id SET DEFAULT nextval('cascade_mem_address_id_seq'::regclass);
 
 
 SET search_path = tiger, pg_catalog;
@@ -2655,6 +3236,188 @@ ALTER TABLE ONLY in_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_
 -- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
 --
 
+ALTER TABLE ONLY nj_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
+
+
+--
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_addr ALTER COLUMN statefp SET DEFAULT '34'::character varying;
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_bg ALTER COLUMN gid SET DEFAULT nextval('tiger.bg_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_cousub ALTER COLUMN gid SET DEFAULT nextval('tiger.cousub_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_edges ALTER COLUMN gid SET DEFAULT nextval('tiger.edges_gid_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_edges_vertices_pgr ALTER COLUMN id SET DEFAULT nextval('nj_edges_vertices_pgr_id_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_faces ALTER COLUMN gid SET DEFAULT nextval('tiger.faces_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_featnames ALTER COLUMN gid SET DEFAULT nextval('tiger.featnames_gid_seq'::regclass);
+
+
+--
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_featnames ALTER COLUMN statefp SET DEFAULT '34'::character varying;
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_place ALTER COLUMN gid SET DEFAULT nextval('tiger.place_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_tabblock ALTER COLUMN gid SET DEFAULT nextval('tiger.tabblock_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_tract ALTER COLUMN gid SET DEFAULT nextval('tiger.tract_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
+
+
+--
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_addr ALTER COLUMN statefp SET DEFAULT '36'::character varying;
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_bg ALTER COLUMN gid SET DEFAULT nextval('tiger.bg_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_cousub ALTER COLUMN gid SET DEFAULT nextval('tiger.cousub_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_edges ALTER COLUMN gid SET DEFAULT nextval('tiger.edges_gid_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_edges_vertices_pgr ALTER COLUMN id SET DEFAULT nextval('ny_edges_vertices_pgr_id_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_faces ALTER COLUMN gid SET DEFAULT nextval('tiger.faces_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_featnames ALTER COLUMN gid SET DEFAULT nextval('tiger.featnames_gid_seq'::regclass);
+
+
+--
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_featnames ALTER COLUMN statefp SET DEFAULT '36'::character varying;
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_place ALTER COLUMN gid SET DEFAULT nextval('tiger.place_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_tabblock ALTER COLUMN gid SET DEFAULT nextval('tiger.tabblock_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_tract ALTER COLUMN gid SET DEFAULT nextval('tiger.tract_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+--
+
 ALTER TABLE ONLY or_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
 
 
@@ -2776,11 +3539,35 @@ ALTER TABLE ONLY cached_geocodes
 
 
 --
+-- Name: cascade_mem_address_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY cascade_mem_address
+    ADD CONSTRAINT cascade_mem_address_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: client_name_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: brandon.patterson
 --
 
 ALTER TABLE ONLY client_name
     ADD CONSTRAINT client_name_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: clover_avoidable_by_zip_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY clover_avoidable_by_zip
+    ADD CONSTRAINT clover_avoidable_by_zip_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: clover_zip_freq_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY clover_zip_freq
+    ADD CONSTRAINT clover_zip_freq_pkey PRIMARY KEY (id);
 
 
 --
@@ -2833,6 +3620,16 @@ ALTER TABLE ONLY quotes
     ADD CONSTRAINT quotes_pkey PRIMARY KEY (id);
 
 
+SET search_path = public, pg_catalog;
+
+--
+-- Name: cascade_mem_address_pkey; Type: CONSTRAINT; Schema: public; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY cascade_mem_address
+    ADD CONSTRAINT cascade_mem_address_pkey PRIMARY KEY (id);
+
+
 SET search_path = tiger, pg_catalog;
 
 --
@@ -2867,6 +3664,22 @@ ALTER TABLE ONLY fl_edges_vertices_pgr
 
 ALTER TABLE ONLY in_edges_vertices_pgr
     ADD CONSTRAINT in_edges_vertices_pgr_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: nj_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_edges_vertices_pgr
+    ADD CONSTRAINT nj_edges_vertices_pgr_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ny_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_edges_vertices_pgr
+    ADD CONSTRAINT ny_edges_vertices_pgr_pkey PRIMARY KEY (id);
 
 
 --
@@ -3094,6 +3907,190 @@ ALTER TABLE ONLY in_zip_lookup_base
 
 
 --
+-- Name: pk_nj_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_addr
+    ADD CONSTRAINT pk_nj_addr PRIMARY KEY (gid);
+
+
+--
+-- Name: pk_nj_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_bg
+    ADD CONSTRAINT pk_nj_bg PRIMARY KEY (bg_id);
+
+
+--
+-- Name: pk_nj_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_cousub
+    ADD CONSTRAINT pk_nj_cousub PRIMARY KEY (cosbidfp);
+
+
+--
+-- Name: pk_nj_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_edges
+    ADD CONSTRAINT pk_nj_edges PRIMARY KEY (gid);
+
+
+--
+-- Name: pk_nj_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_faces
+    ADD CONSTRAINT pk_nj_faces PRIMARY KEY (gid);
+
+
+--
+-- Name: pk_nj_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_featnames
+    ADD CONSTRAINT pk_nj_featnames PRIMARY KEY (gid);
+
+
+--
+-- Name: pk_nj_place; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_place
+    ADD CONSTRAINT pk_nj_place PRIMARY KEY (plcidfp);
+
+
+--
+-- Name: pk_nj_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_tabblock
+    ADD CONSTRAINT pk_nj_tabblock PRIMARY KEY (tabblock_id);
+
+
+--
+-- Name: pk_nj_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_tract
+    ADD CONSTRAINT pk_nj_tract PRIMARY KEY (tract_id);
+
+
+--
+-- Name: pk_nj_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_zcta5
+    ADD CONSTRAINT pk_nj_zcta5 PRIMARY KEY (zcta5ce, statefp);
+
+
+--
+-- Name: pk_nj_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_zip_state
+    ADD CONSTRAINT pk_nj_zip_state PRIMARY KEY (zip, stusps);
+
+
+--
+-- Name: pk_nj_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_zip_state_loc
+    ADD CONSTRAINT pk_nj_zip_state_loc PRIMARY KEY (zip, stusps, place);
+
+
+--
+-- Name: pk_nj_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_zip_lookup_base
+    ADD CONSTRAINT pk_nj_zip_state_loc_city PRIMARY KEY (zip, state, county, city, statefp);
+
+
+--
+-- Name: pk_ny_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_addr
+    ADD CONSTRAINT pk_ny_addr PRIMARY KEY (gid);
+
+
+--
+-- Name: pk_ny_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_bg
+    ADD CONSTRAINT pk_ny_bg PRIMARY KEY (bg_id);
+
+
+--
+-- Name: pk_ny_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_cousub
+    ADD CONSTRAINT pk_ny_cousub PRIMARY KEY (cosbidfp);
+
+
+--
+-- Name: pk_ny_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_edges
+    ADD CONSTRAINT pk_ny_edges PRIMARY KEY (gid);
+
+
+--
+-- Name: pk_ny_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_faces
+    ADD CONSTRAINT pk_ny_faces PRIMARY KEY (gid);
+
+
+--
+-- Name: pk_ny_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_featnames
+    ADD CONSTRAINT pk_ny_featnames PRIMARY KEY (gid);
+
+
+--
+-- Name: pk_ny_place; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_place
+    ADD CONSTRAINT pk_ny_place PRIMARY KEY (plcidfp);
+
+
+--
+-- Name: pk_ny_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_tabblock
+    ADD CONSTRAINT pk_ny_tabblock PRIMARY KEY (tabblock_id);
+
+
+--
+-- Name: pk_ny_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_tract
+    ADD CONSTRAINT pk_ny_tract PRIMARY KEY (tract_id);
+
+
+--
+-- Name: pk_ny_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_zcta5
+    ADD CONSTRAINT pk_ny_zcta5 PRIMARY KEY (zcta5ce, statefp);
+
+
+--
 -- Name: pk_ny_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
 --
 
@@ -3286,6 +4283,54 @@ ALTER TABLE ONLY in_zcta5
 
 
 --
+-- Name: uidx_nj_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_cousub
+    ADD CONSTRAINT uidx_nj_cousub_gid UNIQUE (gid);
+
+
+--
+-- Name: uidx_nj_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_place
+    ADD CONSTRAINT uidx_nj_place_gid UNIQUE (gid);
+
+
+--
+-- Name: uidx_nj_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY nj_zcta5
+    ADD CONSTRAINT uidx_nj_zcta5_gid UNIQUE (gid);
+
+
+--
+-- Name: uidx_ny_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_cousub
+    ADD CONSTRAINT uidx_ny_cousub_gid UNIQUE (gid);
+
+
+--
+-- Name: uidx_ny_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_place
+    ADD CONSTRAINT uidx_ny_place_gid UNIQUE (gid);
+
+
+--
+-- Name: uidx_ny_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+--
+
+ALTER TABLE ONLY ny_zcta5
+    ADD CONSTRAINT uidx_ny_zcta5_gid UNIQUE (gid);
+
+
+--
 -- Name: uidx_or_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
 --
 
@@ -3426,6 +4471,20 @@ CREATE INDEX idx_fl_place_soundex_name ON fl_place USING btree (public.soundex((
 --
 
 CREATE INDEX idx_in_place_soundex_name ON in_place USING btree (public.soundex((name)::text));
+
+
+--
+-- Name: idx_nj_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_nj_place_soundex_name ON nj_place USING btree (public.soundex((name)::text));
+
+
+--
+-- Name: idx_ny_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_ny_place_soundex_name ON ny_place USING btree (public.soundex((name)::text));
 
 
 --
@@ -3667,6 +4726,230 @@ CREATE INDEX idx_tiger_data_in_zip_state_loc_place ON in_zip_state_loc USING btr
 
 
 --
+-- Name: idx_tiger_data_nj_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_addr_least_address ON nj_addr USING btree (tiger.least_hn(fromhn, tohn));
+
+
+--
+-- Name: idx_tiger_data_nj_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_addr_tlid_statefp ON nj_addr USING btree (tlid, statefp);
+
+
+--
+-- Name: idx_tiger_data_nj_addr_zip; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_addr_zip ON nj_addr USING btree (zip);
+
+
+--
+-- Name: idx_tiger_data_nj_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_cousub_countyfp ON nj_cousub USING btree (countyfp);
+
+
+--
+-- Name: idx_tiger_data_nj_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_edges_countyfp ON nj_edges USING btree (countyfp);
+
+
+--
+-- Name: idx_tiger_data_nj_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_edges_tfidl ON nj_edges USING btree (tfidl);
+
+
+--
+-- Name: idx_tiger_data_nj_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_edges_tlid ON nj_edges USING btree (tlid);
+
+
+--
+-- Name: idx_tiger_data_nj_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_edges_zipl ON nj_edges USING btree (zipl);
+
+
+--
+-- Name: idx_tiger_data_nj_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_edgestfidr ON nj_edges USING btree (tfidr);
+
+
+--
+-- Name: idx_tiger_data_nj_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_faces_countyfp ON nj_faces USING btree (countyfp);
+
+
+--
+-- Name: idx_tiger_data_nj_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_faces_tfid ON nj_faces USING btree (tfid);
+
+
+--
+-- Name: idx_tiger_data_nj_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_featnames_lname ON nj_featnames USING btree (lower((name)::text));
+
+
+--
+-- Name: idx_tiger_data_nj_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_featnames_snd_name ON nj_featnames USING btree (public.soundex((name)::text));
+
+
+--
+-- Name: idx_tiger_data_nj_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_featnames_tlid_statefp ON nj_featnames USING btree (tlid, statefp);
+
+
+--
+-- Name: idx_tiger_data_nj_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_zip_lookup_base_citysnd ON nj_zip_lookup_base USING btree (public.soundex((city)::text));
+
+
+--
+-- Name: idx_tiger_data_nj_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_nj_zip_state_loc_place ON nj_zip_state_loc USING btree (public.soundex((place)::text));
+
+
+--
+-- Name: idx_tiger_data_ny_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_addr_least_address ON ny_addr USING btree (tiger.least_hn(fromhn, tohn));
+
+
+--
+-- Name: idx_tiger_data_ny_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_addr_tlid_statefp ON ny_addr USING btree (tlid, statefp);
+
+
+--
+-- Name: idx_tiger_data_ny_addr_zip; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_addr_zip ON ny_addr USING btree (zip);
+
+
+--
+-- Name: idx_tiger_data_ny_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_cousub_countyfp ON ny_cousub USING btree (countyfp);
+
+
+--
+-- Name: idx_tiger_data_ny_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_edges_countyfp ON ny_edges USING btree (countyfp);
+
+
+--
+-- Name: idx_tiger_data_ny_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_edges_tfidl ON ny_edges USING btree (tfidl);
+
+
+--
+-- Name: idx_tiger_data_ny_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_edges_tlid ON ny_edges USING btree (tlid);
+
+
+--
+-- Name: idx_tiger_data_ny_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_edges_zipl ON ny_edges USING btree (zipl);
+
+
+--
+-- Name: idx_tiger_data_ny_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_edgestfidr ON ny_edges USING btree (tfidr);
+
+
+--
+-- Name: idx_tiger_data_ny_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_faces_countyfp ON ny_faces USING btree (countyfp);
+
+
+--
+-- Name: idx_tiger_data_ny_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_faces_tfid ON ny_faces USING btree (tfid);
+
+
+--
+-- Name: idx_tiger_data_ny_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_featnames_lname ON ny_featnames USING btree (lower((name)::text));
+
+
+--
+-- Name: idx_tiger_data_ny_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_featnames_snd_name ON ny_featnames USING btree (public.soundex((name)::text));
+
+
+--
+-- Name: idx_tiger_data_ny_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_featnames_tlid_statefp ON ny_featnames USING btree (tlid, statefp);
+
+
+--
+-- Name: idx_tiger_data_ny_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_zip_lookup_base_citysnd ON ny_zip_lookup_base USING btree (public.soundex((city)::text));
+
+
+--
+-- Name: idx_tiger_data_ny_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX idx_tiger_data_ny_zip_state_loc_place ON ny_zip_state_loc USING btree (public.soundex((place)::text));
+
+
+--
 -- Name: idx_tiger_data_or_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
 --
 
@@ -3797,6 +5080,48 @@ CREATE INDEX in_edges_target_idx ON in_edges USING btree (target);
 --
 
 CREATE INDEX in_edges_vertices_pgr_the_geom_idx ON in_edges_vertices_pgr USING gist (the_geom);
+
+
+--
+-- Name: nj_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX nj_edges_source_idx ON nj_edges USING btree (source);
+
+
+--
+-- Name: nj_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX nj_edges_target_idx ON nj_edges USING btree (target);
+
+
+--
+-- Name: nj_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX nj_edges_vertices_pgr_the_geom_idx ON nj_edges_vertices_pgr USING gist (the_geom);
+
+
+--
+-- Name: ny_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX ny_edges_source_idx ON ny_edges USING btree (source);
+
+
+--
+-- Name: ny_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX ny_edges_target_idx ON ny_edges USING btree (target);
+
+
+--
+-- Name: ny_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX ny_edges_vertices_pgr_the_geom_idx ON ny_edges_vertices_pgr USING gist (the_geom);
 
 
 --
@@ -3940,6 +5265,118 @@ CREATE INDEX tiger_data_in_zcta5_the_geom_gist ON in_zcta5 USING gist (the_geom)
 
 
 --
+-- Name: tiger_data_nj_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_nj_bg_the_geom_gist ON nj_bg USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_nj_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_nj_cousub_the_geom_gist ON nj_cousub USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_nj_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_nj_edges_the_geom_gist ON nj_edges USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_nj_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_nj_faces_the_geom_gist ON nj_faces USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_nj_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_nj_place_the_geom_gist ON nj_place USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_nj_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_nj_tabblock_the_geom_gist ON nj_tabblock USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_nj_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_nj_tract_the_geom_gist ON nj_tract USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_nj_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_nj_zcta5_the_geom_gist ON nj_zcta5 USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_ny_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_ny_bg_the_geom_gist ON ny_bg USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_ny_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_ny_cousub_the_geom_gist ON ny_cousub USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_ny_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_ny_edges_the_geom_gist ON ny_edges USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_ny_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_ny_faces_the_geom_gist ON ny_faces USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_ny_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_ny_place_the_geom_gist ON ny_place USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_ny_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_ny_tabblock_the_geom_gist ON ny_tabblock USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_ny_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_ny_tract_the_geom_gist ON ny_tract USING gist (the_geom);
+
+
+--
+-- Name: tiger_data_ny_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+--
+
+CREATE INDEX tiger_data_ny_zcta5_the_geom_gist ON ny_zcta5 USING gist (the_geom);
+
+
+--
 -- Name: tiger_data_or_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
 --
 
@@ -4044,6 +5481,7 @@ GRANT CREATE ON SCHEMA geocoding_data TO geocoder_users;
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO "aaron.burgess";
 
 
 --
@@ -4062,6 +5500,85 @@ GRANT ALL ON SCHEMA tiger TO "aaron.burgess";
 REVOKE ALL ON SCHEMA topology FROM PUBLIC;
 REVOKE ALL ON SCHEMA topology FROM "aaron.burgess";
 GRANT ALL ON SCHEMA topology TO "aaron.burgess";
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- Name: prm_generate_routing_query(integer, integer, text); Type: ACL; Schema: public; Owner: aaron.burgess
+--
+
+REVOKE ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) FROM "aaron.burgess";
+GRANT ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) TO "aaron.burgess";
+GRANT ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) TO PUBLIC;
+
+
+--
+-- Name: prm_geocode(text, text); Type: ACL; Schema: public; Owner: aaron.burgess
+--
+
+REVOKE ALL ON FUNCTION prm_geocode(_tbl text, statefips text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION prm_geocode(_tbl text, statefips text) FROM "aaron.burgess";
+GRANT ALL ON FUNCTION prm_geocode(_tbl text, statefips text) TO "aaron.burgess";
+GRANT ALL ON FUNCTION prm_geocode(_tbl text, statefips text) TO PUBLIC;
+
+
+--
+-- Name: prm_network_node(geometry, text); Type: ACL; Schema: public; Owner: aaron.burgess
+--
+
+REVOKE ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) FROM "aaron.burgess";
+GRANT ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) TO "aaron.burgess";
+GRANT ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) TO PUBLIC;
+
+
+--
+-- Name: prm_routing(text, integer, integer); Type: ACL; Schema: public; Owner: aaron.burgess
+--
+
+REVOKE ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) FROM "aaron.burgess";
+GRANT ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) TO "aaron.burgess";
+GRANT ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) TO PUBLIC;
+
+
+--
+-- Name: prm_table_routing(text, text, text, text); Type: ACL; Schema: public; Owner: aaron.burgess
+--
+
+REVOKE ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) FROM "aaron.burgess";
+GRANT ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) TO "aaron.burgess";
+GRANT ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) TO PUBLIC;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: ben.wyatt
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM "ben.wyatt";
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON SEQUENCES  TO "aaron.burgess";
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: ben.wyatt
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM "ben.wyatt";
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON FUNCTIONS  TO "aaron.burgess";
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: ben.wyatt
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON TABLES  FROM "ben.wyatt";
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON TABLES  TO "aaron.burgess";
 
 
 --
