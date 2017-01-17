@@ -440,6 +440,7 @@ GRANT "Indy_ePHI_0273VCA" TO "kelsie.stevenson" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273VCA" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273VCA" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "aaron.burgess" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273WOH" TO "andy.barnes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "david.pierce" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "indy-cdrbot-0273woh" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO indy_jenkins_0273woh GRANTED BY postgres;
@@ -1806,6 +1807,29 @@ ALTER TABLE cascade_mem_address_id_seq OWNER TO "aaron.burgess";
 
 ALTER SEQUENCE cascade_mem_address_id_seq OWNED BY cascade_mem_address.id;
 
+
+--
+-- Name: cascade_member_points_201612; Type: VIEW; Schema: public; Owner: aaron.burgess
+--
+
+CREATE VIEW cascade_member_points_201612 AS
+ SELECT a.address,
+    b.id,
+    b.base_address,
+    b.gc_rating,
+    b.street_number,
+    b.street_name,
+    b.street_type,
+    b.city,
+    b.state,
+    b.zip_code,
+    b.geom
+   FROM (( SELECT DISTINCT cascade_mem_address.address
+           FROM geocoding_data.cascade_mem_address) a
+     LEFT JOIN geocoding_data.cached_geocodes b ON ((a.address = b.base_address)));
+
+
+ALTER TABLE cascade_member_points_201612 OWNER TO "aaron.burgess";
 
 SET search_path = tiger, pg_catalog;
 
