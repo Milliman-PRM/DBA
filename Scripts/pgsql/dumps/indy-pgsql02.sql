@@ -227,6 +227,8 @@ CREATE ROLE postgres;
 ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD 'md5573012b511fa8fd9b08eb5001464fec4';
 CREATE ROLE roche_admin;
 ALTER ROLE roche_admin WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md59a51d692172b50cabd9f13901241ad27' VALID UNTIL 'infinity';
+CREATE ROLE roche_users;
+ALTER ROLE roche_users WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS VALID UNTIL 'infinity';
 CREATE ROLE "shea.parkes";
 ALTER ROLE "shea.parkes" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "steve.gredell";
@@ -613,6 +615,10 @@ GRANT ldap_users TO "surjit.malhi" GRANTED BY postgres;
 GRANT ldap_users TO "tom.puckett" GRANTED BY postgres;
 GRANT ldap_users TO "van.nanney" GRANTED BY postgres;
 GRANT luigi_admins TO "ben.wyatt" GRANTED BY "ben.wyatt";
+GRANT roche_users TO "afsheen.khan" GRANTED BY "ben.wyatt";
+GRANT roche_users TO "surjit.malhi" GRANTED BY "ben.wyatt";
+GRANT roche_users TO "tom.puckett" GRANTED BY "ben.wyatt";
+GRANT roche_users TO "van.nanney" GRANTED BY "ben.wyatt";
 
 
 --
@@ -636,10 +642,7 @@ GRANT ALL ON DATABASE "Acuity_Staging" TO "david.pierce";
 GRANT ALL ON DATABASE "Acuity_Staging" TO "andy.barnes";
 GRANT ALL ON DATABASE "Acuity_Staging" TO "afsheen.khan";
 CREATE DATABASE "PG_Presentation_DB" WITH TEMPLATE = template0 OWNER = "steve.gredell";
-CREATE DATABASE "Roche_Medicare_Reimbursement_Develop" WITH TEMPLATE = template0 OWNER = "indy_ePHI_SystemReporting";
-REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" FROM PUBLIC;
-REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" FROM "indy_ePHI_SystemReporting";
-GRANT ALL ON DATABASE "Roche_Medicare_Reimbursement_Develop" TO "indy_ePHI_SystemReporting";
+CREATE DATABASE "Roche_Medicare_Reimbursement_Develop" WITH TEMPLATE = template0 OWNER = roche_users;
 CREATE DATABASE bwtest WITH TEMPLATE = template0 OWNER = indy_jenkins_no_ephi;
 CREATE DATABASE grouper_analytics WITH TEMPLATE = template0 OWNER = "aaron.burgess";
 CREATE DATABASE luigi_dev WITH TEMPLATE = template0 OWNER = luigi_admins;
@@ -813,31 +816,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: rmrrdb_20160311; Type: SCHEMA; Schema: -; Owner: brad.teach
---
-
-CREATE SCHEMA rmrrdb_20160311;
-
-
-ALTER SCHEMA rmrrdb_20160311 OWNER TO "brad.teach";
-
---
--- Name: rmrrdb_20160316; Type: SCHEMA; Schema: -; Owner: brad.teach
---
-
-CREATE SCHEMA rmrrdb_20160316;
-
-
-ALTER SCHEMA rmrrdb_20160316 OWNER TO "brad.teach";
-
---
--- Name: rmrrdb_20160322; Type: SCHEMA; Schema: -; Owner: brad.teach
+-- Name: rmrrdb_20160322; Type: SCHEMA; Schema: -; Owner: roche_users
 --
 
 CREATE SCHEMA rmrrdb_20160322;
 
 
-ALTER SCHEMA rmrrdb_20160322 OWNER TO "brad.teach";
+ALTER SCHEMA rmrrdb_20160322 OWNER TO roche_users;
 
 --
 -- Name: rmrrdb_20160331; Type: SCHEMA; Schema: -; Owner: brad.teach
@@ -847,6 +832,24 @@ CREATE SCHEMA rmrrdb_20160331;
 
 
 ALTER SCHEMA rmrrdb_20160331 OWNER TO "brad.teach";
+
+--
+-- Name: rmrrdb_20170201; Type: SCHEMA; Schema: -; Owner: brad.teach
+--
+
+CREATE SCHEMA rmrrdb_20170201;
+
+
+ALTER SCHEMA rmrrdb_20170201 OWNER TO "brad.teach";
+
+--
+-- Name: rmrrdb_20170202; Type: SCHEMA; Schema: -; Owner: brad.teach
+--
+
+CREATE SCHEMA rmrrdb_20170202;
+
+
+ALTER SCHEMA rmrrdb_20170202 OWNER TO "brad.teach";
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -862,12 +865,12 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
-SET search_path = rmrrdb_20160311, pg_catalog;
+SET search_path = rmrrdb_20160322, pg_catalog;
 
 SET default_with_oids = false;
 
 --
--- Name: analyzers; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE TABLE analyzers (
@@ -878,17 +881,17 @@ CREATE TABLE analyzers (
 );
 
 
-ALTER TABLE analyzers OWNER TO "brad.teach";
+ALTER TABLE analyzers OWNER TO roche_users;
 
 --
--- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
 
 
 --
--- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE SEQUENCE analyzers_id_seq
@@ -899,17 +902,17 @@ CREATE SEQUENCE analyzers_id_seq
     CACHE 1;
 
 
-ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
+ALTER TABLE analyzers_id_seq OWNER TO roche_users;
 
 --
--- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
 
 
 --
--- Name: code; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: code; Type: TABLE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE TABLE code (
@@ -919,17 +922,17 @@ CREATE TABLE code (
 );
 
 
-ALTER TABLE code OWNER TO "brad.teach";
+ALTER TABLE code OWNER TO roche_users;
 
 --
--- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
 
 
 --
--- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE SEQUENCE code_id_seq
@@ -940,17 +943,17 @@ CREATE SEQUENCE code_id_seq
     CACHE 1;
 
 
-ALTER TABLE code_id_seq OWNER TO "brad.teach";
+ALTER TABLE code_id_seq OWNER TO roche_users;
 
 --
--- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER SEQUENCE code_id_seq OWNED BY code.id;
 
 
 --
--- Name: footnotes; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE TABLE footnotes (
@@ -959,17 +962,17 @@ CREATE TABLE footnotes (
 );
 
 
-ALTER TABLE footnotes OWNER TO "brad.teach";
+ALTER TABLE footnotes OWNER TO roche_users;
 
 --
--- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
 
 
 --
--- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE SEQUENCE footnotes_id_seq
@@ -980,17 +983,17 @@ CREATE SEQUENCE footnotes_id_seq
     CACHE 1;
 
 
-ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
+ALTER TABLE footnotes_id_seq OWNER TO roche_users;
 
 --
--- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
 
 
 --
--- Name: localities; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE TABLE localities (
@@ -1000,17 +1003,17 @@ CREATE TABLE localities (
 );
 
 
-ALTER TABLE localities OWNER TO "brad.teach";
+ALTER TABLE localities OWNER TO roche_users;
 
 --
--- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
 
 
 --
--- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE SEQUENCE localities_id_seq
@@ -1021,17 +1024,17 @@ CREATE SEQUENCE localities_id_seq
     CACHE 1;
 
 
-ALTER TABLE localities_id_seq OWNER TO "brad.teach";
+ALTER TABLE localities_id_seq OWNER TO roche_users;
 
 --
--- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
 
 
 --
--- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE TABLE reimbursement_rates (
@@ -1043,17 +1046,17 @@ CREATE TABLE reimbursement_rates (
 );
 
 
-ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
+ALTER TABLE reimbursement_rates OWNER TO roche_users;
 
 --
--- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
 
 
 --
--- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE SEQUENCE reimbursement_rates_id_seq
@@ -1064,17 +1067,17 @@ CREATE SEQUENCE reimbursement_rates_id_seq
     CACHE 1;
 
 
-ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
+ALTER TABLE reimbursement_rates_id_seq OWNER TO roche_users;
 
 --
--- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
 
 
 --
--- Name: search_terms; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE TABLE search_terms (
@@ -1084,17 +1087,17 @@ CREATE TABLE search_terms (
 );
 
 
-ALTER TABLE search_terms OWNER TO "brad.teach";
+ALTER TABLE search_terms OWNER TO roche_users;
 
 --
--- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
 
 
 --
--- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE SEQUENCE search_terms_id_seq
@@ -1105,17 +1108,17 @@ CREATE SEQUENCE search_terms_id_seq
     CACHE 1;
 
 
-ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
+ALTER TABLE search_terms_id_seq OWNER TO roche_users;
 
 --
--- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
 
 
 --
--- Name: weburl; Type: TABLE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE TABLE weburl (
@@ -1125,17 +1128,17 @@ CREATE TABLE weburl (
 );
 
 
-ALTER TABLE weburl OWNER TO "brad.teach";
+ALTER TABLE weburl OWNER TO roche_users;
 
 --
--- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
 
 
 --
--- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 CREATE SEQUENCE weburl_id_seq
@@ -1146,592 +1149,10 @@ CREATE SEQUENCE weburl_id_seq
     CACHE 1;
 
 
-ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
+ALTER TABLE weburl_id_seq OWNER TO roche_users;
 
 --
--- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
-
-
-SET search_path = rmrrdb_20160316, pg_catalog;
-
---
--- Name: analyzers; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE TABLE analyzers (
-    id integer NOT NULL,
-    analyzer_name character varying,
-    notes character varying,
-    fk_code_id integer
-);
-
-
-ALTER TABLE analyzers OWNER TO "brad.teach";
-
---
--- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
-
-
---
--- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE SEQUENCE analyzers_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
-
---
--- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
-
-
---
--- Name: code; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE TABLE code (
-    id integer NOT NULL,
-    code character(5),
-    description character varying
-);
-
-
-ALTER TABLE code OWNER TO "brad.teach";
-
---
--- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
-
-
---
--- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE SEQUENCE code_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE code_id_seq OWNER TO "brad.teach";
-
---
--- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER SEQUENCE code_id_seq OWNED BY code.id;
-
-
---
--- Name: footnotes; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE TABLE footnotes (
-    id integer NOT NULL,
-    footnote text
-);
-
-
-ALTER TABLE footnotes OWNER TO "brad.teach";
-
---
--- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
-
-
---
--- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE SEQUENCE footnotes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
-
---
--- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
-
-
---
--- Name: localities; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE TABLE localities (
-    id integer NOT NULL,
-    locality character varying,
-    locality_description character varying
-);
-
-
-ALTER TABLE localities OWNER TO "brad.teach";
-
---
--- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
-
-
---
--- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE SEQUENCE localities_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE localities_id_seq OWNER TO "brad.teach";
-
---
--- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
-
-
---
--- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE TABLE reimbursement_rates (
-    id integer NOT NULL,
-    fk_code_id integer,
-    year integer,
-    rate double precision,
-    fk_locality_id integer
-);
-
-
-ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
-
---
--- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
-
-
---
--- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE SEQUENCE reimbursement_rates_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
-
---
--- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
-
-
---
--- Name: search_terms; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE TABLE search_terms (
-    id integer NOT NULL,
-    search_desc character varying,
-    fk_code_id integer
-);
-
-
-ALTER TABLE search_terms OWNER TO "brad.teach";
-
---
--- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
-
-
---
--- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE SEQUENCE search_terms_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
-
---
--- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
-
-
---
--- Name: weburl; Type: TABLE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE TABLE weburl (
-    id integer NOT NULL,
-    displaytext character varying,
-    webaddressurl character varying
-);
-
-
-ALTER TABLE weburl OWNER TO "brad.teach";
-
---
--- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
-
-
---
--- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-CREATE SEQUENCE weburl_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
-
---
--- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
-
-
-SET search_path = rmrrdb_20160322, pg_catalog;
-
---
--- Name: analyzers; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE TABLE analyzers (
-    id integer NOT NULL,
-    analyzer_name character varying,
-    notes character varying,
-    fk_code_id integer
-);
-
-
-ALTER TABLE analyzers OWNER TO "brad.teach";
-
---
--- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
-
-
---
--- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE SEQUENCE analyzers_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
-
---
--- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
-
-
---
--- Name: code; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE TABLE code (
-    id integer NOT NULL,
-    code character(5),
-    description character varying
-);
-
-
-ALTER TABLE code OWNER TO "brad.teach";
-
---
--- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
-
-
---
--- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE SEQUENCE code_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE code_id_seq OWNER TO "brad.teach";
-
---
--- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-ALTER SEQUENCE code_id_seq OWNED BY code.id;
-
-
---
--- Name: footnotes; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE TABLE footnotes (
-    id integer NOT NULL,
-    footnote text
-);
-
-
-ALTER TABLE footnotes OWNER TO "brad.teach";
-
---
--- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
-
-
---
--- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE SEQUENCE footnotes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
-
---
--- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
-
-
---
--- Name: localities; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE TABLE localities (
-    id integer NOT NULL,
-    locality character varying,
-    locality_description character varying
-);
-
-
-ALTER TABLE localities OWNER TO "brad.teach";
-
---
--- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
-
-
---
--- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE SEQUENCE localities_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE localities_id_seq OWNER TO "brad.teach";
-
---
--- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
-
-
---
--- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE TABLE reimbursement_rates (
-    id integer NOT NULL,
-    fk_code_id integer,
-    year integer,
-    rate double precision,
-    fk_locality_id integer
-);
-
-
-ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
-
---
--- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
-
-
---
--- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE SEQUENCE reimbursement_rates_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
-
---
--- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
-
-
---
--- Name: search_terms; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE TABLE search_terms (
-    id integer NOT NULL,
-    search_desc character varying,
-    fk_code_id integer
-);
-
-
-ALTER TABLE search_terms OWNER TO "brad.teach";
-
---
--- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
-
-
---
--- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE SEQUENCE search_terms_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
-
---
--- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
-
-
---
--- Name: weburl; Type: TABLE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE TABLE weburl (
-    id integer NOT NULL,
-    displaytext character varying,
-    webaddressurl character varying
-);
-
-
-ALTER TABLE weburl OWNER TO "brad.teach";
-
---
--- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
-
-
---
--- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-CREATE SEQUENCE weburl_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
-
---
--- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
@@ -2028,154 +1449,634 @@ ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
 ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
 
 
-SET search_path = rmrrdb_20160311, pg_catalog;
+SET search_path = rmrrdb_20170201, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
 
 
---
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
-
+ALTER TABLE analyzers OWNER TO "brad.teach";
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
---
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
-
-
-SET search_path = rmrrdb_20160316, pg_catalog;
+ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: code; Type: TABLE; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(7),
+    description character varying
+);
 
 
---
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
-
+ALTER TABLE code OWNER TO "brad.teach";
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "brad.teach";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "brad.teach";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "brad.teach";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "brad.teach";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
+
+
+SET search_path = rmrrdb_20170202, pg_catalog;
+
+--
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE analyzers OWNER TO "brad.teach";
+
+--
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
+
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
+
+
+--
+-- Name: code; Type: TABLE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(7),
+    description character varying
+);
+
+
+ALTER TABLE code OWNER TO "brad.teach";
+
+--
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
+
+
+--
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
+
+
+--
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "brad.teach";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "brad.teach";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "brad.teach";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "brad.teach";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
 
 
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
@@ -2232,190 +2133,112 @@ ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_
 ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
 
 
-SET search_path = rmrrdb_20160311, pg_catalog;
+SET search_path = rmrrdb_20170201, pg_catalog;
 
 --
--- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY analyzers
-    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
-
-
---
--- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY code
-    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
 
 
 --
--- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY localities
-    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
-
-
---
--- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY footnotes
-    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
 
 
 --
--- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY reimbursement_rates
-    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
-
-
---
--- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY search_terms
-    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
 
 
 --
--- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY weburl
-    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
-
-
---
--- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY code
-    ADD CONSTRAINT uq_code_code UNIQUE (code);
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
 
 
 --
--- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY footnotes
-    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
-
-
---
--- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY localities
-    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
 
 
 --
--- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY weburl
-    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
-
-
-SET search_path = rmrrdb_20160316, pg_catalog;
-
---
--- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER TABLE ONLY analyzers
-    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
 
 
 --
--- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER TABLE ONLY code
-    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
 
 
---
--- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER TABLE ONLY localities
-    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
-
+SET search_path = rmrrdb_20170202, pg_catalog;
 
 --
--- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170202; Owner: brad.teach
 --
 
-ALTER TABLE ONLY footnotes
-    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
 
 
 --
--- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170202; Owner: brad.teach
 --
 
-ALTER TABLE ONLY reimbursement_rates
-    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
-
-
---
--- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER TABLE ONLY search_terms
-    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
 
 
 --
--- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170202; Owner: brad.teach
 --
 
-ALTER TABLE ONLY weburl
-    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
-
-
---
--- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER TABLE ONLY code
-    ADD CONSTRAINT uq_code_code UNIQUE (code);
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
 
 
 --
--- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170202; Owner: brad.teach
 --
 
-ALTER TABLE ONLY footnotes
-    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
-
-
---
--- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER TABLE ONLY localities
-    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
 
 
 --
--- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170202; Owner: brad.teach
 --
 
-ALTER TABLE ONLY weburl
-    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
 
 
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
--- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY analyzers
@@ -2423,7 +2246,7 @@ ALTER TABLE ONLY analyzers
 
 
 --
--- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY code
@@ -2431,7 +2254,7 @@ ALTER TABLE ONLY code
 
 
 --
--- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY localities
@@ -2439,7 +2262,7 @@ ALTER TABLE ONLY localities
 
 
 --
--- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY footnotes
@@ -2447,7 +2270,7 @@ ALTER TABLE ONLY footnotes
 
 
 --
--- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY reimbursement_rates
@@ -2455,7 +2278,7 @@ ALTER TABLE ONLY reimbursement_rates
 
 
 --
--- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY search_terms
@@ -2463,7 +2286,7 @@ ALTER TABLE ONLY search_terms
 
 
 --
--- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY weburl
@@ -2471,7 +2294,7 @@ ALTER TABLE ONLY weburl
 
 
 --
--- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY code
@@ -2479,7 +2302,7 @@ ALTER TABLE ONLY code
 
 
 --
--- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY footnotes
@@ -2487,7 +2310,7 @@ ALTER TABLE ONLY footnotes
 
 
 --
--- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY localities
@@ -2495,7 +2318,7 @@ ALTER TABLE ONLY localities
 
 
 --
--- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY weburl
@@ -2592,78 +2415,190 @@ ALTER TABLE ONLY weburl
     ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
 
 
-SET search_path = rmrrdb_20160311, pg_catalog;
+SET search_path = rmrrdb_20170201, pg_catalog;
 
 --
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY analyzers
-    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
-
-
---
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY reimbursement_rates
-    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
-
-
---
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY search_terms
-    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
-
-
---
--- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER TABLE ONLY reimbursement_rates
-    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
-
-
-SET search_path = rmrrdb_20160316, pg_catalog;
-
---
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
 ALTER TABLE ONLY analyzers
-    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
 
 
 --
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
 ALTER TABLE ONLY reimbursement_rates
-    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
 
 
 --
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
 ALTER TABLE ONLY search_terms
-    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
 
 
 --
--- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+
+
+SET search_path = rmrrdb_20170202, pg_catalog;
+
+--
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
 --
 
 ALTER TABLE ONLY reimbursement_rates
-    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
 
 
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY analyzers
@@ -2671,7 +2606,7 @@ ALTER TABLE ONLY analyzers
 
 
 --
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY reimbursement_rates
@@ -2679,7 +2614,7 @@ ALTER TABLE ONLY reimbursement_rates
 
 
 --
--- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY search_terms
@@ -2687,7 +2622,7 @@ ALTER TABLE ONLY search_terms
 
 
 --
--- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20160322; Owner: roche_users
 --
 
 ALTER TABLE ONLY reimbursement_rates
@@ -2728,6 +2663,74 @@ ALTER TABLE ONLY reimbursement_rates
     ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
 
 
+SET search_path = rmrrdb_20170201, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
+SET search_path = rmrrdb_20170202, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -2739,469 +2742,33 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
--- Name: rmrrdb_20160311; Type: ACL; Schema: -; Owner: brad.teach
---
-
-REVOKE ALL ON SCHEMA rmrrdb_20160311 FROM PUBLIC;
-REVOKE ALL ON SCHEMA rmrrdb_20160311 FROM "brad.teach";
-GRANT ALL ON SCHEMA rmrrdb_20160311 TO "brad.teach";
-GRANT ALL ON SCHEMA rmrrdb_20160311 TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: rmrrdb_20160316; Type: ACL; Schema: -; Owner: brad.teach
---
-
-REVOKE ALL ON SCHEMA rmrrdb_20160316 FROM PUBLIC;
-REVOKE ALL ON SCHEMA rmrrdb_20160316 FROM "brad.teach";
-GRANT ALL ON SCHEMA rmrrdb_20160316 TO "brad.teach";
-GRANT ALL ON SCHEMA rmrrdb_20160316 TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: rmrrdb_20160322; Type: ACL; Schema: -; Owner: brad.teach
---
-
-REVOKE ALL ON SCHEMA rmrrdb_20160322 FROM PUBLIC;
-REVOKE ALL ON SCHEMA rmrrdb_20160322 FROM "brad.teach";
-GRANT ALL ON SCHEMA rmrrdb_20160322 TO "brad.teach";
-GRANT ALL ON SCHEMA rmrrdb_20160322 TO "Indy_ClientTeam_0032BOH";
-
-
---
 -- Name: rmrrdb_20160331; Type: ACL; Schema: -; Owner: brad.teach
 --
 
 REVOKE ALL ON SCHEMA rmrrdb_20160331 FROM PUBLIC;
 REVOKE ALL ON SCHEMA rmrrdb_20160331 FROM "brad.teach";
 GRANT ALL ON SCHEMA rmrrdb_20160331 TO "brad.teach";
-GRANT ALL ON SCHEMA rmrrdb_20160331 TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON SCHEMA rmrrdb_20160331 TO roche_users;
 
 
-SET search_path = rmrrdb_20160311, pg_catalog;
-
---
--- Name: analyzers; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE analyzers FROM PUBLIC;
-REVOKE ALL ON TABLE analyzers FROM "brad.teach";
-GRANT ALL ON TABLE analyzers TO "brad.teach";
-GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: code; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE code FROM PUBLIC;
-REVOKE ALL ON TABLE code FROM "brad.teach";
-GRANT ALL ON TABLE code TO "brad.teach";
-GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: footnotes; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE footnotes FROM PUBLIC;
-REVOKE ALL ON TABLE footnotes FROM "brad.teach";
-GRANT ALL ON TABLE footnotes TO "brad.teach";
-GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: localities; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE localities FROM PUBLIC;
-REVOKE ALL ON TABLE localities FROM "brad.teach";
-GRANT ALL ON TABLE localities TO "brad.teach";
-GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
-REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
-GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
-GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: search_terms; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE search_terms FROM PUBLIC;
-REVOKE ALL ON TABLE search_terms FROM "brad.teach";
-GRANT ALL ON TABLE search_terms TO "brad.teach";
-GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: weburl; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE weburl FROM PUBLIC;
-REVOKE ALL ON TABLE weburl FROM "brad.teach";
-GRANT ALL ON TABLE weburl TO "brad.teach";
-GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE weburl_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
-SET search_path = rmrrdb_20160316, pg_catalog;
-
---
--- Name: analyzers; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE analyzers FROM PUBLIC;
-REVOKE ALL ON TABLE analyzers FROM "brad.teach";
-GRANT ALL ON TABLE analyzers TO "brad.teach";
-GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: code; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE code FROM PUBLIC;
-REVOKE ALL ON TABLE code FROM "brad.teach";
-GRANT ALL ON TABLE code TO "brad.teach";
-GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: footnotes; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE footnotes FROM PUBLIC;
-REVOKE ALL ON TABLE footnotes FROM "brad.teach";
-GRANT ALL ON TABLE footnotes TO "brad.teach";
-GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: localities; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE localities FROM PUBLIC;
-REVOKE ALL ON TABLE localities FROM "brad.teach";
-GRANT ALL ON TABLE localities TO "brad.teach";
-GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
-REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
-GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
-GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: search_terms; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE search_terms FROM PUBLIC;
-REVOKE ALL ON TABLE search_terms FROM "brad.teach";
-GRANT ALL ON TABLE search_terms TO "brad.teach";
-GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: weburl; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE weburl FROM PUBLIC;
-REVOKE ALL ON TABLE weburl FROM "brad.teach";
-GRANT ALL ON TABLE weburl TO "brad.teach";
-GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE weburl_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
-SET search_path = rmrrdb_20160322, pg_catalog;
-
---
--- Name: analyzers; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE analyzers FROM PUBLIC;
-REVOKE ALL ON TABLE analyzers FROM "brad.teach";
-GRANT ALL ON TABLE analyzers TO "brad.teach";
-GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: code; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE code FROM PUBLIC;
-REVOKE ALL ON TABLE code FROM "brad.teach";
-GRANT ALL ON TABLE code TO "brad.teach";
-GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: footnotes; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE footnotes FROM PUBLIC;
-REVOKE ALL ON TABLE footnotes FROM "brad.teach";
-GRANT ALL ON TABLE footnotes TO "brad.teach";
-GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: localities; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE localities FROM PUBLIC;
-REVOKE ALL ON TABLE localities FROM "brad.teach";
-GRANT ALL ON TABLE localities TO "brad.teach";
-GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
-REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
-GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
-GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: search_terms; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON TABLE search_terms FROM PUBLIC;
-REVOKE ALL ON TABLE search_terms FROM "brad.teach";
-GRANT ALL ON TABLE search_terms TO "brad.teach";
-GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
-
-
---
--- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
-
-
 --
--- Name: weburl; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: rmrrdb_20170201; Type: ACL; Schema: -; Owner: brad.teach
 --
 
-REVOKE ALL ON TABLE weburl FROM PUBLIC;
-REVOKE ALL ON TABLE weburl FROM "brad.teach";
-GRANT ALL ON TABLE weburl TO "brad.teach";
-GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
+REVOKE ALL ON SCHEMA rmrrdb_20170201 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20170201 FROM "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20170201 TO "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20170201 TO roche_users;
 
 
 --
--- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: rmrrdb_20170202; Type: ACL; Schema: -; Owner: brad.teach
 --
 
-REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
-REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
-GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE weburl_id_seq TO "Indy_ClientTeam_0032BOH";
+REVOKE ALL ON SCHEMA rmrrdb_20170202 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20170202 FROM "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20170202 TO "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20170202 TO roche_users;
 
 
 SET search_path = rmrrdb_20160331, pg_catalog;
@@ -3213,7 +2780,7 @@ SET search_path = rmrrdb_20160331, pg_catalog;
 REVOKE ALL ON TABLE analyzers FROM PUBLIC;
 REVOKE ALL ON TABLE analyzers FROM "brad.teach";
 GRANT ALL ON TABLE analyzers TO "brad.teach";
-GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON TABLE analyzers TO roche_users;
 
 
 --
@@ -3223,7 +2790,7 @@ GRANT ALL ON TABLE analyzers TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
 REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
 GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO roche_users;
 
 
 --
@@ -3233,7 +2800,7 @@ GRANT ALL ON SEQUENCE analyzers_id_seq TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON TABLE code FROM PUBLIC;
 REVOKE ALL ON TABLE code FROM "brad.teach";
 GRANT ALL ON TABLE code TO "brad.teach";
-GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON TABLE code TO roche_users;
 
 
 --
@@ -3243,7 +2810,7 @@ GRANT ALL ON TABLE code TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
 REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
 GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON SEQUENCE code_id_seq TO roche_users;
 
 
 --
@@ -3253,7 +2820,7 @@ GRANT ALL ON SEQUENCE code_id_seq TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON TABLE footnotes FROM PUBLIC;
 REVOKE ALL ON TABLE footnotes FROM "brad.teach";
 GRANT ALL ON TABLE footnotes TO "brad.teach";
-GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON TABLE footnotes TO roche_users;
 
 
 --
@@ -3263,7 +2830,7 @@ GRANT ALL ON TABLE footnotes TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
 REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
 GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO roche_users;
 
 
 --
@@ -3273,7 +2840,7 @@ GRANT ALL ON SEQUENCE footnotes_id_seq TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON TABLE localities FROM PUBLIC;
 REVOKE ALL ON TABLE localities FROM "brad.teach";
 GRANT ALL ON TABLE localities TO "brad.teach";
-GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON TABLE localities TO roche_users;
 
 
 --
@@ -3283,7 +2850,7 @@ GRANT ALL ON TABLE localities TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
 REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
 GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON SEQUENCE localities_id_seq TO roche_users;
 
 
 --
@@ -3293,7 +2860,7 @@ GRANT ALL ON SEQUENCE localities_id_seq TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
 REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
 GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
-GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON TABLE reimbursement_rates TO roche_users;
 
 
 --
@@ -3303,7 +2870,7 @@ GRANT ALL ON TABLE reimbursement_rates TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
 REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
 GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO roche_users;
 
 
 --
@@ -3313,7 +2880,7 @@ GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON TABLE search_terms FROM PUBLIC;
 REVOKE ALL ON TABLE search_terms FROM "brad.teach";
 GRANT ALL ON TABLE search_terms TO "brad.teach";
-GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON TABLE search_terms TO roche_users;
 
 
 --
@@ -3323,7 +2890,7 @@ GRANT ALL ON TABLE search_terms TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
 REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
 GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO roche_users;
 
 
 --
@@ -3333,7 +2900,7 @@ GRANT ALL ON SEQUENCE search_terms_id_seq TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON TABLE weburl FROM PUBLIC;
 REVOKE ALL ON TABLE weburl FROM "brad.teach";
 GRANT ALL ON TABLE weburl TO "brad.teach";
-GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON TABLE weburl TO roche_users;
 
 
 --
@@ -3343,67 +2910,291 @@ GRANT ALL ON TABLE weburl TO "Indy_ClientTeam_0032BOH";
 REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
 REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
 GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
-GRANT ALL ON SEQUENCE weburl_id_seq TO "Indy_ClientTeam_0032BOH";
+GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
 
 
-SET search_path = rmrrdb_20160311, pg_catalog;
-
---
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20160311; Owner: brad.teach
---
-
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 GRANT ALL ON SEQUENCES  TO "Indy_ClientTeam_0032BOH";
-
+SET search_path = rmrrdb_20170201, pg_catalog;
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20160311; Owner: brad.teach
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 REVOKE ALL ON TABLES  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 REVOKE ALL ON TABLES  FROM "brad.teach";
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160311 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
-
-
-SET search_path = rmrrdb_20160316, pg_catalog;
-
---
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20160316; Owner: brad.teach
---
-
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 GRANT ALL ON SEQUENCES  TO "Indy_ClientTeam_0032BOH";
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "brad.teach";
+GRANT ALL ON TABLE analyzers TO "brad.teach";
+GRANT ALL ON TABLE analyzers TO roche_users;
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20160316; Owner: brad.teach
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 REVOKE ALL ON TABLES  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 REVOKE ALL ON TABLES  FROM "brad.teach";
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160316 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
-
-
-SET search_path = rmrrdb_20160322, pg_catalog;
-
---
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20160322; Owner: brad.teach
---
-
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 GRANT ALL ON SEQUENCES  TO "Indy_ClientTeam_0032BOH";
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO roche_users;
 
 
 --
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20160322; Owner: brad.teach
+-- Name: code; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 REVOKE ALL ON TABLES  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 REVOKE ALL ON TABLES  FROM "brad.teach";
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160322 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "brad.teach";
+GRANT ALL ON TABLE code TO "brad.teach";
+GRANT ALL ON TABLE code TO roche_users;
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO roche_users;
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "brad.teach";
+GRANT ALL ON TABLE footnotes TO "brad.teach";
+GRANT ALL ON TABLE footnotes TO roche_users;
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO roche_users;
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "brad.teach";
+GRANT ALL ON TABLE localities TO "brad.teach";
+GRANT ALL ON TABLE localities TO roche_users;
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO roche_users;
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO roche_users;
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO roche_users;
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "brad.teach";
+GRANT ALL ON TABLE search_terms TO "brad.teach";
+GRANT ALL ON TABLE search_terms TO roche_users;
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO roche_users;
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "brad.teach";
+GRANT ALL ON TABLE weburl TO "brad.teach";
+GRANT ALL ON TABLE weburl TO roche_users;
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
+
+
+SET search_path = rmrrdb_20170202, pg_catalog;
+
+--
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "brad.teach";
+GRANT ALL ON TABLE analyzers TO "brad.teach";
+GRANT ALL ON TABLE analyzers TO roche_users;
+
+
+--
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO roche_users;
+
+
+--
+-- Name: code; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "brad.teach";
+GRANT ALL ON TABLE code TO "brad.teach";
+GRANT ALL ON TABLE code TO roche_users;
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO roche_users;
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "brad.teach";
+GRANT ALL ON TABLE footnotes TO "brad.teach";
+GRANT ALL ON TABLE footnotes TO roche_users;
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO roche_users;
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "brad.teach";
+GRANT ALL ON TABLE localities TO "brad.teach";
+GRANT ALL ON TABLE localities TO roche_users;
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO roche_users;
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO roche_users;
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO roche_users;
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "brad.teach";
+GRANT ALL ON TABLE search_terms TO "brad.teach";
+GRANT ALL ON TABLE search_terms TO roche_users;
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO roche_users;
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "brad.teach";
+GRANT ALL ON TABLE weburl TO "brad.teach";
+GRANT ALL ON TABLE weburl TO roche_users;
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
 
 
 SET search_path = rmrrdb_20160331, pg_catalog;
@@ -3414,7 +3205,7 @@ SET search_path = rmrrdb_20160331, pg_catalog;
 
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT ALL ON SEQUENCES  TO "Indy_ClientTeam_0032BOH";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT ALL ON SEQUENCES  TO roche_users;
 
 
 --
@@ -3423,7 +3214,47 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT A
 
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON TABLES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 REVOKE ALL ON TABLES  FROM "brad.teach";
-ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT ALL ON TABLES  TO "Indy_ClientTeam_0032BOH";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20160331 GRANT ALL ON TABLES  TO roche_users;
+
+
+SET search_path = rmrrdb_20170201, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170201 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170201 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170201 GRANT ALL ON SEQUENCES  TO roche_users;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20170201; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170201 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170201 REVOKE ALL ON TABLES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170201 GRANT ALL ON TABLES  TO roche_users;
+
+
+SET search_path = rmrrdb_20170202, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170202 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170202 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170202 GRANT ALL ON SEQUENCES  TO roche_users;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20170202; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170202 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170202 REVOKE ALL ON TABLES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170202 GRANT ALL ON TABLES  TO roche_users;
 
 
 --
