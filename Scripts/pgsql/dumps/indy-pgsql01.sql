@@ -213,6 +213,8 @@ CREATE ROLE "tom.puckett";
 ALTER ROLE "tom.puckett" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "van.nanney";
 ALTER ROLE "van.nanney" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE zabbixadmin;
+ALTER ROLE zabbixadmin WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md557336f3de58ac5119721bad5c95f2925';
 
 
 --
@@ -577,6 +579,7 @@ REVOKE ALL ON DATABASE template1 FROM PUBLIC;
 REVOKE ALL ON DATABASE template1 FROM postgres;
 GRANT ALL ON DATABASE template1 TO postgres;
 GRANT CONNECT ON DATABASE template1 TO PUBLIC;
+CREATE DATABASE zabbix WITH TEMPLATE = template0 OWNER = zabbixadmin;
 
 
 \connect "Roche_Medicare_Reimbursement"
@@ -660,6 +663,15 @@ CREATE SCHEMA rmrrdb_20170213;
 
 
 ALTER SCHEMA rmrrdb_20170213 OWNER TO "brad.teach";
+
+--
+-- Name: rmrrdb_20170214; Type: SCHEMA; Schema: -; Owner: brad.teach
+--
+
+CREATE SCHEMA rmrrdb_20170214;
+
+
+ALTER SCHEMA rmrrdb_20170214 OWNER TO "brad.teach";
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -2714,6 +2726,297 @@ ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
 ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
 
 
+SET search_path = rmrrdb_20170214, pg_catalog;
+
+--
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE analyzers OWNER TO "brad.teach";
+
+--
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
+
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE analyzers_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
+
+
+--
+-- Name: code; Type: TABLE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(7),
+    description character varying
+);
+
+
+ALTER TABLE code OWNER TO "brad.teach";
+
+--
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
+
+
+--
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
+
+
+--
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "brad.teach";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "brad.teach";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "brad.teach";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "brad.teach";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "brad.teach";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
+
+
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
@@ -3066,6 +3369,57 @@ ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_
 
 --
 -- Name: id; Type: DEFAULT; Schema: rmrrdb_20170213; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
+
+
+SET search_path = rmrrdb_20170214, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20170214; Owner: brad.teach
 --
 
 ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
@@ -3701,6 +4055,96 @@ ALTER TABLE ONLY weburl
     ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
 
 
+SET search_path = rmrrdb_20170214, pg_catalog;
+
+--
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+
+
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
@@ -3939,6 +4383,40 @@ ALTER TABLE ONLY reimbursement_rates
     ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
 
 
+SET search_path = rmrrdb_20170214, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -4007,6 +4485,16 @@ REVOKE ALL ON SCHEMA rmrrdb_20170213 FROM PUBLIC;
 REVOKE ALL ON SCHEMA rmrrdb_20170213 FROM "brad.teach";
 GRANT ALL ON SCHEMA rmrrdb_20170213 TO "brad.teach";
 GRANT ALL ON SCHEMA rmrrdb_20170213 TO roche_users;
+
+
+--
+-- Name: rmrrdb_20170214; Type: ACL; Schema: -; Owner: brad.teach
+--
+
+REVOKE ALL ON SCHEMA rmrrdb_20170214 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20170214 FROM "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20170214 TO "brad.teach";
+GRANT ALL ON SCHEMA rmrrdb_20170214 TO roche_users;
 
 
 SET search_path = rmrrdb_20160331, pg_catalog;
@@ -4861,6 +5349,148 @@ GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
 GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
 
 
+SET search_path = rmrrdb_20170214, pg_catalog;
+
+--
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "brad.teach";
+GRANT ALL ON TABLE analyzers TO "brad.teach";
+GRANT ALL ON TABLE analyzers TO roche_users;
+
+
+--
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO roche_users;
+
+
+--
+-- Name: code; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "brad.teach";
+GRANT ALL ON TABLE code TO "brad.teach";
+GRANT ALL ON TABLE code TO roche_users;
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE code_id_seq TO roche_users;
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "brad.teach";
+GRANT ALL ON TABLE footnotes TO "brad.teach";
+GRANT ALL ON TABLE footnotes TO roche_users;
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO roche_users;
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "brad.teach";
+GRANT ALL ON TABLE localities TO "brad.teach";
+GRANT ALL ON TABLE localities TO roche_users;
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE localities_id_seq TO roche_users;
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO "brad.teach";
+GRANT ALL ON TABLE reimbursement_rates TO roche_users;
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO roche_users;
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "brad.teach";
+GRANT ALL ON TABLE search_terms TO "brad.teach";
+GRANT ALL ON TABLE search_terms TO roche_users;
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO roche_users;
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "brad.teach";
+GRANT ALL ON TABLE weburl TO "brad.teach";
+GRANT ALL ON TABLE weburl TO roche_users;
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
+GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
+
+
 SET search_path = rmrrdb_20160331, pg_catalog;
 
 --
@@ -4979,6 +5609,26 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170213 GRANT A
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170213 REVOKE ALL ON TABLES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170213 REVOKE ALL ON TABLES  FROM "brad.teach";
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170213 GRANT ALL ON TABLES  TO roche_users;
+
+
+SET search_path = rmrrdb_20170214, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 REVOKE ALL ON SEQUENCES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 GRANT ALL ON SEQUENCES  TO roche_users;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20170214; Owner: brad.teach
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 REVOKE ALL ON TABLES  FROM "brad.teach";
+ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 GRANT ALL ON TABLES  TO roche_users;
 
 
 --
@@ -5781,6 +6431,7 @@ CREATE VIEW view_session_log AS
             WHEN (lastsession.document ~~ '%OHIO FINANCIAL DASHBOARD%'::text) THEN 'Ohio Financial Dashboard'::text
             WHEN (lastsession.document ~~ '%CAPITATION DASHBOARD%'::text) THEN 'Capitation Dashboard'::text
             WHEN (lastsession.document ~~ '%ENCOUNTER QUALITY DASHBOARD%'::text) THEN 'Encounter Quality Dashboard'::text
+            WHEN (lastsession.document ~~ '%DRIVE%'::text) THEN 'DRIVE'::text
             WHEN (lastsession.document ~~ '%PIHP SUBMITTED ENCOUNTER DASHBOARD%'::text) THEN 'PIHP Submitted Encounter Dashboard'::text
             WHEN (lastsession.document ~~ '%GAP.QVW%'::text) THEN 'GAP'::text
             WHEN (lastsession.document ~~ '%SOC WC%'::text) THEN 'SOC WC'::text
@@ -5862,8 +6513,8 @@ CREATE VIEW view_group AS
  SELECT "group".id AS groupid,
         CASE
             WHEN ((("group".groupname)::text ~~ '%DEMO%'::text) OR (("group".groupname)::text ~~ '%TEST%'::text) OR (("group".groupname)::text ~~ '%PROTOTYPES%'::text)) THEN 'Other'::text
-            WHEN (("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) AND (substr(("group".groupname)::text, 5, 3) <> ALL (ARRAY['MMD'::text, 'ODM'::text]))) THEN 'PRM Analytics'::text
-            WHEN ("left"(("group".groupname)::text, 7) = ANY (ARRAY['0032MMD'::text, '0032ODM'::text])) THEN 'Indianapolis Medicaid'::text
+            WHEN (("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) AND (substr(("group".groupname)::text, 5, 3) <> ALL (ARRAY['MMD'::text, 'ODM'::text, 'ILM'::text, 'IWM'::text, 'AKH'::text]))) THEN 'PRM Analytics'::text
+            WHEN ("left"(("group".groupname)::text, 7) = ANY (ARRAY['0032MMD'::text, '0032ODM'::text, '0032ILM'::text, '0032IWM'::text, '0173AKH'::text])) THEN 'Indianapolis Medicaid'::text
             WHEN (("left"(("group".groupname)::text, 17) = '0000EXT01_NEWYORK'::text) OR ("left"(("group".groupname)::text, 9) = 'NY OFFICE'::text)) THEN 'New York'::text
             WHEN ("left"(("group".groupname)::text, 16) = '0000EXT01_BOSTON'::text) THEN 'Vermont'::text
             WHEN ("left"(("group".groupname)::text, 18) = '0000EXT01_HARTFORD'::text) THEN 'Hartford'::text
@@ -6367,6 +7018,5267 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect zabbix
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_with_oids = false;
+
+--
+-- Name: acknowledges; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE acknowledges (
+    acknowledgeid bigint NOT NULL,
+    userid bigint NOT NULL,
+    eventid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    message character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE acknowledges OWNER TO "ben.wyatt";
+
+--
+-- Name: actions; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE actions (
+    actionid bigint NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    eventsource integer DEFAULT 0 NOT NULL,
+    evaltype integer DEFAULT 0 NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    esc_period integer DEFAULT 0 NOT NULL,
+    def_shortdata character varying(255) DEFAULT ''::character varying NOT NULL,
+    def_longdata text DEFAULT ''::text NOT NULL,
+    recovery_msg integer DEFAULT 0 NOT NULL,
+    r_shortdata character varying(255) DEFAULT ''::character varying NOT NULL,
+    r_longdata text DEFAULT ''::text NOT NULL
+);
+
+
+ALTER TABLE actions OWNER TO "ben.wyatt";
+
+--
+-- Name: alerts; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE alerts (
+    alertid bigint NOT NULL,
+    actionid bigint NOT NULL,
+    eventid bigint NOT NULL,
+    userid bigint,
+    clock integer DEFAULT 0 NOT NULL,
+    mediatypeid bigint,
+    sendto character varying(100) DEFAULT ''::character varying NOT NULL,
+    subject character varying(255) DEFAULT ''::character varying NOT NULL,
+    message text DEFAULT ''::text NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    retries integer DEFAULT 0 NOT NULL,
+    error character varying(128) DEFAULT ''::character varying NOT NULL,
+    esc_step integer DEFAULT 0 NOT NULL,
+    alerttype integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE alerts OWNER TO "ben.wyatt";
+
+--
+-- Name: application_template; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE application_template (
+    application_templateid bigint NOT NULL,
+    applicationid bigint NOT NULL,
+    templateid bigint NOT NULL
+);
+
+
+ALTER TABLE application_template OWNER TO "ben.wyatt";
+
+--
+-- Name: applications; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE applications (
+    applicationid bigint NOT NULL,
+    hostid bigint NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE applications OWNER TO "ben.wyatt";
+
+--
+-- Name: auditlog; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE auditlog (
+    auditid bigint NOT NULL,
+    userid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    action integer DEFAULT 0 NOT NULL,
+    resourcetype integer DEFAULT 0 NOT NULL,
+    details character varying(128) DEFAULT '0'::character varying NOT NULL,
+    ip character varying(39) DEFAULT ''::character varying NOT NULL,
+    resourceid bigint DEFAULT '0'::bigint NOT NULL,
+    resourcename character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE auditlog OWNER TO "ben.wyatt";
+
+--
+-- Name: auditlog_details; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE auditlog_details (
+    auditdetailid bigint NOT NULL,
+    auditid bigint NOT NULL,
+    table_name character varying(64) DEFAULT ''::character varying NOT NULL,
+    field_name character varying(64) DEFAULT ''::character varying NOT NULL,
+    oldvalue text DEFAULT ''::text NOT NULL,
+    newvalue text DEFAULT ''::text NOT NULL
+);
+
+
+ALTER TABLE auditlog_details OWNER TO "ben.wyatt";
+
+--
+-- Name: autoreg_host; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE autoreg_host (
+    autoreg_hostid bigint NOT NULL,
+    proxy_hostid bigint,
+    host character varying(64) DEFAULT ''::character varying NOT NULL,
+    listen_ip character varying(39) DEFAULT ''::character varying NOT NULL,
+    listen_port integer DEFAULT 0 NOT NULL,
+    listen_dns character varying(64) DEFAULT ''::character varying NOT NULL,
+    host_metadata character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE autoreg_host OWNER TO "ben.wyatt";
+
+--
+-- Name: conditions; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE conditions (
+    conditionid bigint NOT NULL,
+    actionid bigint NOT NULL,
+    conditiontype integer DEFAULT 0 NOT NULL,
+    operator integer DEFAULT 0 NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE conditions OWNER TO "ben.wyatt";
+
+--
+-- Name: config; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE config (
+    configid bigint NOT NULL,
+    refresh_unsupported integer DEFAULT 0 NOT NULL,
+    work_period character varying(100) DEFAULT '1-5,00:00-24:00'::character varying NOT NULL,
+    alert_usrgrpid bigint,
+    event_ack_enable integer DEFAULT 1 NOT NULL,
+    event_expire integer DEFAULT 7 NOT NULL,
+    event_show_max integer DEFAULT 100 NOT NULL,
+    default_theme character varying(128) DEFAULT 'originalblue'::character varying NOT NULL,
+    authentication_type integer DEFAULT 0 NOT NULL,
+    ldap_host character varying(255) DEFAULT ''::character varying NOT NULL,
+    ldap_port integer DEFAULT 389 NOT NULL,
+    ldap_base_dn character varying(255) DEFAULT ''::character varying NOT NULL,
+    ldap_bind_dn character varying(255) DEFAULT ''::character varying NOT NULL,
+    ldap_bind_password character varying(128) DEFAULT ''::character varying NOT NULL,
+    ldap_search_attribute character varying(128) DEFAULT ''::character varying NOT NULL,
+    dropdown_first_entry integer DEFAULT 1 NOT NULL,
+    dropdown_first_remember integer DEFAULT 1 NOT NULL,
+    discovery_groupid bigint NOT NULL,
+    max_in_table integer DEFAULT 50 NOT NULL,
+    search_limit integer DEFAULT 1000 NOT NULL,
+    severity_color_0 character varying(6) DEFAULT 'DBDBDB'::character varying NOT NULL,
+    severity_color_1 character varying(6) DEFAULT 'D6F6FF'::character varying NOT NULL,
+    severity_color_2 character varying(6) DEFAULT 'FFF6A5'::character varying NOT NULL,
+    severity_color_3 character varying(6) DEFAULT 'FFB689'::character varying NOT NULL,
+    severity_color_4 character varying(6) DEFAULT 'FF9999'::character varying NOT NULL,
+    severity_color_5 character varying(6) DEFAULT 'FF3838'::character varying NOT NULL,
+    severity_name_0 character varying(32) DEFAULT 'Not classified'::character varying NOT NULL,
+    severity_name_1 character varying(32) DEFAULT 'Information'::character varying NOT NULL,
+    severity_name_2 character varying(32) DEFAULT 'Warning'::character varying NOT NULL,
+    severity_name_3 character varying(32) DEFAULT 'Average'::character varying NOT NULL,
+    severity_name_4 character varying(32) DEFAULT 'High'::character varying NOT NULL,
+    severity_name_5 character varying(32) DEFAULT 'Disaster'::character varying NOT NULL,
+    ok_period integer DEFAULT 1800 NOT NULL,
+    blink_period integer DEFAULT 1800 NOT NULL,
+    problem_unack_color character varying(6) DEFAULT 'DC0000'::character varying NOT NULL,
+    problem_ack_color character varying(6) DEFAULT 'DC0000'::character varying NOT NULL,
+    ok_unack_color character varying(6) DEFAULT '00AA00'::character varying NOT NULL,
+    ok_ack_color character varying(6) DEFAULT '00AA00'::character varying NOT NULL,
+    problem_unack_style integer DEFAULT 1 NOT NULL,
+    problem_ack_style integer DEFAULT 1 NOT NULL,
+    ok_unack_style integer DEFAULT 1 NOT NULL,
+    ok_ack_style integer DEFAULT 1 NOT NULL,
+    snmptrap_logging integer DEFAULT 1 NOT NULL,
+    server_check_interval integer DEFAULT 10 NOT NULL,
+    hk_events_mode integer DEFAULT 1 NOT NULL,
+    hk_events_trigger integer DEFAULT 365 NOT NULL,
+    hk_events_internal integer DEFAULT 365 NOT NULL,
+    hk_events_discovery integer DEFAULT 365 NOT NULL,
+    hk_events_autoreg integer DEFAULT 365 NOT NULL,
+    hk_services_mode integer DEFAULT 1 NOT NULL,
+    hk_services integer DEFAULT 365 NOT NULL,
+    hk_audit_mode integer DEFAULT 1 NOT NULL,
+    hk_audit integer DEFAULT 365 NOT NULL,
+    hk_sessions_mode integer DEFAULT 1 NOT NULL,
+    hk_sessions integer DEFAULT 365 NOT NULL,
+    hk_history_mode integer DEFAULT 1 NOT NULL,
+    hk_history_global integer DEFAULT 0 NOT NULL,
+    hk_history integer DEFAULT 90 NOT NULL,
+    hk_trends_mode integer DEFAULT 1 NOT NULL,
+    hk_trends_global integer DEFAULT 0 NOT NULL,
+    hk_trends integer DEFAULT 365 NOT NULL
+);
+
+
+ALTER TABLE config OWNER TO "ben.wyatt";
+
+--
+-- Name: dbversion; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE dbversion (
+    mandatory integer DEFAULT 0 NOT NULL,
+    optional integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE dbversion OWNER TO "ben.wyatt";
+
+--
+-- Name: dchecks; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE dchecks (
+    dcheckid bigint NOT NULL,
+    druleid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    key_ character varying(255) DEFAULT ''::character varying NOT NULL,
+    snmp_community character varying(255) DEFAULT ''::character varying NOT NULL,
+    ports character varying(255) DEFAULT '0'::character varying NOT NULL,
+    snmpv3_securityname character varying(64) DEFAULT ''::character varying NOT NULL,
+    snmpv3_securitylevel integer DEFAULT 0 NOT NULL,
+    snmpv3_authpassphrase character varying(64) DEFAULT ''::character varying NOT NULL,
+    snmpv3_privpassphrase character varying(64) DEFAULT ''::character varying NOT NULL,
+    uniq integer DEFAULT 0 NOT NULL,
+    snmpv3_authprotocol integer DEFAULT 0 NOT NULL,
+    snmpv3_privprotocol integer DEFAULT 0 NOT NULL,
+    snmpv3_contextname character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE dchecks OWNER TO "ben.wyatt";
+
+--
+-- Name: dhosts; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE dhosts (
+    dhostid bigint NOT NULL,
+    druleid bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    lastup integer DEFAULT 0 NOT NULL,
+    lastdown integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE dhosts OWNER TO "ben.wyatt";
+
+--
+-- Name: drules; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE drules (
+    druleid bigint NOT NULL,
+    proxy_hostid bigint,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    iprange character varying(255) DEFAULT ''::character varying NOT NULL,
+    delay integer DEFAULT 3600 NOT NULL,
+    nextcheck integer DEFAULT 0 NOT NULL,
+    status integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE drules OWNER TO "ben.wyatt";
+
+--
+-- Name: dservices; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE dservices (
+    dserviceid bigint NOT NULL,
+    dhostid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    key_ character varying(255) DEFAULT ''::character varying NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL,
+    port integer DEFAULT 0 NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    lastup integer DEFAULT 0 NOT NULL,
+    lastdown integer DEFAULT 0 NOT NULL,
+    dcheckid bigint NOT NULL,
+    ip character varying(39) DEFAULT ''::character varying NOT NULL,
+    dns character varying(64) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE dservices OWNER TO "ben.wyatt";
+
+--
+-- Name: escalations; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE escalations (
+    escalationid bigint NOT NULL,
+    actionid bigint NOT NULL,
+    triggerid bigint,
+    eventid bigint,
+    r_eventid bigint,
+    nextcheck integer DEFAULT 0 NOT NULL,
+    esc_step integer DEFAULT 0 NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    itemid bigint
+);
+
+
+ALTER TABLE escalations OWNER TO "ben.wyatt";
+
+--
+-- Name: events; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE events (
+    eventid bigint NOT NULL,
+    source integer DEFAULT 0 NOT NULL,
+    object integer DEFAULT 0 NOT NULL,
+    objectid bigint DEFAULT '0'::bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value integer DEFAULT 0 NOT NULL,
+    acknowledged integer DEFAULT 0 NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE events OWNER TO "ben.wyatt";
+
+--
+-- Name: expressions; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE expressions (
+    expressionid bigint NOT NULL,
+    regexpid bigint NOT NULL,
+    expression character varying(255) DEFAULT ''::character varying NOT NULL,
+    expression_type integer DEFAULT 0 NOT NULL,
+    exp_delimiter character varying(1) DEFAULT ''::character varying NOT NULL,
+    case_sensitive integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE expressions OWNER TO "ben.wyatt";
+
+--
+-- Name: functions; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE functions (
+    functionid bigint NOT NULL,
+    itemid bigint NOT NULL,
+    triggerid bigint NOT NULL,
+    function character varying(12) DEFAULT ''::character varying NOT NULL,
+    parameter character varying(255) DEFAULT '0'::character varying NOT NULL
+);
+
+
+ALTER TABLE functions OWNER TO "ben.wyatt";
+
+--
+-- Name: globalmacro; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE globalmacro (
+    globalmacroid bigint NOT NULL,
+    macro character varying(64) DEFAULT ''::character varying NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE globalmacro OWNER TO "ben.wyatt";
+
+--
+-- Name: globalvars; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE globalvars (
+    globalvarid bigint NOT NULL,
+    snmp_lastsize integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE globalvars OWNER TO "ben.wyatt";
+
+--
+-- Name: graph_discovery; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE graph_discovery (
+    graphdiscoveryid bigint NOT NULL,
+    graphid bigint NOT NULL,
+    parent_graphid bigint NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE graph_discovery OWNER TO "ben.wyatt";
+
+--
+-- Name: graph_theme; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE graph_theme (
+    graphthemeid bigint NOT NULL,
+    description character varying(64) DEFAULT ''::character varying NOT NULL,
+    theme character varying(64) DEFAULT ''::character varying NOT NULL,
+    backgroundcolor character varying(6) DEFAULT 'F0F0F0'::character varying NOT NULL,
+    graphcolor character varying(6) DEFAULT 'FFFFFF'::character varying NOT NULL,
+    graphbordercolor character varying(6) DEFAULT '222222'::character varying NOT NULL,
+    gridcolor character varying(6) DEFAULT 'CCCCCC'::character varying NOT NULL,
+    maingridcolor character varying(6) DEFAULT 'AAAAAA'::character varying NOT NULL,
+    gridbordercolor character varying(6) DEFAULT '000000'::character varying NOT NULL,
+    textcolor character varying(6) DEFAULT '202020'::character varying NOT NULL,
+    highlightcolor character varying(6) DEFAULT 'AA4444'::character varying NOT NULL,
+    leftpercentilecolor character varying(6) DEFAULT '11CC11'::character varying NOT NULL,
+    rightpercentilecolor character varying(6) DEFAULT 'CC1111'::character varying NOT NULL,
+    nonworktimecolor character varying(6) DEFAULT 'CCCCCC'::character varying NOT NULL,
+    gridview integer DEFAULT 1 NOT NULL,
+    legendview integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE graph_theme OWNER TO "ben.wyatt";
+
+--
+-- Name: graphs; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE graphs (
+    graphid bigint NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
+    width integer DEFAULT 900 NOT NULL,
+    height integer DEFAULT 200 NOT NULL,
+    yaxismin numeric(16,4) DEFAULT '0'::numeric NOT NULL,
+    yaxismax numeric(16,4) DEFAULT '100'::numeric NOT NULL,
+    templateid bigint,
+    show_work_period integer DEFAULT 1 NOT NULL,
+    show_triggers integer DEFAULT 1 NOT NULL,
+    graphtype integer DEFAULT 0 NOT NULL,
+    show_legend integer DEFAULT 1 NOT NULL,
+    show_3d integer DEFAULT 0 NOT NULL,
+    percent_left numeric(16,4) DEFAULT '0'::numeric NOT NULL,
+    percent_right numeric(16,4) DEFAULT '0'::numeric NOT NULL,
+    ymin_type integer DEFAULT 0 NOT NULL,
+    ymax_type integer DEFAULT 0 NOT NULL,
+    ymin_itemid bigint,
+    ymax_itemid bigint,
+    flags integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE graphs OWNER TO "ben.wyatt";
+
+--
+-- Name: graphs_items; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE graphs_items (
+    gitemid bigint NOT NULL,
+    graphid bigint NOT NULL,
+    itemid bigint NOT NULL,
+    drawtype integer DEFAULT 0 NOT NULL,
+    sortorder integer DEFAULT 0 NOT NULL,
+    color character varying(6) DEFAULT '009600'::character varying NOT NULL,
+    yaxisside integer DEFAULT 0 NOT NULL,
+    calc_fnc integer DEFAULT 2 NOT NULL,
+    type integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE graphs_items OWNER TO "ben.wyatt";
+
+--
+-- Name: group_discovery; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE group_discovery (
+    groupid bigint NOT NULL,
+    parent_group_prototypeid bigint NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    lastcheck integer DEFAULT 0 NOT NULL,
+    ts_delete integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE group_discovery OWNER TO "ben.wyatt";
+
+--
+-- Name: group_prototype; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE group_prototype (
+    group_prototypeid bigint NOT NULL,
+    hostid bigint NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    groupid bigint,
+    templateid bigint
+);
+
+
+ALTER TABLE group_prototype OWNER TO "ben.wyatt";
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE groups (
+    groupid bigint NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    internal integer DEFAULT 0 NOT NULL,
+    flags integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE groups OWNER TO "ben.wyatt";
+
+--
+-- Name: history; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE history (
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value numeric(16,4) DEFAULT 0.0000 NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE history OWNER TO "ben.wyatt";
+
+--
+-- Name: history_log; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE history_log (
+    id bigint NOT NULL,
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    "timestamp" integer DEFAULT 0 NOT NULL,
+    source character varying(64) DEFAULT ''::character varying NOT NULL,
+    severity integer DEFAULT 0 NOT NULL,
+    value text DEFAULT ''::text NOT NULL,
+    logeventid integer DEFAULT 0 NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE history_log OWNER TO "ben.wyatt";
+
+--
+-- Name: history_str; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE history_str (
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE history_str OWNER TO "ben.wyatt";
+
+--
+-- Name: history_str_sync; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE history_str_sync (
+    id bigint NOT NULL,
+    nodeid integer NOT NULL,
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE history_str_sync OWNER TO "ben.wyatt";
+
+--
+-- Name: history_str_sync_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE history_str_sync_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE history_str_sync_id_seq OWNER TO "ben.wyatt";
+
+--
+-- Name: history_str_sync_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ben.wyatt
+--
+
+ALTER SEQUENCE history_str_sync_id_seq OWNED BY history_str_sync.id;
+
+
+--
+-- Name: history_sync; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE history_sync (
+    id bigint NOT NULL,
+    nodeid integer NOT NULL,
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value numeric(16,4) DEFAULT 0.0000 NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE history_sync OWNER TO "ben.wyatt";
+
+--
+-- Name: history_sync_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE history_sync_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE history_sync_id_seq OWNER TO "ben.wyatt";
+
+--
+-- Name: history_sync_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ben.wyatt
+--
+
+ALTER SEQUENCE history_sync_id_seq OWNED BY history_sync.id;
+
+
+--
+-- Name: history_text; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE history_text (
+    id bigint NOT NULL,
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value text DEFAULT ''::text NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE history_text OWNER TO "ben.wyatt";
+
+--
+-- Name: history_uint; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE history_uint (
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value numeric(20,0) DEFAULT '0'::numeric NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE history_uint OWNER TO "ben.wyatt";
+
+--
+-- Name: history_uint_sync; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE history_uint_sync (
+    id bigint NOT NULL,
+    nodeid integer NOT NULL,
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value numeric(20,0) DEFAULT '0'::numeric NOT NULL,
+    ns integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE history_uint_sync OWNER TO "ben.wyatt";
+
+--
+-- Name: history_uint_sync_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE history_uint_sync_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE history_uint_sync_id_seq OWNER TO "ben.wyatt";
+
+--
+-- Name: history_uint_sync_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ben.wyatt
+--
+
+ALTER SEQUENCE history_uint_sync_id_seq OWNED BY history_uint_sync.id;
+
+
+--
+-- Name: host_discovery; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE host_discovery (
+    hostid bigint NOT NULL,
+    parent_hostid bigint,
+    parent_itemid bigint,
+    host character varying(64) DEFAULT ''::character varying NOT NULL,
+    lastcheck integer DEFAULT 0 NOT NULL,
+    ts_delete integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE host_discovery OWNER TO "ben.wyatt";
+
+--
+-- Name: host_inventory; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE host_inventory (
+    hostid bigint NOT NULL,
+    inventory_mode integer DEFAULT 0 NOT NULL,
+    type character varying(64) DEFAULT ''::character varying NOT NULL,
+    type_full character varying(64) DEFAULT ''::character varying NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    alias character varying(64) DEFAULT ''::character varying NOT NULL,
+    os character varying(64) DEFAULT ''::character varying NOT NULL,
+    os_full character varying(255) DEFAULT ''::character varying NOT NULL,
+    os_short character varying(64) DEFAULT ''::character varying NOT NULL,
+    serialno_a character varying(64) DEFAULT ''::character varying NOT NULL,
+    serialno_b character varying(64) DEFAULT ''::character varying NOT NULL,
+    tag character varying(64) DEFAULT ''::character varying NOT NULL,
+    asset_tag character varying(64) DEFAULT ''::character varying NOT NULL,
+    macaddress_a character varying(64) DEFAULT ''::character varying NOT NULL,
+    macaddress_b character varying(64) DEFAULT ''::character varying NOT NULL,
+    hardware character varying(255) DEFAULT ''::character varying NOT NULL,
+    hardware_full text DEFAULT ''::text NOT NULL,
+    software character varying(255) DEFAULT ''::character varying NOT NULL,
+    software_full text DEFAULT ''::text NOT NULL,
+    software_app_a character varying(64) DEFAULT ''::character varying NOT NULL,
+    software_app_b character varying(64) DEFAULT ''::character varying NOT NULL,
+    software_app_c character varying(64) DEFAULT ''::character varying NOT NULL,
+    software_app_d character varying(64) DEFAULT ''::character varying NOT NULL,
+    software_app_e character varying(64) DEFAULT ''::character varying NOT NULL,
+    contact text DEFAULT ''::text NOT NULL,
+    location text DEFAULT ''::text NOT NULL,
+    location_lat character varying(16) DEFAULT ''::character varying NOT NULL,
+    location_lon character varying(16) DEFAULT ''::character varying NOT NULL,
+    notes text DEFAULT ''::text NOT NULL,
+    chassis character varying(64) DEFAULT ''::character varying NOT NULL,
+    model character varying(64) DEFAULT ''::character varying NOT NULL,
+    hw_arch character varying(32) DEFAULT ''::character varying NOT NULL,
+    vendor character varying(64) DEFAULT ''::character varying NOT NULL,
+    contract_number character varying(64) DEFAULT ''::character varying NOT NULL,
+    installer_name character varying(64) DEFAULT ''::character varying NOT NULL,
+    deployment_status character varying(64) DEFAULT ''::character varying NOT NULL,
+    url_a character varying(255) DEFAULT ''::character varying NOT NULL,
+    url_b character varying(255) DEFAULT ''::character varying NOT NULL,
+    url_c character varying(255) DEFAULT ''::character varying NOT NULL,
+    host_networks text DEFAULT ''::text NOT NULL,
+    host_netmask character varying(39) DEFAULT ''::character varying NOT NULL,
+    host_router character varying(39) DEFAULT ''::character varying NOT NULL,
+    oob_ip character varying(39) DEFAULT ''::character varying NOT NULL,
+    oob_netmask character varying(39) DEFAULT ''::character varying NOT NULL,
+    oob_router character varying(39) DEFAULT ''::character varying NOT NULL,
+    date_hw_purchase character varying(64) DEFAULT ''::character varying NOT NULL,
+    date_hw_install character varying(64) DEFAULT ''::character varying NOT NULL,
+    date_hw_expiry character varying(64) DEFAULT ''::character varying NOT NULL,
+    date_hw_decomm character varying(64) DEFAULT ''::character varying NOT NULL,
+    site_address_a character varying(128) DEFAULT ''::character varying NOT NULL,
+    site_address_b character varying(128) DEFAULT ''::character varying NOT NULL,
+    site_address_c character varying(128) DEFAULT ''::character varying NOT NULL,
+    site_city character varying(128) DEFAULT ''::character varying NOT NULL,
+    site_state character varying(64) DEFAULT ''::character varying NOT NULL,
+    site_country character varying(64) DEFAULT ''::character varying NOT NULL,
+    site_zip character varying(64) DEFAULT ''::character varying NOT NULL,
+    site_rack character varying(128) DEFAULT ''::character varying NOT NULL,
+    site_notes text DEFAULT ''::text NOT NULL,
+    poc_1_name character varying(128) DEFAULT ''::character varying NOT NULL,
+    poc_1_email character varying(128) DEFAULT ''::character varying NOT NULL,
+    poc_1_phone_a character varying(64) DEFAULT ''::character varying NOT NULL,
+    poc_1_phone_b character varying(64) DEFAULT ''::character varying NOT NULL,
+    poc_1_cell character varying(64) DEFAULT ''::character varying NOT NULL,
+    poc_1_screen character varying(64) DEFAULT ''::character varying NOT NULL,
+    poc_1_notes text DEFAULT ''::text NOT NULL,
+    poc_2_name character varying(128) DEFAULT ''::character varying NOT NULL,
+    poc_2_email character varying(128) DEFAULT ''::character varying NOT NULL,
+    poc_2_phone_a character varying(64) DEFAULT ''::character varying NOT NULL,
+    poc_2_phone_b character varying(64) DEFAULT ''::character varying NOT NULL,
+    poc_2_cell character varying(64) DEFAULT ''::character varying NOT NULL,
+    poc_2_screen character varying(64) DEFAULT ''::character varying NOT NULL,
+    poc_2_notes text DEFAULT ''::text NOT NULL
+);
+
+
+ALTER TABLE host_inventory OWNER TO "ben.wyatt";
+
+--
+-- Name: hostmacro; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE hostmacro (
+    hostmacroid bigint NOT NULL,
+    hostid bigint NOT NULL,
+    macro character varying(64) DEFAULT ''::character varying NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE hostmacro OWNER TO "ben.wyatt";
+
+--
+-- Name: hosts; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE hosts (
+    hostid bigint NOT NULL,
+    proxy_hostid bigint,
+    host character varying(64) DEFAULT ''::character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    disable_until integer DEFAULT 0 NOT NULL,
+    error character varying(128) DEFAULT ''::character varying NOT NULL,
+    available integer DEFAULT 0 NOT NULL,
+    errors_from integer DEFAULT 0 NOT NULL,
+    lastaccess integer DEFAULT 0 NOT NULL,
+    ipmi_authtype integer DEFAULT 0 NOT NULL,
+    ipmi_privilege integer DEFAULT 2 NOT NULL,
+    ipmi_username character varying(16) DEFAULT ''::character varying NOT NULL,
+    ipmi_password character varying(20) DEFAULT ''::character varying NOT NULL,
+    ipmi_disable_until integer DEFAULT 0 NOT NULL,
+    ipmi_available integer DEFAULT 0 NOT NULL,
+    snmp_disable_until integer DEFAULT 0 NOT NULL,
+    snmp_available integer DEFAULT 0 NOT NULL,
+    maintenanceid bigint,
+    maintenance_status integer DEFAULT 0 NOT NULL,
+    maintenance_type integer DEFAULT 0 NOT NULL,
+    maintenance_from integer DEFAULT 0 NOT NULL,
+    ipmi_errors_from integer DEFAULT 0 NOT NULL,
+    snmp_errors_from integer DEFAULT 0 NOT NULL,
+    ipmi_error character varying(128) DEFAULT ''::character varying NOT NULL,
+    snmp_error character varying(128) DEFAULT ''::character varying NOT NULL,
+    jmx_disable_until integer DEFAULT 0 NOT NULL,
+    jmx_available integer DEFAULT 0 NOT NULL,
+    jmx_errors_from integer DEFAULT 0 NOT NULL,
+    jmx_error character varying(128) DEFAULT ''::character varying NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    flags integer DEFAULT 0 NOT NULL,
+    templateid bigint
+);
+
+
+ALTER TABLE hosts OWNER TO "ben.wyatt";
+
+--
+-- Name: hosts_groups; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE hosts_groups (
+    hostgroupid bigint NOT NULL,
+    hostid bigint NOT NULL,
+    groupid bigint NOT NULL
+);
+
+
+ALTER TABLE hosts_groups OWNER TO "ben.wyatt";
+
+--
+-- Name: hosts_templates; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE hosts_templates (
+    hosttemplateid bigint NOT NULL,
+    hostid bigint NOT NULL,
+    templateid bigint NOT NULL
+);
+
+
+ALTER TABLE hosts_templates OWNER TO "ben.wyatt";
+
+--
+-- Name: housekeeper; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE housekeeper (
+    housekeeperid bigint NOT NULL,
+    tablename character varying(64) DEFAULT ''::character varying NOT NULL,
+    field character varying(64) DEFAULT ''::character varying NOT NULL,
+    value bigint NOT NULL
+);
+
+
+ALTER TABLE housekeeper OWNER TO "ben.wyatt";
+
+--
+-- Name: httpstep; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE httpstep (
+    httpstepid bigint NOT NULL,
+    httptestid bigint NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    no integer DEFAULT 0 NOT NULL,
+    url character varying(255) DEFAULT ''::character varying NOT NULL,
+    timeout integer DEFAULT 30 NOT NULL,
+    posts text DEFAULT ''::text NOT NULL,
+    required character varying(255) DEFAULT ''::character varying NOT NULL,
+    status_codes character varying(255) DEFAULT ''::character varying NOT NULL,
+    variables text DEFAULT ''::text NOT NULL
+);
+
+
+ALTER TABLE httpstep OWNER TO "ben.wyatt";
+
+--
+-- Name: httpstepitem; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE httpstepitem (
+    httpstepitemid bigint NOT NULL,
+    httpstepid bigint NOT NULL,
+    itemid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE httpstepitem OWNER TO "ben.wyatt";
+
+--
+-- Name: httptest; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE httptest (
+    httptestid bigint NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    applicationid bigint,
+    nextcheck integer DEFAULT 0 NOT NULL,
+    delay integer DEFAULT 60 NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    variables text DEFAULT ''::text NOT NULL,
+    agent character varying(255) DEFAULT ''::character varying NOT NULL,
+    authentication integer DEFAULT 0 NOT NULL,
+    http_user character varying(64) DEFAULT ''::character varying NOT NULL,
+    http_password character varying(64) DEFAULT ''::character varying NOT NULL,
+    hostid bigint NOT NULL,
+    templateid bigint,
+    http_proxy character varying(255) DEFAULT ''::character varying NOT NULL,
+    retries integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE httptest OWNER TO "ben.wyatt";
+
+--
+-- Name: httptestitem; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE httptestitem (
+    httptestitemid bigint NOT NULL,
+    httptestid bigint NOT NULL,
+    itemid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE httptestitem OWNER TO "ben.wyatt";
+
+--
+-- Name: icon_map; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE icon_map (
+    iconmapid bigint NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    default_iconid bigint NOT NULL
+);
+
+
+ALTER TABLE icon_map OWNER TO "ben.wyatt";
+
+--
+-- Name: icon_mapping; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE icon_mapping (
+    iconmappingid bigint NOT NULL,
+    iconmapid bigint NOT NULL,
+    iconid bigint NOT NULL,
+    inventory_link integer DEFAULT 0 NOT NULL,
+    expression character varying(64) DEFAULT ''::character varying NOT NULL,
+    sortorder integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE icon_mapping OWNER TO "ben.wyatt";
+
+--
+-- Name: ids; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE ids (
+    nodeid integer NOT NULL,
+    table_name character varying(64) DEFAULT ''::character varying NOT NULL,
+    field_name character varying(64) DEFAULT ''::character varying NOT NULL,
+    nextid bigint NOT NULL
+);
+
+
+ALTER TABLE ids OWNER TO "ben.wyatt";
+
+--
+-- Name: images; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE images (
+    imageid bigint NOT NULL,
+    imagetype integer DEFAULT 0 NOT NULL,
+    name character varying(64) DEFAULT '0'::character varying NOT NULL,
+    image bytea DEFAULT '\x'::bytea NOT NULL
+);
+
+
+ALTER TABLE images OWNER TO "ben.wyatt";
+
+--
+-- Name: interface; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE interface (
+    interfaceid bigint NOT NULL,
+    hostid bigint NOT NULL,
+    main integer DEFAULT 0 NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    useip integer DEFAULT 1 NOT NULL,
+    ip character varying(64) DEFAULT '127.0.0.1'::character varying NOT NULL,
+    dns character varying(64) DEFAULT ''::character varying NOT NULL,
+    port character varying(64) DEFAULT '10050'::character varying NOT NULL
+);
+
+
+ALTER TABLE interface OWNER TO "ben.wyatt";
+
+--
+-- Name: interface_discovery; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE interface_discovery (
+    interfaceid bigint NOT NULL,
+    parent_interfaceid bigint NOT NULL
+);
+
+
+ALTER TABLE interface_discovery OWNER TO "ben.wyatt";
+
+--
+-- Name: item_discovery; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE item_discovery (
+    itemdiscoveryid bigint NOT NULL,
+    itemid bigint NOT NULL,
+    parent_itemid bigint NOT NULL,
+    key_ character varying(255) DEFAULT ''::character varying NOT NULL,
+    lastcheck integer DEFAULT 0 NOT NULL,
+    ts_delete integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE item_discovery OWNER TO "ben.wyatt";
+
+--
+-- Name: items; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE items (
+    itemid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    snmp_community character varying(64) DEFAULT ''::character varying NOT NULL,
+    snmp_oid character varying(255) DEFAULT ''::character varying NOT NULL,
+    hostid bigint NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    key_ character varying(255) DEFAULT ''::character varying NOT NULL,
+    delay integer DEFAULT 0 NOT NULL,
+    history integer DEFAULT 90 NOT NULL,
+    trends integer DEFAULT 365 NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    value_type integer DEFAULT 0 NOT NULL,
+    trapper_hosts character varying(255) DEFAULT ''::character varying NOT NULL,
+    units character varying(255) DEFAULT ''::character varying NOT NULL,
+    multiplier integer DEFAULT 0 NOT NULL,
+    delta integer DEFAULT 0 NOT NULL,
+    snmpv3_securityname character varying(64) DEFAULT ''::character varying NOT NULL,
+    snmpv3_securitylevel integer DEFAULT 0 NOT NULL,
+    snmpv3_authpassphrase character varying(64) DEFAULT ''::character varying NOT NULL,
+    snmpv3_privpassphrase character varying(64) DEFAULT ''::character varying NOT NULL,
+    formula character varying(255) DEFAULT '1'::character varying NOT NULL,
+    error character varying(128) DEFAULT ''::character varying NOT NULL,
+    lastlogsize numeric(20,0) DEFAULT '0'::numeric NOT NULL,
+    logtimefmt character varying(64) DEFAULT ''::character varying NOT NULL,
+    templateid bigint,
+    valuemapid bigint,
+    delay_flex character varying(255) DEFAULT ''::character varying NOT NULL,
+    params text DEFAULT ''::text NOT NULL,
+    ipmi_sensor character varying(128) DEFAULT ''::character varying NOT NULL,
+    data_type integer DEFAULT 0 NOT NULL,
+    authtype integer DEFAULT 0 NOT NULL,
+    username character varying(64) DEFAULT ''::character varying NOT NULL,
+    password character varying(64) DEFAULT ''::character varying NOT NULL,
+    publickey character varying(64) DEFAULT ''::character varying NOT NULL,
+    privatekey character varying(64) DEFAULT ''::character varying NOT NULL,
+    mtime integer DEFAULT 0 NOT NULL,
+    flags integer DEFAULT 0 NOT NULL,
+    filter character varying(255) DEFAULT ''::character varying NOT NULL,
+    interfaceid bigint,
+    port character varying(64) DEFAULT ''::character varying NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    inventory_link integer DEFAULT 0 NOT NULL,
+    lifetime character varying(64) DEFAULT '30'::character varying NOT NULL,
+    snmpv3_authprotocol integer DEFAULT 0 NOT NULL,
+    snmpv3_privprotocol integer DEFAULT 0 NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    snmpv3_contextname character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE items OWNER TO "ben.wyatt";
+
+--
+-- Name: items_applications; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE items_applications (
+    itemappid bigint NOT NULL,
+    applicationid bigint NOT NULL,
+    itemid bigint NOT NULL
+);
+
+
+ALTER TABLE items_applications OWNER TO "ben.wyatt";
+
+--
+-- Name: maintenances; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE maintenances (
+    maintenanceid bigint NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
+    maintenance_type integer DEFAULT 0 NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    active_since integer DEFAULT 0 NOT NULL,
+    active_till integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE maintenances OWNER TO "ben.wyatt";
+
+--
+-- Name: maintenances_groups; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE maintenances_groups (
+    maintenance_groupid bigint NOT NULL,
+    maintenanceid bigint NOT NULL,
+    groupid bigint NOT NULL
+);
+
+
+ALTER TABLE maintenances_groups OWNER TO "ben.wyatt";
+
+--
+-- Name: maintenances_hosts; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE maintenances_hosts (
+    maintenance_hostid bigint NOT NULL,
+    maintenanceid bigint NOT NULL,
+    hostid bigint NOT NULL
+);
+
+
+ALTER TABLE maintenances_hosts OWNER TO "ben.wyatt";
+
+--
+-- Name: maintenances_windows; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE maintenances_windows (
+    maintenance_timeperiodid bigint NOT NULL,
+    maintenanceid bigint NOT NULL,
+    timeperiodid bigint NOT NULL
+);
+
+
+ALTER TABLE maintenances_windows OWNER TO "ben.wyatt";
+
+--
+-- Name: mappings; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE mappings (
+    mappingid bigint NOT NULL,
+    valuemapid bigint NOT NULL,
+    value character varying(64) DEFAULT ''::character varying NOT NULL,
+    newvalue character varying(64) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE mappings OWNER TO "ben.wyatt";
+
+--
+-- Name: media; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE media (
+    mediaid bigint NOT NULL,
+    userid bigint NOT NULL,
+    mediatypeid bigint NOT NULL,
+    sendto character varying(100) DEFAULT ''::character varying NOT NULL,
+    active integer DEFAULT 0 NOT NULL,
+    severity integer DEFAULT 63 NOT NULL,
+    period character varying(100) DEFAULT '1-7,00:00-24:00'::character varying NOT NULL
+);
+
+
+ALTER TABLE media OWNER TO "ben.wyatt";
+
+--
+-- Name: media_type; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE media_type (
+    mediatypeid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    description character varying(100) DEFAULT ''::character varying NOT NULL,
+    smtp_server character varying(255) DEFAULT ''::character varying NOT NULL,
+    smtp_helo character varying(255) DEFAULT ''::character varying NOT NULL,
+    smtp_email character varying(255) DEFAULT ''::character varying NOT NULL,
+    exec_path character varying(255) DEFAULT ''::character varying NOT NULL,
+    gsm_modem character varying(255) DEFAULT ''::character varying NOT NULL,
+    username character varying(255) DEFAULT ''::character varying NOT NULL,
+    passwd character varying(255) DEFAULT ''::character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE media_type OWNER TO "ben.wyatt";
+
+--
+-- Name: node_cksum; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE node_cksum (
+    nodeid integer NOT NULL,
+    tablename character varying(64) DEFAULT ''::character varying NOT NULL,
+    recordid bigint NOT NULL,
+    cksumtype integer DEFAULT 0 NOT NULL,
+    cksum text DEFAULT ''::text NOT NULL,
+    sync character(128) DEFAULT ''::bpchar NOT NULL
+);
+
+
+ALTER TABLE node_cksum OWNER TO "ben.wyatt";
+
+--
+-- Name: nodes; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE nodes (
+    nodeid integer NOT NULL,
+    name character varying(64) DEFAULT '0'::character varying NOT NULL,
+    ip character varying(39) DEFAULT ''::character varying NOT NULL,
+    port integer DEFAULT 10051 NOT NULL,
+    nodetype integer DEFAULT 0 NOT NULL,
+    masterid integer
+);
+
+
+ALTER TABLE nodes OWNER TO "ben.wyatt";
+
+--
+-- Name: opcommand; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE opcommand (
+    operationid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    scriptid bigint,
+    execute_on integer DEFAULT 0 NOT NULL,
+    port character varying(64) DEFAULT ''::character varying NOT NULL,
+    authtype integer DEFAULT 0 NOT NULL,
+    username character varying(64) DEFAULT ''::character varying NOT NULL,
+    password character varying(64) DEFAULT ''::character varying NOT NULL,
+    publickey character varying(64) DEFAULT ''::character varying NOT NULL,
+    privatekey character varying(64) DEFAULT ''::character varying NOT NULL,
+    command text DEFAULT ''::text NOT NULL
+);
+
+
+ALTER TABLE opcommand OWNER TO "ben.wyatt";
+
+--
+-- Name: opcommand_grp; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE opcommand_grp (
+    opcommand_grpid bigint NOT NULL,
+    operationid bigint NOT NULL,
+    groupid bigint NOT NULL
+);
+
+
+ALTER TABLE opcommand_grp OWNER TO "ben.wyatt";
+
+--
+-- Name: opcommand_hst; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE opcommand_hst (
+    opcommand_hstid bigint NOT NULL,
+    operationid bigint NOT NULL,
+    hostid bigint
+);
+
+
+ALTER TABLE opcommand_hst OWNER TO "ben.wyatt";
+
+--
+-- Name: opconditions; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE opconditions (
+    opconditionid bigint NOT NULL,
+    operationid bigint NOT NULL,
+    conditiontype integer DEFAULT 0 NOT NULL,
+    operator integer DEFAULT 0 NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE opconditions OWNER TO "ben.wyatt";
+
+--
+-- Name: operations; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE operations (
+    operationid bigint NOT NULL,
+    actionid bigint NOT NULL,
+    operationtype integer DEFAULT 0 NOT NULL,
+    esc_period integer DEFAULT 0 NOT NULL,
+    esc_step_from integer DEFAULT 1 NOT NULL,
+    esc_step_to integer DEFAULT 1 NOT NULL,
+    evaltype integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE operations OWNER TO "ben.wyatt";
+
+--
+-- Name: opgroup; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE opgroup (
+    opgroupid bigint NOT NULL,
+    operationid bigint NOT NULL,
+    groupid bigint NOT NULL
+);
+
+
+ALTER TABLE opgroup OWNER TO "ben.wyatt";
+
+--
+-- Name: opmessage; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE opmessage (
+    operationid bigint NOT NULL,
+    default_msg integer DEFAULT 0 NOT NULL,
+    subject character varying(255) DEFAULT ''::character varying NOT NULL,
+    message text DEFAULT ''::text NOT NULL,
+    mediatypeid bigint
+);
+
+
+ALTER TABLE opmessage OWNER TO "ben.wyatt";
+
+--
+-- Name: opmessage_grp; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE opmessage_grp (
+    opmessage_grpid bigint NOT NULL,
+    operationid bigint NOT NULL,
+    usrgrpid bigint NOT NULL
+);
+
+
+ALTER TABLE opmessage_grp OWNER TO "ben.wyatt";
+
+--
+-- Name: opmessage_usr; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE opmessage_usr (
+    opmessage_usrid bigint NOT NULL,
+    operationid bigint NOT NULL,
+    userid bigint NOT NULL
+);
+
+
+ALTER TABLE opmessage_usr OWNER TO "ben.wyatt";
+
+--
+-- Name: optemplate; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE optemplate (
+    optemplateid bigint NOT NULL,
+    operationid bigint NOT NULL,
+    templateid bigint NOT NULL
+);
+
+
+ALTER TABLE optemplate OWNER TO "ben.wyatt";
+
+--
+-- Name: profiles; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE profiles (
+    profileid bigint NOT NULL,
+    userid bigint NOT NULL,
+    idx character varying(96) DEFAULT ''::character varying NOT NULL,
+    idx2 bigint DEFAULT '0'::bigint NOT NULL,
+    value_id bigint DEFAULT '0'::bigint NOT NULL,
+    value_int integer DEFAULT 0 NOT NULL,
+    value_str character varying(255) DEFAULT ''::character varying NOT NULL,
+    source character varying(96) DEFAULT ''::character varying NOT NULL,
+    type integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE profiles OWNER TO "ben.wyatt";
+
+--
+-- Name: proxy_autoreg_host; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE proxy_autoreg_host (
+    id bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    host character varying(64) DEFAULT ''::character varying NOT NULL,
+    listen_ip character varying(39) DEFAULT ''::character varying NOT NULL,
+    listen_port integer DEFAULT 0 NOT NULL,
+    listen_dns character varying(64) DEFAULT ''::character varying NOT NULL,
+    host_metadata character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE proxy_autoreg_host OWNER TO "ben.wyatt";
+
+--
+-- Name: proxy_autoreg_host_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE proxy_autoreg_host_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE proxy_autoreg_host_id_seq OWNER TO "ben.wyatt";
+
+--
+-- Name: proxy_autoreg_host_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ben.wyatt
+--
+
+ALTER SEQUENCE proxy_autoreg_host_id_seq OWNED BY proxy_autoreg_host.id;
+
+
+--
+-- Name: proxy_dhistory; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE proxy_dhistory (
+    id bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    druleid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    ip character varying(39) DEFAULT ''::character varying NOT NULL,
+    port integer DEFAULT 0 NOT NULL,
+    key_ character varying(255) DEFAULT ''::character varying NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    dcheckid bigint,
+    dns character varying(64) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE proxy_dhistory OWNER TO "ben.wyatt";
+
+--
+-- Name: proxy_dhistory_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE proxy_dhistory_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE proxy_dhistory_id_seq OWNER TO "ben.wyatt";
+
+--
+-- Name: proxy_dhistory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ben.wyatt
+--
+
+ALTER SEQUENCE proxy_dhistory_id_seq OWNED BY proxy_dhistory.id;
+
+
+--
+-- Name: proxy_history; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE proxy_history (
+    id bigint NOT NULL,
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    "timestamp" integer DEFAULT 0 NOT NULL,
+    source character varying(64) DEFAULT ''::character varying NOT NULL,
+    severity integer DEFAULT 0 NOT NULL,
+    value text DEFAULT ''::text NOT NULL,
+    logeventid integer DEFAULT 0 NOT NULL,
+    ns integer DEFAULT 0 NOT NULL,
+    state integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE proxy_history OWNER TO "ben.wyatt";
+
+--
+-- Name: proxy_history_id_seq; Type: SEQUENCE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE SEQUENCE proxy_history_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE proxy_history_id_seq OWNER TO "ben.wyatt";
+
+--
+-- Name: proxy_history_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ben.wyatt
+--
+
+ALTER SEQUENCE proxy_history_id_seq OWNED BY proxy_history.id;
+
+
+--
+-- Name: regexps; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE regexps (
+    regexpid bigint NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
+    test_string text DEFAULT ''::text NOT NULL
+);
+
+
+ALTER TABLE regexps OWNER TO "ben.wyatt";
+
+--
+-- Name: rights; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE rights (
+    rightid bigint NOT NULL,
+    groupid bigint NOT NULL,
+    permission integer DEFAULT 0 NOT NULL,
+    id bigint NOT NULL
+);
+
+
+ALTER TABLE rights OWNER TO "ben.wyatt";
+
+--
+-- Name: screens; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE screens (
+    screenid bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    hsize integer DEFAULT 1 NOT NULL,
+    vsize integer DEFAULT 1 NOT NULL,
+    templateid bigint
+);
+
+
+ALTER TABLE screens OWNER TO "ben.wyatt";
+
+--
+-- Name: screens_items; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE screens_items (
+    screenitemid bigint NOT NULL,
+    screenid bigint NOT NULL,
+    resourcetype integer DEFAULT 0 NOT NULL,
+    resourceid bigint DEFAULT '0'::bigint NOT NULL,
+    width integer DEFAULT 320 NOT NULL,
+    height integer DEFAULT 200 NOT NULL,
+    x integer DEFAULT 0 NOT NULL,
+    y integer DEFAULT 0 NOT NULL,
+    colspan integer DEFAULT 0 NOT NULL,
+    rowspan integer DEFAULT 0 NOT NULL,
+    elements integer DEFAULT 25 NOT NULL,
+    valign integer DEFAULT 0 NOT NULL,
+    halign integer DEFAULT 0 NOT NULL,
+    style integer DEFAULT 0 NOT NULL,
+    url character varying(255) DEFAULT ''::character varying NOT NULL,
+    dynamic integer DEFAULT 0 NOT NULL,
+    sort_triggers integer DEFAULT 0 NOT NULL,
+    application character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE screens_items OWNER TO "ben.wyatt";
+
+--
+-- Name: scripts; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE scripts (
+    scriptid bigint NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    command character varying(255) DEFAULT ''::character varying NOT NULL,
+    host_access integer DEFAULT 2 NOT NULL,
+    usrgrpid bigint,
+    groupid bigint,
+    description text DEFAULT ''::text NOT NULL,
+    confirmation character varying(255) DEFAULT ''::character varying NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    execute_on integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE scripts OWNER TO "ben.wyatt";
+
+--
+-- Name: service_alarms; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE service_alarms (
+    servicealarmid bigint NOT NULL,
+    serviceid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    value integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE service_alarms OWNER TO "ben.wyatt";
+
+--
+-- Name: services; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE services (
+    serviceid bigint NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    algorithm integer DEFAULT 0 NOT NULL,
+    triggerid bigint,
+    showsla integer DEFAULT 0 NOT NULL,
+    goodsla numeric(16,4) DEFAULT 99.9 NOT NULL,
+    sortorder integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE services OWNER TO "ben.wyatt";
+
+--
+-- Name: services_links; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE services_links (
+    linkid bigint NOT NULL,
+    serviceupid bigint NOT NULL,
+    servicedownid bigint NOT NULL,
+    soft integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE services_links OWNER TO "ben.wyatt";
+
+--
+-- Name: services_times; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE services_times (
+    timeid bigint NOT NULL,
+    serviceid bigint NOT NULL,
+    type integer DEFAULT 0 NOT NULL,
+    ts_from integer DEFAULT 0 NOT NULL,
+    ts_to integer DEFAULT 0 NOT NULL,
+    note character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE services_times OWNER TO "ben.wyatt";
+
+--
+-- Name: sessions; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE sessions (
+    sessionid character varying(32) DEFAULT ''::character varying NOT NULL,
+    userid bigint NOT NULL,
+    lastaccess integer DEFAULT 0 NOT NULL,
+    status integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE sessions OWNER TO "ben.wyatt";
+
+--
+-- Name: slides; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE slides (
+    slideid bigint NOT NULL,
+    slideshowid bigint NOT NULL,
+    screenid bigint NOT NULL,
+    step integer DEFAULT 0 NOT NULL,
+    delay integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE slides OWNER TO "ben.wyatt";
+
+--
+-- Name: slideshows; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE slideshows (
+    slideshowid bigint NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    delay integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE slideshows OWNER TO "ben.wyatt";
+
+--
+-- Name: sysmap_element_url; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE sysmap_element_url (
+    sysmapelementurlid bigint NOT NULL,
+    selementid bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    url character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE sysmap_element_url OWNER TO "ben.wyatt";
+
+--
+-- Name: sysmap_url; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE sysmap_url (
+    sysmapurlid bigint NOT NULL,
+    sysmapid bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    url character varying(255) DEFAULT ''::character varying NOT NULL,
+    elementtype integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE sysmap_url OWNER TO "ben.wyatt";
+
+--
+-- Name: sysmaps; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE sysmaps (
+    sysmapid bigint NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
+    width integer DEFAULT 600 NOT NULL,
+    height integer DEFAULT 400 NOT NULL,
+    backgroundid bigint,
+    label_type integer DEFAULT 2 NOT NULL,
+    label_location integer DEFAULT 0 NOT NULL,
+    highlight integer DEFAULT 1 NOT NULL,
+    expandproblem integer DEFAULT 1 NOT NULL,
+    markelements integer DEFAULT 0 NOT NULL,
+    show_unack integer DEFAULT 0 NOT NULL,
+    grid_size integer DEFAULT 50 NOT NULL,
+    grid_show integer DEFAULT 1 NOT NULL,
+    grid_align integer DEFAULT 1 NOT NULL,
+    label_format integer DEFAULT 0 NOT NULL,
+    label_type_host integer DEFAULT 2 NOT NULL,
+    label_type_hostgroup integer DEFAULT 2 NOT NULL,
+    label_type_trigger integer DEFAULT 2 NOT NULL,
+    label_type_map integer DEFAULT 2 NOT NULL,
+    label_type_image integer DEFAULT 2 NOT NULL,
+    label_string_host character varying(255) DEFAULT ''::character varying NOT NULL,
+    label_string_hostgroup character varying(255) DEFAULT ''::character varying NOT NULL,
+    label_string_trigger character varying(255) DEFAULT ''::character varying NOT NULL,
+    label_string_map character varying(255) DEFAULT ''::character varying NOT NULL,
+    label_string_image character varying(255) DEFAULT ''::character varying NOT NULL,
+    iconmapid bigint,
+    expand_macros integer DEFAULT 0 NOT NULL,
+    severity_min integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE sysmaps OWNER TO "ben.wyatt";
+
+--
+-- Name: sysmaps_elements; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE sysmaps_elements (
+    selementid bigint NOT NULL,
+    sysmapid bigint NOT NULL,
+    elementid bigint DEFAULT '0'::bigint NOT NULL,
+    elementtype integer DEFAULT 0 NOT NULL,
+    iconid_off bigint,
+    iconid_on bigint,
+    label character varying(2048) DEFAULT ''::character varying NOT NULL,
+    label_location integer DEFAULT '-1'::integer NOT NULL,
+    x integer DEFAULT 0 NOT NULL,
+    y integer DEFAULT 0 NOT NULL,
+    iconid_disabled bigint,
+    iconid_maintenance bigint,
+    elementsubtype integer DEFAULT 0 NOT NULL,
+    areatype integer DEFAULT 0 NOT NULL,
+    width integer DEFAULT 200 NOT NULL,
+    height integer DEFAULT 200 NOT NULL,
+    viewtype integer DEFAULT 0 NOT NULL,
+    use_iconmap integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE sysmaps_elements OWNER TO "ben.wyatt";
+
+--
+-- Name: sysmaps_link_triggers; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE sysmaps_link_triggers (
+    linktriggerid bigint NOT NULL,
+    linkid bigint NOT NULL,
+    triggerid bigint NOT NULL,
+    drawtype integer DEFAULT 0 NOT NULL,
+    color character varying(6) DEFAULT '000000'::character varying NOT NULL
+);
+
+
+ALTER TABLE sysmaps_link_triggers OWNER TO "ben.wyatt";
+
+--
+-- Name: sysmaps_links; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE sysmaps_links (
+    linkid bigint NOT NULL,
+    sysmapid bigint NOT NULL,
+    selementid1 bigint NOT NULL,
+    selementid2 bigint NOT NULL,
+    drawtype integer DEFAULT 0 NOT NULL,
+    color character varying(6) DEFAULT '000000'::character varying NOT NULL,
+    label character varying(2048) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE sysmaps_links OWNER TO "ben.wyatt";
+
+--
+-- Name: timeperiods; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE timeperiods (
+    timeperiodid bigint NOT NULL,
+    timeperiod_type integer DEFAULT 0 NOT NULL,
+    every integer DEFAULT 0 NOT NULL,
+    month integer DEFAULT 0 NOT NULL,
+    dayofweek integer DEFAULT 0 NOT NULL,
+    day integer DEFAULT 0 NOT NULL,
+    start_time integer DEFAULT 0 NOT NULL,
+    period integer DEFAULT 0 NOT NULL,
+    start_date integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE timeperiods OWNER TO "ben.wyatt";
+
+--
+-- Name: trends; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE trends (
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    num integer DEFAULT 0 NOT NULL,
+    value_min numeric(16,4) DEFAULT 0.0000 NOT NULL,
+    value_avg numeric(16,4) DEFAULT 0.0000 NOT NULL,
+    value_max numeric(16,4) DEFAULT 0.0000 NOT NULL
+);
+
+
+ALTER TABLE trends OWNER TO "ben.wyatt";
+
+--
+-- Name: trends_uint; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE trends_uint (
+    itemid bigint NOT NULL,
+    clock integer DEFAULT 0 NOT NULL,
+    num integer DEFAULT 0 NOT NULL,
+    value_min numeric(20,0) DEFAULT '0'::numeric NOT NULL,
+    value_avg numeric(20,0) DEFAULT '0'::numeric NOT NULL,
+    value_max numeric(20,0) DEFAULT '0'::numeric NOT NULL
+);
+
+
+ALTER TABLE trends_uint OWNER TO "ben.wyatt";
+
+--
+-- Name: trigger_depends; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE trigger_depends (
+    triggerdepid bigint NOT NULL,
+    triggerid_down bigint NOT NULL,
+    triggerid_up bigint NOT NULL
+);
+
+
+ALTER TABLE trigger_depends OWNER TO "ben.wyatt";
+
+--
+-- Name: trigger_discovery; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE trigger_discovery (
+    triggerdiscoveryid bigint NOT NULL,
+    triggerid bigint NOT NULL,
+    parent_triggerid bigint NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE trigger_discovery OWNER TO "ben.wyatt";
+
+--
+-- Name: triggers; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE triggers (
+    triggerid bigint NOT NULL,
+    expression character varying(2048) DEFAULT ''::character varying NOT NULL,
+    description character varying(255) DEFAULT ''::character varying NOT NULL,
+    url character varying(255) DEFAULT ''::character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    value integer DEFAULT 0 NOT NULL,
+    priority integer DEFAULT 0 NOT NULL,
+    lastchange integer DEFAULT 0 NOT NULL,
+    comments text DEFAULT ''::text NOT NULL,
+    error character varying(128) DEFAULT ''::character varying NOT NULL,
+    templateid bigint,
+    type integer DEFAULT 0 NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    flags integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE triggers OWNER TO "ben.wyatt";
+
+--
+-- Name: user_history; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE user_history (
+    userhistoryid bigint NOT NULL,
+    userid bigint NOT NULL,
+    title1 character varying(255) DEFAULT ''::character varying NOT NULL,
+    url1 character varying(255) DEFAULT ''::character varying NOT NULL,
+    title2 character varying(255) DEFAULT ''::character varying NOT NULL,
+    url2 character varying(255) DEFAULT ''::character varying NOT NULL,
+    title3 character varying(255) DEFAULT ''::character varying NOT NULL,
+    url3 character varying(255) DEFAULT ''::character varying NOT NULL,
+    title4 character varying(255) DEFAULT ''::character varying NOT NULL,
+    url4 character varying(255) DEFAULT ''::character varying NOT NULL,
+    title5 character varying(255) DEFAULT ''::character varying NOT NULL,
+    url5 character varying(255) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE user_history OWNER TO "ben.wyatt";
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE users (
+    userid bigint NOT NULL,
+    alias character varying(100) DEFAULT ''::character varying NOT NULL,
+    name character varying(100) DEFAULT ''::character varying NOT NULL,
+    surname character varying(100) DEFAULT ''::character varying NOT NULL,
+    passwd character(32) DEFAULT ''::bpchar NOT NULL,
+    url character varying(255) DEFAULT ''::character varying NOT NULL,
+    autologin integer DEFAULT 0 NOT NULL,
+    autologout integer DEFAULT 900 NOT NULL,
+    lang character varying(5) DEFAULT 'en_GB'::character varying NOT NULL,
+    refresh integer DEFAULT 30 NOT NULL,
+    type integer DEFAULT 1 NOT NULL,
+    theme character varying(128) DEFAULT 'default'::character varying NOT NULL,
+    attempt_failed integer DEFAULT 0 NOT NULL,
+    attempt_ip character varying(39) DEFAULT ''::character varying NOT NULL,
+    attempt_clock integer DEFAULT 0 NOT NULL,
+    rows_per_page integer DEFAULT 50 NOT NULL
+);
+
+
+ALTER TABLE users OWNER TO "ben.wyatt";
+
+--
+-- Name: users_groups; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE users_groups (
+    id bigint NOT NULL,
+    usrgrpid bigint NOT NULL,
+    userid bigint NOT NULL
+);
+
+
+ALTER TABLE users_groups OWNER TO "ben.wyatt";
+
+--
+-- Name: usrgrp; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE usrgrp (
+    usrgrpid bigint NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
+    gui_access integer DEFAULT 0 NOT NULL,
+    users_status integer DEFAULT 0 NOT NULL,
+    debug_mode integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE usrgrp OWNER TO "ben.wyatt";
+
+--
+-- Name: valuemaps; Type: TABLE; Schema: public; Owner: ben.wyatt
+--
+
+CREATE TABLE valuemaps (
+    valuemapid bigint NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL
+);
+
+
+ALTER TABLE valuemaps OWNER TO "ben.wyatt";
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY history_str_sync ALTER COLUMN id SET DEFAULT nextval('history_str_sync_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY history_sync ALTER COLUMN id SET DEFAULT nextval('history_sync_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY history_uint_sync ALTER COLUMN id SET DEFAULT nextval('history_uint_sync_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY proxy_autoreg_host ALTER COLUMN id SET DEFAULT nextval('proxy_autoreg_host_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY proxy_dhistory ALTER COLUMN id SET DEFAULT nextval('proxy_dhistory_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY proxy_history ALTER COLUMN id SET DEFAULT nextval('proxy_history_id_seq'::regclass);
+
+
+--
+-- Name: acknowledges_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY acknowledges
+    ADD CONSTRAINT acknowledges_pkey PRIMARY KEY (acknowledgeid);
+
+
+--
+-- Name: actions_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY actions
+    ADD CONSTRAINT actions_pkey PRIMARY KEY (actionid);
+
+
+--
+-- Name: alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY alerts
+    ADD CONSTRAINT alerts_pkey PRIMARY KEY (alertid);
+
+
+--
+-- Name: application_template_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY application_template
+    ADD CONSTRAINT application_template_pkey PRIMARY KEY (application_templateid);
+
+
+--
+-- Name: applications_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY applications
+    ADD CONSTRAINT applications_pkey PRIMARY KEY (applicationid);
+
+
+--
+-- Name: auditlog_details_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY auditlog_details
+    ADD CONSTRAINT auditlog_details_pkey PRIMARY KEY (auditdetailid);
+
+
+--
+-- Name: auditlog_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY auditlog
+    ADD CONSTRAINT auditlog_pkey PRIMARY KEY (auditid);
+
+
+--
+-- Name: autoreg_host_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY autoreg_host
+    ADD CONSTRAINT autoreg_host_pkey PRIMARY KEY (autoreg_hostid);
+
+
+--
+-- Name: conditions_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY conditions
+    ADD CONSTRAINT conditions_pkey PRIMARY KEY (conditionid);
+
+
+--
+-- Name: config_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY config
+    ADD CONSTRAINT config_pkey PRIMARY KEY (configid);
+
+
+--
+-- Name: dchecks_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY dchecks
+    ADD CONSTRAINT dchecks_pkey PRIMARY KEY (dcheckid);
+
+
+--
+-- Name: dhosts_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY dhosts
+    ADD CONSTRAINT dhosts_pkey PRIMARY KEY (dhostid);
+
+
+--
+-- Name: drules_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY drules
+    ADD CONSTRAINT drules_pkey PRIMARY KEY (druleid);
+
+
+--
+-- Name: dservices_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY dservices
+    ADD CONSTRAINT dservices_pkey PRIMARY KEY (dserviceid);
+
+
+--
+-- Name: escalations_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY escalations
+    ADD CONSTRAINT escalations_pkey PRIMARY KEY (escalationid);
+
+
+--
+-- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (eventid);
+
+
+--
+-- Name: expressions_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY expressions
+    ADD CONSTRAINT expressions_pkey PRIMARY KEY (expressionid);
+
+
+--
+-- Name: functions_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY functions
+    ADD CONSTRAINT functions_pkey PRIMARY KEY (functionid);
+
+
+--
+-- Name: globalmacro_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY globalmacro
+    ADD CONSTRAINT globalmacro_pkey PRIMARY KEY (globalmacroid);
+
+
+--
+-- Name: globalvars_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY globalvars
+    ADD CONSTRAINT globalvars_pkey PRIMARY KEY (globalvarid);
+
+
+--
+-- Name: graph_discovery_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graph_discovery
+    ADD CONSTRAINT graph_discovery_pkey PRIMARY KEY (graphdiscoveryid);
+
+
+--
+-- Name: graph_theme_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graph_theme
+    ADD CONSTRAINT graph_theme_pkey PRIMARY KEY (graphthemeid);
+
+
+--
+-- Name: graphs_items_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graphs_items
+    ADD CONSTRAINT graphs_items_pkey PRIMARY KEY (gitemid);
+
+
+--
+-- Name: graphs_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graphs
+    ADD CONSTRAINT graphs_pkey PRIMARY KEY (graphid);
+
+
+--
+-- Name: group_discovery_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY group_discovery
+    ADD CONSTRAINT group_discovery_pkey PRIMARY KEY (groupid);
+
+
+--
+-- Name: group_prototype_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY group_prototype
+    ADD CONSTRAINT group_prototype_pkey PRIMARY KEY (group_prototypeid);
+
+
+--
+-- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (groupid);
+
+
+--
+-- Name: history_log_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY history_log
+    ADD CONSTRAINT history_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: history_str_sync_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY history_str_sync
+    ADD CONSTRAINT history_str_sync_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: history_sync_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY history_sync
+    ADD CONSTRAINT history_sync_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: history_text_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY history_text
+    ADD CONSTRAINT history_text_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: history_uint_sync_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY history_uint_sync
+    ADD CONSTRAINT history_uint_sync_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: host_discovery_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY host_discovery
+    ADD CONSTRAINT host_discovery_pkey PRIMARY KEY (hostid);
+
+
+--
+-- Name: host_inventory_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY host_inventory
+    ADD CONSTRAINT host_inventory_pkey PRIMARY KEY (hostid);
+
+
+--
+-- Name: hostmacro_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hostmacro
+    ADD CONSTRAINT hostmacro_pkey PRIMARY KEY (hostmacroid);
+
+
+--
+-- Name: hosts_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts_groups
+    ADD CONSTRAINT hosts_groups_pkey PRIMARY KEY (hostgroupid);
+
+
+--
+-- Name: hosts_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts
+    ADD CONSTRAINT hosts_pkey PRIMARY KEY (hostid);
+
+
+--
+-- Name: hosts_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts_templates
+    ADD CONSTRAINT hosts_templates_pkey PRIMARY KEY (hosttemplateid);
+
+
+--
+-- Name: housekeeper_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY housekeeper
+    ADD CONSTRAINT housekeeper_pkey PRIMARY KEY (housekeeperid);
+
+
+--
+-- Name: httpstep_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httpstep
+    ADD CONSTRAINT httpstep_pkey PRIMARY KEY (httpstepid);
+
+
+--
+-- Name: httpstepitem_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httpstepitem
+    ADD CONSTRAINT httpstepitem_pkey PRIMARY KEY (httpstepitemid);
+
+
+--
+-- Name: httptest_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httptest
+    ADD CONSTRAINT httptest_pkey PRIMARY KEY (httptestid);
+
+
+--
+-- Name: httptestitem_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httptestitem
+    ADD CONSTRAINT httptestitem_pkey PRIMARY KEY (httptestitemid);
+
+
+--
+-- Name: icon_map_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY icon_map
+    ADD CONSTRAINT icon_map_pkey PRIMARY KEY (iconmapid);
+
+
+--
+-- Name: icon_mapping_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY icon_mapping
+    ADD CONSTRAINT icon_mapping_pkey PRIMARY KEY (iconmappingid);
+
+
+--
+-- Name: ids_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY ids
+    ADD CONSTRAINT ids_pkey PRIMARY KEY (nodeid, table_name, field_name);
+
+
+--
+-- Name: images_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY images
+    ADD CONSTRAINT images_pkey PRIMARY KEY (imageid);
+
+
+--
+-- Name: interface_discovery_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY interface_discovery
+    ADD CONSTRAINT interface_discovery_pkey PRIMARY KEY (interfaceid);
+
+
+--
+-- Name: interface_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY interface
+    ADD CONSTRAINT interface_pkey PRIMARY KEY (interfaceid);
+
+
+--
+-- Name: item_discovery_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY item_discovery
+    ADD CONSTRAINT item_discovery_pkey PRIMARY KEY (itemdiscoveryid);
+
+
+--
+-- Name: items_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY items_applications
+    ADD CONSTRAINT items_applications_pkey PRIMARY KEY (itemappid);
+
+
+--
+-- Name: items_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT items_pkey PRIMARY KEY (itemid);
+
+
+--
+-- Name: maintenances_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_groups
+    ADD CONSTRAINT maintenances_groups_pkey PRIMARY KEY (maintenance_groupid);
+
+
+--
+-- Name: maintenances_hosts_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_hosts
+    ADD CONSTRAINT maintenances_hosts_pkey PRIMARY KEY (maintenance_hostid);
+
+
+--
+-- Name: maintenances_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances
+    ADD CONSTRAINT maintenances_pkey PRIMARY KEY (maintenanceid);
+
+
+--
+-- Name: maintenances_windows_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_windows
+    ADD CONSTRAINT maintenances_windows_pkey PRIMARY KEY (maintenance_timeperiodid);
+
+
+--
+-- Name: mappings_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY mappings
+    ADD CONSTRAINT mappings_pkey PRIMARY KEY (mappingid);
+
+
+--
+-- Name: media_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY media
+    ADD CONSTRAINT media_pkey PRIMARY KEY (mediaid);
+
+
+--
+-- Name: media_type_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY media_type
+    ADD CONSTRAINT media_type_pkey PRIMARY KEY (mediatypeid);
+
+
+--
+-- Name: nodes_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY nodes
+    ADD CONSTRAINT nodes_pkey PRIMARY KEY (nodeid);
+
+
+--
+-- Name: opcommand_grp_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand_grp
+    ADD CONSTRAINT opcommand_grp_pkey PRIMARY KEY (opcommand_grpid);
+
+
+--
+-- Name: opcommand_hst_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand_hst
+    ADD CONSTRAINT opcommand_hst_pkey PRIMARY KEY (opcommand_hstid);
+
+
+--
+-- Name: opcommand_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand
+    ADD CONSTRAINT opcommand_pkey PRIMARY KEY (operationid);
+
+
+--
+-- Name: opconditions_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opconditions
+    ADD CONSTRAINT opconditions_pkey PRIMARY KEY (opconditionid);
+
+
+--
+-- Name: operations_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY operations
+    ADD CONSTRAINT operations_pkey PRIMARY KEY (operationid);
+
+
+--
+-- Name: opgroup_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opgroup
+    ADD CONSTRAINT opgroup_pkey PRIMARY KEY (opgroupid);
+
+
+--
+-- Name: opmessage_grp_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage_grp
+    ADD CONSTRAINT opmessage_grp_pkey PRIMARY KEY (opmessage_grpid);
+
+
+--
+-- Name: opmessage_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage
+    ADD CONSTRAINT opmessage_pkey PRIMARY KEY (operationid);
+
+
+--
+-- Name: opmessage_usr_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage_usr
+    ADD CONSTRAINT opmessage_usr_pkey PRIMARY KEY (opmessage_usrid);
+
+
+--
+-- Name: optemplate_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY optemplate
+    ADD CONSTRAINT optemplate_pkey PRIMARY KEY (optemplateid);
+
+
+--
+-- Name: profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY profiles
+    ADD CONSTRAINT profiles_pkey PRIMARY KEY (profileid);
+
+
+--
+-- Name: proxy_autoreg_host_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY proxy_autoreg_host
+    ADD CONSTRAINT proxy_autoreg_host_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: proxy_dhistory_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY proxy_dhistory
+    ADD CONSTRAINT proxy_dhistory_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: proxy_history_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY proxy_history
+    ADD CONSTRAINT proxy_history_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: regexps_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY regexps
+    ADD CONSTRAINT regexps_pkey PRIMARY KEY (regexpid);
+
+
+--
+-- Name: rights_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY rights
+    ADD CONSTRAINT rights_pkey PRIMARY KEY (rightid);
+
+
+--
+-- Name: screens_items_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY screens_items
+    ADD CONSTRAINT screens_items_pkey PRIMARY KEY (screenitemid);
+
+
+--
+-- Name: screens_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY screens
+    ADD CONSTRAINT screens_pkey PRIMARY KEY (screenid);
+
+
+--
+-- Name: scripts_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY scripts
+    ADD CONSTRAINT scripts_pkey PRIMARY KEY (scriptid);
+
+
+--
+-- Name: service_alarms_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY service_alarms
+    ADD CONSTRAINT service_alarms_pkey PRIMARY KEY (servicealarmid);
+
+
+--
+-- Name: services_links_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY services_links
+    ADD CONSTRAINT services_links_pkey PRIMARY KEY (linkid);
+
+
+--
+-- Name: services_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY services
+    ADD CONSTRAINT services_pkey PRIMARY KEY (serviceid);
+
+
+--
+-- Name: services_times_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY services_times
+    ADD CONSTRAINT services_times_pkey PRIMARY KEY (timeid);
+
+
+--
+-- Name: sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (sessionid);
+
+
+--
+-- Name: slides_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY slides
+    ADD CONSTRAINT slides_pkey PRIMARY KEY (slideid);
+
+
+--
+-- Name: slideshows_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY slideshows
+    ADD CONSTRAINT slideshows_pkey PRIMARY KEY (slideshowid);
+
+
+--
+-- Name: sysmap_element_url_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmap_element_url
+    ADD CONSTRAINT sysmap_element_url_pkey PRIMARY KEY (sysmapelementurlid);
+
+
+--
+-- Name: sysmap_url_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmap_url
+    ADD CONSTRAINT sysmap_url_pkey PRIMARY KEY (sysmapurlid);
+
+
+--
+-- Name: sysmaps_elements_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_elements
+    ADD CONSTRAINT sysmaps_elements_pkey PRIMARY KEY (selementid);
+
+
+--
+-- Name: sysmaps_link_triggers_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_link_triggers
+    ADD CONSTRAINT sysmaps_link_triggers_pkey PRIMARY KEY (linktriggerid);
+
+
+--
+-- Name: sysmaps_links_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_links
+    ADD CONSTRAINT sysmaps_links_pkey PRIMARY KEY (linkid);
+
+
+--
+-- Name: sysmaps_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps
+    ADD CONSTRAINT sysmaps_pkey PRIMARY KEY (sysmapid);
+
+
+--
+-- Name: timeperiods_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY timeperiods
+    ADD CONSTRAINT timeperiods_pkey PRIMARY KEY (timeperiodid);
+
+
+--
+-- Name: trends_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY trends
+    ADD CONSTRAINT trends_pkey PRIMARY KEY (itemid, clock);
+
+
+--
+-- Name: trends_uint_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY trends_uint
+    ADD CONSTRAINT trends_uint_pkey PRIMARY KEY (itemid, clock);
+
+
+--
+-- Name: trigger_depends_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY trigger_depends
+    ADD CONSTRAINT trigger_depends_pkey PRIMARY KEY (triggerdepid);
+
+
+--
+-- Name: trigger_discovery_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY trigger_discovery
+    ADD CONSTRAINT trigger_discovery_pkey PRIMARY KEY (triggerdiscoveryid);
+
+
+--
+-- Name: triggers_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY triggers
+    ADD CONSTRAINT triggers_pkey PRIMARY KEY (triggerid);
+
+
+--
+-- Name: user_history_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY user_history
+    ADD CONSTRAINT user_history_pkey PRIMARY KEY (userhistoryid);
+
+
+--
+-- Name: users_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY users_groups
+    ADD CONSTRAINT users_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (userid);
+
+
+--
+-- Name: usrgrp_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY usrgrp
+    ADD CONSTRAINT usrgrp_pkey PRIMARY KEY (usrgrpid);
+
+
+--
+-- Name: valuemaps_pkey; Type: CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY valuemaps
+    ADD CONSTRAINT valuemaps_pkey PRIMARY KEY (valuemapid);
+
+
+--
+-- Name: acknowledges_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX acknowledges_1 ON acknowledges USING btree (userid);
+
+
+--
+-- Name: acknowledges_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX acknowledges_2 ON acknowledges USING btree (eventid);
+
+
+--
+-- Name: acknowledges_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX acknowledges_3 ON acknowledges USING btree (clock);
+
+
+--
+-- Name: actions_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX actions_1 ON actions USING btree (eventsource, status);
+
+
+--
+-- Name: alerts_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX alerts_1 ON alerts USING btree (actionid);
+
+
+--
+-- Name: alerts_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX alerts_2 ON alerts USING btree (clock);
+
+
+--
+-- Name: alerts_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX alerts_3 ON alerts USING btree (eventid);
+
+
+--
+-- Name: alerts_4; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX alerts_4 ON alerts USING btree (status, retries);
+
+
+--
+-- Name: alerts_5; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX alerts_5 ON alerts USING btree (mediatypeid);
+
+
+--
+-- Name: alerts_6; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX alerts_6 ON alerts USING btree (userid);
+
+
+--
+-- Name: application_template_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX application_template_1 ON application_template USING btree (applicationid, templateid);
+
+
+--
+-- Name: application_template_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX application_template_2 ON application_template USING btree (templateid);
+
+
+--
+-- Name: applications_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX applications_2 ON applications USING btree (hostid, name);
+
+
+--
+-- Name: auditlog_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX auditlog_1 ON auditlog USING btree (userid, clock);
+
+
+--
+-- Name: auditlog_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX auditlog_2 ON auditlog USING btree (clock);
+
+
+--
+-- Name: auditlog_details_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX auditlog_details_1 ON auditlog_details USING btree (auditid);
+
+
+--
+-- Name: autoreg_host_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX autoreg_host_1 ON autoreg_host USING btree (proxy_hostid, host);
+
+
+--
+-- Name: conditions_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX conditions_1 ON conditions USING btree (actionid);
+
+
+--
+-- Name: config_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX config_1 ON config USING btree (alert_usrgrpid);
+
+
+--
+-- Name: config_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX config_2 ON config USING btree (discovery_groupid);
+
+
+--
+-- Name: dchecks_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX dchecks_1 ON dchecks USING btree (druleid);
+
+
+--
+-- Name: dhosts_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX dhosts_1 ON dhosts USING btree (druleid);
+
+
+--
+-- Name: drules_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX drules_1 ON drules USING btree (proxy_hostid);
+
+
+--
+-- Name: dservices_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX dservices_1 ON dservices USING btree (dcheckid, type, key_, ip, port);
+
+
+--
+-- Name: dservices_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX dservices_2 ON dservices USING btree (dhostid);
+
+
+--
+-- Name: escalations_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX escalations_1 ON escalations USING btree (actionid, triggerid, itemid, escalationid);
+
+
+--
+-- Name: events_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX events_1 ON events USING btree (source, object, objectid, clock);
+
+
+--
+-- Name: events_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX events_2 ON events USING btree (source, object, clock);
+
+
+--
+-- Name: expressions_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX expressions_1 ON expressions USING btree (regexpid);
+
+
+--
+-- Name: functions_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX functions_1 ON functions USING btree (triggerid);
+
+
+--
+-- Name: functions_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX functions_2 ON functions USING btree (itemid, function, parameter);
+
+
+--
+-- Name: globalmacro_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX globalmacro_1 ON globalmacro USING btree (macro);
+
+
+--
+-- Name: graph_discovery_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX graph_discovery_1 ON graph_discovery USING btree (graphid, parent_graphid);
+
+
+--
+-- Name: graph_discovery_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graph_discovery_2 ON graph_discovery USING btree (parent_graphid);
+
+
+--
+-- Name: graph_theme_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graph_theme_1 ON graph_theme USING btree (description);
+
+
+--
+-- Name: graph_theme_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graph_theme_2 ON graph_theme USING btree (theme);
+
+
+--
+-- Name: graphs_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graphs_1 ON graphs USING btree (name);
+
+
+--
+-- Name: graphs_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graphs_2 ON graphs USING btree (templateid);
+
+
+--
+-- Name: graphs_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graphs_3 ON graphs USING btree (ymin_itemid);
+
+
+--
+-- Name: graphs_4; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graphs_4 ON graphs USING btree (ymax_itemid);
+
+
+--
+-- Name: graphs_items_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graphs_items_1 ON graphs_items USING btree (itemid);
+
+
+--
+-- Name: graphs_items_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX graphs_items_2 ON graphs_items USING btree (graphid);
+
+
+--
+-- Name: group_prototype_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX group_prototype_1 ON group_prototype USING btree (hostid);
+
+
+--
+-- Name: groups_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX groups_1 ON groups USING btree (name);
+
+
+--
+-- Name: history_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX history_1 ON history USING btree (itemid, clock);
+
+
+--
+-- Name: history_log_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX history_log_1 ON history_log USING btree (itemid, clock);
+
+
+--
+-- Name: history_log_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX history_log_2 ON history_log USING btree (itemid, id);
+
+
+--
+-- Name: history_str_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX history_str_1 ON history_str USING btree (itemid, clock);
+
+
+--
+-- Name: history_str_sync_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX history_str_sync_1 ON history_str_sync USING btree (nodeid, id);
+
+
+--
+-- Name: history_sync_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX history_sync_1 ON history_sync USING btree (nodeid, id);
+
+
+--
+-- Name: history_text_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX history_text_1 ON history_text USING btree (itemid, clock);
+
+
+--
+-- Name: history_text_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX history_text_2 ON history_text USING btree (itemid, id);
+
+
+--
+-- Name: history_uint_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX history_uint_1 ON history_uint USING btree (itemid, clock);
+
+
+--
+-- Name: history_uint_sync_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX history_uint_sync_1 ON history_uint_sync USING btree (nodeid, id);
+
+
+--
+-- Name: hostmacro_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX hostmacro_1 ON hostmacro USING btree (hostid, macro);
+
+
+--
+-- Name: hosts_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX hosts_1 ON hosts USING btree (host);
+
+
+--
+-- Name: hosts_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX hosts_2 ON hosts USING btree (status);
+
+
+--
+-- Name: hosts_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX hosts_3 ON hosts USING btree (proxy_hostid);
+
+
+--
+-- Name: hosts_4; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX hosts_4 ON hosts USING btree (name);
+
+
+--
+-- Name: hosts_5; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX hosts_5 ON hosts USING btree (maintenanceid);
+
+
+--
+-- Name: hosts_groups_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX hosts_groups_1 ON hosts_groups USING btree (hostid, groupid);
+
+
+--
+-- Name: hosts_groups_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX hosts_groups_2 ON hosts_groups USING btree (groupid);
+
+
+--
+-- Name: hosts_templates_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX hosts_templates_1 ON hosts_templates USING btree (hostid, templateid);
+
+
+--
+-- Name: hosts_templates_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX hosts_templates_2 ON hosts_templates USING btree (templateid);
+
+
+--
+-- Name: httpstep_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX httpstep_1 ON httpstep USING btree (httptestid);
+
+
+--
+-- Name: httpstepitem_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX httpstepitem_1 ON httpstepitem USING btree (httpstepid, itemid);
+
+
+--
+-- Name: httpstepitem_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX httpstepitem_2 ON httpstepitem USING btree (itemid);
+
+
+--
+-- Name: httptest_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX httptest_1 ON httptest USING btree (applicationid);
+
+
+--
+-- Name: httptest_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX httptest_2 ON httptest USING btree (hostid, name);
+
+
+--
+-- Name: httptest_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX httptest_3 ON httptest USING btree (status);
+
+
+--
+-- Name: httptest_4; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX httptest_4 ON httptest USING btree (templateid);
+
+
+--
+-- Name: httptestitem_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX httptestitem_1 ON httptestitem USING btree (httptestid, itemid);
+
+
+--
+-- Name: httptestitem_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX httptestitem_2 ON httptestitem USING btree (itemid);
+
+
+--
+-- Name: icon_map_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX icon_map_1 ON icon_map USING btree (name);
+
+
+--
+-- Name: icon_map_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX icon_map_2 ON icon_map USING btree (default_iconid);
+
+
+--
+-- Name: icon_mapping_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX icon_mapping_1 ON icon_mapping USING btree (iconmapid);
+
+
+--
+-- Name: icon_mapping_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX icon_mapping_2 ON icon_mapping USING btree (iconid);
+
+
+--
+-- Name: images_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX images_1 ON images USING btree (imagetype, name);
+
+
+--
+-- Name: interface_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX interface_1 ON interface USING btree (hostid, type);
+
+
+--
+-- Name: interface_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX interface_2 ON interface USING btree (ip, dns);
+
+
+--
+-- Name: item_discovery_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX item_discovery_1 ON item_discovery USING btree (itemid, parent_itemid);
+
+
+--
+-- Name: item_discovery_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX item_discovery_2 ON item_discovery USING btree (parent_itemid);
+
+
+--
+-- Name: items_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX items_1 ON items USING btree (hostid, key_);
+
+
+--
+-- Name: items_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX items_3 ON items USING btree (status);
+
+
+--
+-- Name: items_4; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX items_4 ON items USING btree (templateid);
+
+
+--
+-- Name: items_5; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX items_5 ON items USING btree (valuemapid);
+
+
+--
+-- Name: items_6; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX items_6 ON items USING btree (interfaceid);
+
+
+--
+-- Name: items_applications_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX items_applications_1 ON items_applications USING btree (applicationid, itemid);
+
+
+--
+-- Name: items_applications_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX items_applications_2 ON items_applications USING btree (itemid);
+
+
+--
+-- Name: maintenances_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX maintenances_1 ON maintenances USING btree (active_since, active_till);
+
+
+--
+-- Name: maintenances_groups_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX maintenances_groups_1 ON maintenances_groups USING btree (maintenanceid, groupid);
+
+
+--
+-- Name: maintenances_groups_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX maintenances_groups_2 ON maintenances_groups USING btree (groupid);
+
+
+--
+-- Name: maintenances_hosts_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX maintenances_hosts_1 ON maintenances_hosts USING btree (maintenanceid, hostid);
+
+
+--
+-- Name: maintenances_hosts_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX maintenances_hosts_2 ON maintenances_hosts USING btree (hostid);
+
+
+--
+-- Name: maintenances_windows_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX maintenances_windows_1 ON maintenances_windows USING btree (maintenanceid, timeperiodid);
+
+
+--
+-- Name: maintenances_windows_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX maintenances_windows_2 ON maintenances_windows USING btree (timeperiodid);
+
+
+--
+-- Name: mappings_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX mappings_1 ON mappings USING btree (valuemapid);
+
+
+--
+-- Name: media_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX media_1 ON media USING btree (userid);
+
+
+--
+-- Name: media_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX media_2 ON media USING btree (mediatypeid);
+
+
+--
+-- Name: node_cksum_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX node_cksum_1 ON node_cksum USING btree (nodeid, cksumtype, tablename, recordid);
+
+
+--
+-- Name: nodes_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX nodes_1 ON nodes USING btree (masterid);
+
+
+--
+-- Name: opcommand_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opcommand_1 ON opcommand USING btree (scriptid);
+
+
+--
+-- Name: opcommand_grp_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opcommand_grp_1 ON opcommand_grp USING btree (operationid);
+
+
+--
+-- Name: opcommand_grp_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opcommand_grp_2 ON opcommand_grp USING btree (groupid);
+
+
+--
+-- Name: opcommand_hst_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opcommand_hst_1 ON opcommand_hst USING btree (operationid);
+
+
+--
+-- Name: opcommand_hst_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opcommand_hst_2 ON opcommand_hst USING btree (hostid);
+
+
+--
+-- Name: opconditions_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opconditions_1 ON opconditions USING btree (operationid);
+
+
+--
+-- Name: operations_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX operations_1 ON operations USING btree (actionid);
+
+
+--
+-- Name: opgroup_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX opgroup_1 ON opgroup USING btree (operationid, groupid);
+
+
+--
+-- Name: opgroup_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opgroup_2 ON opgroup USING btree (groupid);
+
+
+--
+-- Name: opmessage_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opmessage_1 ON opmessage USING btree (mediatypeid);
+
+
+--
+-- Name: opmessage_grp_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX opmessage_grp_1 ON opmessage_grp USING btree (operationid, usrgrpid);
+
+
+--
+-- Name: opmessage_grp_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opmessage_grp_2 ON opmessage_grp USING btree (usrgrpid);
+
+
+--
+-- Name: opmessage_usr_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX opmessage_usr_1 ON opmessage_usr USING btree (operationid, userid);
+
+
+--
+-- Name: opmessage_usr_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX opmessage_usr_2 ON opmessage_usr USING btree (userid);
+
+
+--
+-- Name: optemplate_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX optemplate_1 ON optemplate USING btree (operationid, templateid);
+
+
+--
+-- Name: optemplate_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX optemplate_2 ON optemplate USING btree (templateid);
+
+
+--
+-- Name: profiles_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX profiles_1 ON profiles USING btree (userid, idx, idx2);
+
+
+--
+-- Name: profiles_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX profiles_2 ON profiles USING btree (userid, profileid);
+
+
+--
+-- Name: proxy_autoreg_host_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX proxy_autoreg_host_1 ON proxy_autoreg_host USING btree (clock);
+
+
+--
+-- Name: proxy_dhistory_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX proxy_dhistory_1 ON proxy_dhistory USING btree (clock);
+
+
+--
+-- Name: proxy_history_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX proxy_history_1 ON proxy_history USING btree (clock);
+
+
+--
+-- Name: regexps_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX regexps_1 ON regexps USING btree (name);
+
+
+--
+-- Name: rights_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX rights_1 ON rights USING btree (groupid);
+
+
+--
+-- Name: rights_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX rights_2 ON rights USING btree (id);
+
+
+--
+-- Name: screens_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX screens_1 ON screens USING btree (templateid);
+
+
+--
+-- Name: screens_items_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX screens_items_1 ON screens_items USING btree (screenid);
+
+
+--
+-- Name: scripts_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX scripts_1 ON scripts USING btree (usrgrpid);
+
+
+--
+-- Name: scripts_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX scripts_2 ON scripts USING btree (groupid);
+
+
+--
+-- Name: service_alarms_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX service_alarms_1 ON service_alarms USING btree (serviceid, clock);
+
+
+--
+-- Name: service_alarms_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX service_alarms_2 ON service_alarms USING btree (clock);
+
+
+--
+-- Name: services_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX services_1 ON services USING btree (triggerid);
+
+
+--
+-- Name: services_links_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX services_links_1 ON services_links USING btree (servicedownid);
+
+
+--
+-- Name: services_links_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX services_links_2 ON services_links USING btree (serviceupid, servicedownid);
+
+
+--
+-- Name: services_times_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX services_times_1 ON services_times USING btree (serviceid, type, ts_from, ts_to);
+
+
+--
+-- Name: sessions_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sessions_1 ON sessions USING btree (userid, status);
+
+
+--
+-- Name: slides_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX slides_1 ON slides USING btree (slideshowid);
+
+
+--
+-- Name: slides_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX slides_2 ON slides USING btree (screenid);
+
+
+--
+-- Name: sysmap_element_url_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX sysmap_element_url_1 ON sysmap_element_url USING btree (selementid, name);
+
+
+--
+-- Name: sysmap_url_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX sysmap_url_1 ON sysmap_url USING btree (sysmapid, name);
+
+
+--
+-- Name: sysmaps_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_1 ON sysmaps USING btree (name);
+
+
+--
+-- Name: sysmaps_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_2 ON sysmaps USING btree (backgroundid);
+
+
+--
+-- Name: sysmaps_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_3 ON sysmaps USING btree (iconmapid);
+
+
+--
+-- Name: sysmaps_elements_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_elements_1 ON sysmaps_elements USING btree (sysmapid);
+
+
+--
+-- Name: sysmaps_elements_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_elements_2 ON sysmaps_elements USING btree (iconid_off);
+
+
+--
+-- Name: sysmaps_elements_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_elements_3 ON sysmaps_elements USING btree (iconid_on);
+
+
+--
+-- Name: sysmaps_elements_4; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_elements_4 ON sysmaps_elements USING btree (iconid_disabled);
+
+
+--
+-- Name: sysmaps_elements_5; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_elements_5 ON sysmaps_elements USING btree (iconid_maintenance);
+
+
+--
+-- Name: sysmaps_link_triggers_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX sysmaps_link_triggers_1 ON sysmaps_link_triggers USING btree (linkid, triggerid);
+
+
+--
+-- Name: sysmaps_link_triggers_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_link_triggers_2 ON sysmaps_link_triggers USING btree (triggerid);
+
+
+--
+-- Name: sysmaps_links_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_links_1 ON sysmaps_links USING btree (sysmapid);
+
+
+--
+-- Name: sysmaps_links_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_links_2 ON sysmaps_links USING btree (selementid1);
+
+
+--
+-- Name: sysmaps_links_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX sysmaps_links_3 ON sysmaps_links USING btree (selementid2);
+
+
+--
+-- Name: trigger_depends_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX trigger_depends_1 ON trigger_depends USING btree (triggerid_down, triggerid_up);
+
+
+--
+-- Name: trigger_depends_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX trigger_depends_2 ON trigger_depends USING btree (triggerid_up);
+
+
+--
+-- Name: trigger_discovery_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX trigger_discovery_1 ON trigger_discovery USING btree (triggerid, parent_triggerid);
+
+
+--
+-- Name: trigger_discovery_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX trigger_discovery_2 ON trigger_discovery USING btree (parent_triggerid);
+
+
+--
+-- Name: triggers_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX triggers_1 ON triggers USING btree (status);
+
+
+--
+-- Name: triggers_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX triggers_2 ON triggers USING btree (value);
+
+
+--
+-- Name: triggers_3; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX triggers_3 ON triggers USING btree (templateid);
+
+
+--
+-- Name: user_history_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX user_history_1 ON user_history USING btree (userid);
+
+
+--
+-- Name: users_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX users_1 ON users USING btree (alias);
+
+
+--
+-- Name: users_groups_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE UNIQUE INDEX users_groups_1 ON users_groups USING btree (usrgrpid, userid);
+
+
+--
+-- Name: users_groups_2; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX users_groups_2 ON users_groups USING btree (userid);
+
+
+--
+-- Name: usrgrp_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX usrgrp_1 ON usrgrp USING btree (name);
+
+
+--
+-- Name: valuemaps_1; Type: INDEX; Schema: public; Owner: ben.wyatt
+--
+
+CREATE INDEX valuemaps_1 ON valuemaps USING btree (name);
+
+
+--
+-- Name: c_acknowledges_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY acknowledges
+    ADD CONSTRAINT c_acknowledges_1 FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_acknowledges_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY acknowledges
+    ADD CONSTRAINT c_acknowledges_2 FOREIGN KEY (eventid) REFERENCES events(eventid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_alerts_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY alerts
+    ADD CONSTRAINT c_alerts_1 FOREIGN KEY (actionid) REFERENCES actions(actionid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_alerts_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY alerts
+    ADD CONSTRAINT c_alerts_2 FOREIGN KEY (eventid) REFERENCES events(eventid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_alerts_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY alerts
+    ADD CONSTRAINT c_alerts_3 FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_alerts_4; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY alerts
+    ADD CONSTRAINT c_alerts_4 FOREIGN KEY (mediatypeid) REFERENCES media_type(mediatypeid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_application_template_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY application_template
+    ADD CONSTRAINT c_application_template_1 FOREIGN KEY (applicationid) REFERENCES applications(applicationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_application_template_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY application_template
+    ADD CONSTRAINT c_application_template_2 FOREIGN KEY (templateid) REFERENCES applications(applicationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_applications_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY applications
+    ADD CONSTRAINT c_applications_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_auditlog_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY auditlog
+    ADD CONSTRAINT c_auditlog_1 FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_auditlog_details_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY auditlog_details
+    ADD CONSTRAINT c_auditlog_details_1 FOREIGN KEY (auditid) REFERENCES auditlog(auditid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_autoreg_host_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY autoreg_host
+    ADD CONSTRAINT c_autoreg_host_1 FOREIGN KEY (proxy_hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_conditions_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY conditions
+    ADD CONSTRAINT c_conditions_1 FOREIGN KEY (actionid) REFERENCES actions(actionid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_config_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY config
+    ADD CONSTRAINT c_config_1 FOREIGN KEY (alert_usrgrpid) REFERENCES usrgrp(usrgrpid);
+
+
+--
+-- Name: c_config_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY config
+    ADD CONSTRAINT c_config_2 FOREIGN KEY (discovery_groupid) REFERENCES groups(groupid);
+
+
+--
+-- Name: c_dchecks_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY dchecks
+    ADD CONSTRAINT c_dchecks_1 FOREIGN KEY (druleid) REFERENCES drules(druleid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_dhosts_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY dhosts
+    ADD CONSTRAINT c_dhosts_1 FOREIGN KEY (druleid) REFERENCES drules(druleid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_drules_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY drules
+    ADD CONSTRAINT c_drules_1 FOREIGN KEY (proxy_hostid) REFERENCES hosts(hostid);
+
+
+--
+-- Name: c_dservices_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY dservices
+    ADD CONSTRAINT c_dservices_1 FOREIGN KEY (dhostid) REFERENCES dhosts(dhostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_dservices_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY dservices
+    ADD CONSTRAINT c_dservices_2 FOREIGN KEY (dcheckid) REFERENCES dchecks(dcheckid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_expressions_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY expressions
+    ADD CONSTRAINT c_expressions_1 FOREIGN KEY (regexpid) REFERENCES regexps(regexpid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_functions_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY functions
+    ADD CONSTRAINT c_functions_1 FOREIGN KEY (itemid) REFERENCES items(itemid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_functions_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY functions
+    ADD CONSTRAINT c_functions_2 FOREIGN KEY (triggerid) REFERENCES triggers(triggerid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_graph_discovery_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graph_discovery
+    ADD CONSTRAINT c_graph_discovery_1 FOREIGN KEY (graphid) REFERENCES graphs(graphid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_graph_discovery_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graph_discovery
+    ADD CONSTRAINT c_graph_discovery_2 FOREIGN KEY (parent_graphid) REFERENCES graphs(graphid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_graphs_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graphs
+    ADD CONSTRAINT c_graphs_1 FOREIGN KEY (templateid) REFERENCES graphs(graphid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_graphs_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graphs
+    ADD CONSTRAINT c_graphs_2 FOREIGN KEY (ymin_itemid) REFERENCES items(itemid);
+
+
+--
+-- Name: c_graphs_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graphs
+    ADD CONSTRAINT c_graphs_3 FOREIGN KEY (ymax_itemid) REFERENCES items(itemid);
+
+
+--
+-- Name: c_graphs_items_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graphs_items
+    ADD CONSTRAINT c_graphs_items_1 FOREIGN KEY (graphid) REFERENCES graphs(graphid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_graphs_items_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY graphs_items
+    ADD CONSTRAINT c_graphs_items_2 FOREIGN KEY (itemid) REFERENCES items(itemid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_group_discovery_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY group_discovery
+    ADD CONSTRAINT c_group_discovery_1 FOREIGN KEY (groupid) REFERENCES groups(groupid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_group_discovery_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY group_discovery
+    ADD CONSTRAINT c_group_discovery_2 FOREIGN KEY (parent_group_prototypeid) REFERENCES group_prototype(group_prototypeid);
+
+
+--
+-- Name: c_group_prototype_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY group_prototype
+    ADD CONSTRAINT c_group_prototype_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_group_prototype_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY group_prototype
+    ADD CONSTRAINT c_group_prototype_2 FOREIGN KEY (groupid) REFERENCES groups(groupid);
+
+
+--
+-- Name: c_group_prototype_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY group_prototype
+    ADD CONSTRAINT c_group_prototype_3 FOREIGN KEY (templateid) REFERENCES group_prototype(group_prototypeid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_host_discovery_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY host_discovery
+    ADD CONSTRAINT c_host_discovery_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_host_discovery_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY host_discovery
+    ADD CONSTRAINT c_host_discovery_2 FOREIGN KEY (parent_hostid) REFERENCES hosts(hostid);
+
+
+--
+-- Name: c_host_discovery_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY host_discovery
+    ADD CONSTRAINT c_host_discovery_3 FOREIGN KEY (parent_itemid) REFERENCES items(itemid);
+
+
+--
+-- Name: c_host_inventory_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY host_inventory
+    ADD CONSTRAINT c_host_inventory_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_hostmacro_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hostmacro
+    ADD CONSTRAINT c_hostmacro_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_hosts_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts
+    ADD CONSTRAINT c_hosts_1 FOREIGN KEY (proxy_hostid) REFERENCES hosts(hostid);
+
+
+--
+-- Name: c_hosts_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts
+    ADD CONSTRAINT c_hosts_2 FOREIGN KEY (maintenanceid) REFERENCES maintenances(maintenanceid);
+
+
+--
+-- Name: c_hosts_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts
+    ADD CONSTRAINT c_hosts_3 FOREIGN KEY (templateid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_hosts_groups_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts_groups
+    ADD CONSTRAINT c_hosts_groups_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_hosts_groups_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts_groups
+    ADD CONSTRAINT c_hosts_groups_2 FOREIGN KEY (groupid) REFERENCES groups(groupid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_hosts_templates_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts_templates
+    ADD CONSTRAINT c_hosts_templates_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_hosts_templates_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY hosts_templates
+    ADD CONSTRAINT c_hosts_templates_2 FOREIGN KEY (templateid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_httpstep_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httpstep
+    ADD CONSTRAINT c_httpstep_1 FOREIGN KEY (httptestid) REFERENCES httptest(httptestid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_httpstepitem_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httpstepitem
+    ADD CONSTRAINT c_httpstepitem_1 FOREIGN KEY (httpstepid) REFERENCES httpstep(httpstepid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_httpstepitem_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httpstepitem
+    ADD CONSTRAINT c_httpstepitem_2 FOREIGN KEY (itemid) REFERENCES items(itemid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_httptest_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httptest
+    ADD CONSTRAINT c_httptest_1 FOREIGN KEY (applicationid) REFERENCES applications(applicationid);
+
+
+--
+-- Name: c_httptest_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httptest
+    ADD CONSTRAINT c_httptest_2 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_httptest_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httptest
+    ADD CONSTRAINT c_httptest_3 FOREIGN KEY (templateid) REFERENCES httptest(httptestid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_httptestitem_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httptestitem
+    ADD CONSTRAINT c_httptestitem_1 FOREIGN KEY (httptestid) REFERENCES httptest(httptestid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_httptestitem_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY httptestitem
+    ADD CONSTRAINT c_httptestitem_2 FOREIGN KEY (itemid) REFERENCES items(itemid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_icon_map_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY icon_map
+    ADD CONSTRAINT c_icon_map_1 FOREIGN KEY (default_iconid) REFERENCES images(imageid);
+
+
+--
+-- Name: c_icon_mapping_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY icon_mapping
+    ADD CONSTRAINT c_icon_mapping_1 FOREIGN KEY (iconmapid) REFERENCES icon_map(iconmapid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_icon_mapping_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY icon_mapping
+    ADD CONSTRAINT c_icon_mapping_2 FOREIGN KEY (iconid) REFERENCES images(imageid);
+
+
+--
+-- Name: c_interface_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY interface
+    ADD CONSTRAINT c_interface_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_interface_discovery_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY interface_discovery
+    ADD CONSTRAINT c_interface_discovery_1 FOREIGN KEY (interfaceid) REFERENCES interface(interfaceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_interface_discovery_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY interface_discovery
+    ADD CONSTRAINT c_interface_discovery_2 FOREIGN KEY (parent_interfaceid) REFERENCES interface(interfaceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_item_discovery_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY item_discovery
+    ADD CONSTRAINT c_item_discovery_1 FOREIGN KEY (itemid) REFERENCES items(itemid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_item_discovery_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY item_discovery
+    ADD CONSTRAINT c_item_discovery_2 FOREIGN KEY (parent_itemid) REFERENCES items(itemid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_items_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT c_items_1 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_items_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT c_items_2 FOREIGN KEY (templateid) REFERENCES items(itemid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_items_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT c_items_3 FOREIGN KEY (valuemapid) REFERENCES valuemaps(valuemapid);
+
+
+--
+-- Name: c_items_4; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT c_items_4 FOREIGN KEY (interfaceid) REFERENCES interface(interfaceid);
+
+
+--
+-- Name: c_items_applications_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY items_applications
+    ADD CONSTRAINT c_items_applications_1 FOREIGN KEY (applicationid) REFERENCES applications(applicationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_items_applications_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY items_applications
+    ADD CONSTRAINT c_items_applications_2 FOREIGN KEY (itemid) REFERENCES items(itemid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_maintenances_groups_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_groups
+    ADD CONSTRAINT c_maintenances_groups_1 FOREIGN KEY (maintenanceid) REFERENCES maintenances(maintenanceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_maintenances_groups_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_groups
+    ADD CONSTRAINT c_maintenances_groups_2 FOREIGN KEY (groupid) REFERENCES groups(groupid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_maintenances_hosts_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_hosts
+    ADD CONSTRAINT c_maintenances_hosts_1 FOREIGN KEY (maintenanceid) REFERENCES maintenances(maintenanceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_maintenances_hosts_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_hosts
+    ADD CONSTRAINT c_maintenances_hosts_2 FOREIGN KEY (hostid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_maintenances_windows_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_windows
+    ADD CONSTRAINT c_maintenances_windows_1 FOREIGN KEY (maintenanceid) REFERENCES maintenances(maintenanceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_maintenances_windows_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY maintenances_windows
+    ADD CONSTRAINT c_maintenances_windows_2 FOREIGN KEY (timeperiodid) REFERENCES timeperiods(timeperiodid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_mappings_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY mappings
+    ADD CONSTRAINT c_mappings_1 FOREIGN KEY (valuemapid) REFERENCES valuemaps(valuemapid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_media_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY media
+    ADD CONSTRAINT c_media_1 FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_media_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY media
+    ADD CONSTRAINT c_media_2 FOREIGN KEY (mediatypeid) REFERENCES media_type(mediatypeid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_node_cksum_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY node_cksum
+    ADD CONSTRAINT c_node_cksum_1 FOREIGN KEY (nodeid) REFERENCES nodes(nodeid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_nodes_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY nodes
+    ADD CONSTRAINT c_nodes_1 FOREIGN KEY (masterid) REFERENCES nodes(nodeid);
+
+
+--
+-- Name: c_opcommand_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand
+    ADD CONSTRAINT c_opcommand_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_opcommand_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand
+    ADD CONSTRAINT c_opcommand_2 FOREIGN KEY (scriptid) REFERENCES scripts(scriptid);
+
+
+--
+-- Name: c_opcommand_grp_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand_grp
+    ADD CONSTRAINT c_opcommand_grp_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_opcommand_grp_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand_grp
+    ADD CONSTRAINT c_opcommand_grp_2 FOREIGN KEY (groupid) REFERENCES groups(groupid);
+
+
+--
+-- Name: c_opcommand_hst_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand_hst
+    ADD CONSTRAINT c_opcommand_hst_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_opcommand_hst_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opcommand_hst
+    ADD CONSTRAINT c_opcommand_hst_2 FOREIGN KEY (hostid) REFERENCES hosts(hostid);
+
+
+--
+-- Name: c_opconditions_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opconditions
+    ADD CONSTRAINT c_opconditions_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_operations_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY operations
+    ADD CONSTRAINT c_operations_1 FOREIGN KEY (actionid) REFERENCES actions(actionid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_opgroup_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opgroup
+    ADD CONSTRAINT c_opgroup_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_opgroup_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opgroup
+    ADD CONSTRAINT c_opgroup_2 FOREIGN KEY (groupid) REFERENCES groups(groupid);
+
+
+--
+-- Name: c_opmessage_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage
+    ADD CONSTRAINT c_opmessage_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_opmessage_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage
+    ADD CONSTRAINT c_opmessage_2 FOREIGN KEY (mediatypeid) REFERENCES media_type(mediatypeid);
+
+
+--
+-- Name: c_opmessage_grp_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage_grp
+    ADD CONSTRAINT c_opmessage_grp_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_opmessage_grp_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage_grp
+    ADD CONSTRAINT c_opmessage_grp_2 FOREIGN KEY (usrgrpid) REFERENCES usrgrp(usrgrpid);
+
+
+--
+-- Name: c_opmessage_usr_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage_usr
+    ADD CONSTRAINT c_opmessage_usr_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_opmessage_usr_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY opmessage_usr
+    ADD CONSTRAINT c_opmessage_usr_2 FOREIGN KEY (userid) REFERENCES users(userid);
+
+
+--
+-- Name: c_optemplate_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY optemplate
+    ADD CONSTRAINT c_optemplate_1 FOREIGN KEY (operationid) REFERENCES operations(operationid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_optemplate_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY optemplate
+    ADD CONSTRAINT c_optemplate_2 FOREIGN KEY (templateid) REFERENCES hosts(hostid);
+
+
+--
+-- Name: c_profiles_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY profiles
+    ADD CONSTRAINT c_profiles_1 FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_rights_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY rights
+    ADD CONSTRAINT c_rights_1 FOREIGN KEY (groupid) REFERENCES usrgrp(usrgrpid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_rights_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY rights
+    ADD CONSTRAINT c_rights_2 FOREIGN KEY (id) REFERENCES groups(groupid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_screens_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY screens
+    ADD CONSTRAINT c_screens_1 FOREIGN KEY (templateid) REFERENCES hosts(hostid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_screens_items_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY screens_items
+    ADD CONSTRAINT c_screens_items_1 FOREIGN KEY (screenid) REFERENCES screens(screenid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_scripts_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY scripts
+    ADD CONSTRAINT c_scripts_1 FOREIGN KEY (usrgrpid) REFERENCES usrgrp(usrgrpid);
+
+
+--
+-- Name: c_scripts_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY scripts
+    ADD CONSTRAINT c_scripts_2 FOREIGN KEY (groupid) REFERENCES groups(groupid);
+
+
+--
+-- Name: c_service_alarms_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY service_alarms
+    ADD CONSTRAINT c_service_alarms_1 FOREIGN KEY (serviceid) REFERENCES services(serviceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_services_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY services
+    ADD CONSTRAINT c_services_1 FOREIGN KEY (triggerid) REFERENCES triggers(triggerid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_services_links_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY services_links
+    ADD CONSTRAINT c_services_links_1 FOREIGN KEY (serviceupid) REFERENCES services(serviceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_services_links_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY services_links
+    ADD CONSTRAINT c_services_links_2 FOREIGN KEY (servicedownid) REFERENCES services(serviceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_services_times_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY services_times
+    ADD CONSTRAINT c_services_times_1 FOREIGN KEY (serviceid) REFERENCES services(serviceid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sessions_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sessions
+    ADD CONSTRAINT c_sessions_1 FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_slides_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY slides
+    ADD CONSTRAINT c_slides_1 FOREIGN KEY (slideshowid) REFERENCES slideshows(slideshowid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_slides_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY slides
+    ADD CONSTRAINT c_slides_2 FOREIGN KEY (screenid) REFERENCES screens(screenid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sysmap_element_url_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmap_element_url
+    ADD CONSTRAINT c_sysmap_element_url_1 FOREIGN KEY (selementid) REFERENCES sysmaps_elements(selementid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sysmap_url_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmap_url
+    ADD CONSTRAINT c_sysmap_url_1 FOREIGN KEY (sysmapid) REFERENCES sysmaps(sysmapid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sysmaps_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps
+    ADD CONSTRAINT c_sysmaps_1 FOREIGN KEY (backgroundid) REFERENCES images(imageid);
+
+
+--
+-- Name: c_sysmaps_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps
+    ADD CONSTRAINT c_sysmaps_2 FOREIGN KEY (iconmapid) REFERENCES icon_map(iconmapid);
+
+
+--
+-- Name: c_sysmaps_elements_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_elements
+    ADD CONSTRAINT c_sysmaps_elements_1 FOREIGN KEY (sysmapid) REFERENCES sysmaps(sysmapid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sysmaps_elements_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_elements
+    ADD CONSTRAINT c_sysmaps_elements_2 FOREIGN KEY (iconid_off) REFERENCES images(imageid);
+
+
+--
+-- Name: c_sysmaps_elements_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_elements
+    ADD CONSTRAINT c_sysmaps_elements_3 FOREIGN KEY (iconid_on) REFERENCES images(imageid);
+
+
+--
+-- Name: c_sysmaps_elements_4; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_elements
+    ADD CONSTRAINT c_sysmaps_elements_4 FOREIGN KEY (iconid_disabled) REFERENCES images(imageid);
+
+
+--
+-- Name: c_sysmaps_elements_5; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_elements
+    ADD CONSTRAINT c_sysmaps_elements_5 FOREIGN KEY (iconid_maintenance) REFERENCES images(imageid);
+
+
+--
+-- Name: c_sysmaps_link_triggers_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_link_triggers
+    ADD CONSTRAINT c_sysmaps_link_triggers_1 FOREIGN KEY (linkid) REFERENCES sysmaps_links(linkid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sysmaps_link_triggers_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_link_triggers
+    ADD CONSTRAINT c_sysmaps_link_triggers_2 FOREIGN KEY (triggerid) REFERENCES triggers(triggerid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sysmaps_links_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_links
+    ADD CONSTRAINT c_sysmaps_links_1 FOREIGN KEY (sysmapid) REFERENCES sysmaps(sysmapid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sysmaps_links_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_links
+    ADD CONSTRAINT c_sysmaps_links_2 FOREIGN KEY (selementid1) REFERENCES sysmaps_elements(selementid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_sysmaps_links_3; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY sysmaps_links
+    ADD CONSTRAINT c_sysmaps_links_3 FOREIGN KEY (selementid2) REFERENCES sysmaps_elements(selementid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_trigger_depends_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY trigger_depends
+    ADD CONSTRAINT c_trigger_depends_1 FOREIGN KEY (triggerid_down) REFERENCES triggers(triggerid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_trigger_depends_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY trigger_depends
+    ADD CONSTRAINT c_trigger_depends_2 FOREIGN KEY (triggerid_up) REFERENCES triggers(triggerid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_trigger_discovery_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY trigger_discovery
+    ADD CONSTRAINT c_trigger_discovery_1 FOREIGN KEY (triggerid) REFERENCES triggers(triggerid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_trigger_discovery_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY trigger_discovery
+    ADD CONSTRAINT c_trigger_discovery_2 FOREIGN KEY (parent_triggerid) REFERENCES triggers(triggerid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_triggers_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY triggers
+    ADD CONSTRAINT c_triggers_1 FOREIGN KEY (templateid) REFERENCES triggers(triggerid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_user_history_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY user_history
+    ADD CONSTRAINT c_user_history_1 FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_users_groups_1; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY users_groups
+    ADD CONSTRAINT c_users_groups_1 FOREIGN KEY (usrgrpid) REFERENCES usrgrp(usrgrpid) ON DELETE CASCADE;
+
+
+--
+-- Name: c_users_groups_2; Type: FK CONSTRAINT; Schema: public; Owner: ben.wyatt
+--
+
+ALTER TABLE ONLY users_groups
+    ADD CONSTRAINT c_users_groups_2 FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE;
 
 
 --
