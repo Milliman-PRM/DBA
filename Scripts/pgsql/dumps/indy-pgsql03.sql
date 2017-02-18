@@ -107,6 +107,8 @@ CREATE ROLE "Indy_ePHI_0273APR";
 ALTER ROLE "Indy_ePHI_0273APR" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0273CHA";
 ALTER ROLE "Indy_ePHI_0273CHA" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "Indy_ePHI_0273CHC";
+ALTER ROLE "Indy_ePHI_0273CHC" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0273CHI";
 ALTER ROLE "Indy_ePHI_0273CHI" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_0273CRR";
@@ -195,6 +197,8 @@ CREATE ROLE "david.pierce";
 ALTER ROLE "david.pierce" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE geocoder;
 ALTER ROLE geocoder WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN REPLICATION NOBYPASSRLS PASSWORD 'md5cd06c02c1857e673e82d4cc0a3a4232a';
+CREATE ROLE geocoder_admins;
+ALTER ROLE geocoder_admins WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE geocoder_users;
 ALTER ROLE geocoder_users WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "indy-cdrbot-0273woh";
@@ -324,6 +328,8 @@ GRANT "Indy_ePHI_0273CHA" TO "jacob.krebs" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHA" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHA" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHA" TO "shea.parkes" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273CHC" TO "jason.altieri" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273CHC" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHI" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHI" TO "david.pierce" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHI" TO "jason.altieri" GRANTED BY postgres;
@@ -496,6 +502,8 @@ GRANT "Indy_ePHI_0273ZRR" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZRR" TO "david.pierce" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZRR" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_VT_QVW" TO "van.nanney" GRANTED BY postgres;
+GRANT geocoder_admins TO "aaron.burgess" GRANTED BY "ben.wyatt";
+GRANT geocoder_admins TO "jacob.krebs" GRANTED BY "ben.wyatt";
 GRANT geocoder_users TO "brandon.patterson" GRANTED BY "ben.wyatt";
 GRANT geocoder_users TO indy_jenkins_no_ephi GRANTED BY "ben.wyatt";
 GRANT geocoder_users TO "jacob.krebs" GRANTED BY "ben.wyatt";
@@ -548,6 +556,7 @@ GRANT ldap_groups TO "Indy_ePHI_0273AHN" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0273AOH" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0273APR" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0273CHA" GRANTED BY postgres;
+GRANT ldap_groups TO "Indy_ePHI_0273CHC" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0273CHI" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0273CRR" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0273EVH" GRANTED BY postgres;
@@ -612,7 +621,7 @@ GRANT ldap_users TO "van.nanney" GRANTED BY postgres;
 -- Database creation
 --
 
-CREATE DATABASE prm_geocoder_dev WITH TEMPLATE = template0 OWNER = "aaron.burgess";
+CREATE DATABASE prm_geocoder_dev WITH TEMPLATE = template0 OWNER = geocoder_admins;
 ALTER DATABASE prm_geocoder_dev SET search_path TO "$user", public, tiger;
 REVOKE ALL ON DATABASE template1 FROM PUBLIC;
 REVOKE ALL ON DATABASE template1 FROM postgres;
@@ -708,31 +717,31 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: geocoding_data; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+-- Name: geocoding_data; Type: SCHEMA; Schema: -; Owner: geocoder_admins
 --
 
 CREATE SCHEMA geocoding_data;
 
 
-ALTER SCHEMA geocoding_data OWNER TO "aaron.burgess";
+ALTER SCHEMA geocoding_data OWNER TO geocoder_admins;
 
 --
--- Name: pierce; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+-- Name: pierce; Type: SCHEMA; Schema: -; Owner: geocoder_admins
 --
 
 CREATE SCHEMA pierce;
 
 
-ALTER SCHEMA pierce OWNER TO "aaron.burgess";
+ALTER SCHEMA pierce OWNER TO geocoder_admins;
 
 --
--- Name: tiger; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+-- Name: tiger; Type: SCHEMA; Schema: -; Owner: geocoder_admins
 --
 
 CREATE SCHEMA tiger;
 
 
-ALTER SCHEMA tiger OWNER TO "aaron.burgess";
+ALTER SCHEMA tiger OWNER TO geocoder_admins;
 
 --
 -- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: 
@@ -777,22 +786,22 @@ COMMENT ON EXTENSION postgis_tiger_geocoder IS 'PostGIS tiger geocoder and rever
 
 
 --
--- Name: tiger_staging; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+-- Name: tiger_staging; Type: SCHEMA; Schema: -; Owner: geocoder_admins
 --
 
 CREATE SCHEMA tiger_staging;
 
 
-ALTER SCHEMA tiger_staging OWNER TO "aaron.burgess";
+ALTER SCHEMA tiger_staging OWNER TO geocoder_admins;
 
 --
--- Name: topology; Type: SCHEMA; Schema: -; Owner: aaron.burgess
+-- Name: topology; Type: SCHEMA; Schema: -; Owner: geocoder_admins
 --
 
 CREATE SCHEMA topology;
 
 
-ALTER SCHEMA topology OWNER TO "aaron.burgess";
+ALTER SCHEMA topology OWNER TO geocoder_admins;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -853,7 +862,7 @@ COMMENT ON EXTENSION postgis_topology IS 'PostGIS topology spatial types and fun
 SET search_path = public, pg_catalog;
 
 --
--- Name: prm_generate_routing_query(integer, integer, text); Type: FUNCTION; Schema: public; Owner: aaron.burgess
+-- Name: prm_generate_routing_query(integer, integer, text); Type: FUNCTION; Schema: public; Owner: geocoder_admins
 --
 
 CREATE FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) RETURNS text
@@ -868,10 +877,10 @@ END;
 $$;
 
 
-ALTER FUNCTION public.prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) OWNER TO "aaron.burgess";
+ALTER FUNCTION public.prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) OWNER TO geocoder_admins;
 
 --
--- Name: prm_geocode(text, text); Type: FUNCTION; Schema: public; Owner: aaron.burgess
+-- Name: prm_geocode(text, text); Type: FUNCTION; Schema: public; Owner: geocoder_admins
 --
 
 CREATE FUNCTION prm_geocode(_tbl text, statefips text) RETURNS void
@@ -890,10 +899,10 @@ END;
 $$;
 
 
-ALTER FUNCTION public.prm_geocode(_tbl text, statefips text) OWNER TO "aaron.burgess";
+ALTER FUNCTION public.prm_geocode(_tbl text, statefips text) OWNER TO geocoder_admins;
 
 --
--- Name: prm_network_node(geometry, text); Type: FUNCTION; Schema: public; Owner: aaron.burgess
+-- Name: prm_network_node(geometry, text); Type: FUNCTION; Schema: public; Owner: geocoder_admins
 --
 
 CREATE FUNCTION prm_network_node(point geometry, stateabbrev text) RETURNS integer
@@ -909,10 +918,10 @@ END;
 $$;
 
 
-ALTER FUNCTION public.prm_network_node(point geometry, stateabbrev text) OWNER TO "aaron.burgess";
+ALTER FUNCTION public.prm_network_node(point geometry, stateabbrev text) OWNER TO geocoder_admins;
 
 --
--- Name: prm_routing(text, integer, integer); Type: FUNCTION; Schema: public; Owner: aaron.burgess
+-- Name: prm_routing(text, integer, integer); Type: FUNCTION; Schema: public; Owner: geocoder_admins
 --
 
 CREATE FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) RETURNS double precision
@@ -924,10 +933,10 @@ END;
 $$;
 
 
-ALTER FUNCTION public.prm_routing(routing_query text, start_node integer, end_node integer) OWNER TO "aaron.burgess";
+ALTER FUNCTION public.prm_routing(routing_query text, start_node integer, end_node integer) OWNER TO geocoder_admins;
 
 --
--- Name: prm_table_routing(text, text, text, text); Type: FUNCTION; Schema: public; Owner: aaron.burgess
+-- Name: prm_table_routing(text, text, text, text); Type: FUNCTION; Schema: public; Owner: geocoder_admins
 --
 
 CREATE FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) RETURNS void
@@ -950,7 +959,7 @@ END;
 $$;
 
 
-ALTER FUNCTION public.prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) OWNER TO "aaron.burgess";
+ALTER FUNCTION public.prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) OWNER TO geocoder_admins;
 
 SET search_path = geocoding_data, pg_catalog;
 
@@ -1023,7 +1032,40 @@ ALTER SEQUENCE "HI_id_seq" OWNED BY "HI".id;
 
 
 --
--- Name: cached_geocodes; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: aaron_burgess; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
+--
+
+CREATE TABLE aaron_burgess (
+    id integer NOT NULL,
+    address text
+);
+
+
+ALTER TABLE aaron_burgess OWNER TO geocoder_admins;
+
+--
+-- Name: aaron_burgess_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
+--
+
+CREATE SEQUENCE aaron_burgess_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE aaron_burgess_id_seq OWNER TO geocoder_admins;
+
+--
+-- Name: aaron_burgess_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
+--
+
+ALTER SEQUENCE aaron_burgess_id_seq OWNED BY aaron_burgess.id;
+
+
+--
+-- Name: cached_geocodes; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE cached_geocodes (
@@ -1040,10 +1082,10 @@ CREATE TABLE cached_geocodes (
 );
 
 
-ALTER TABLE cached_geocodes OWNER TO "aaron.burgess";
+ALTER TABLE cached_geocodes OWNER TO geocoder_admins;
 
 --
--- Name: cached_geocodes_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cached_geocodes_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE cached_geocodes_id_seq
@@ -1054,17 +1096,17 @@ CREATE SEQUENCE cached_geocodes_id_seq
     CACHE 1;
 
 
-ALTER TABLE cached_geocodes_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE cached_geocodes_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: cached_geocodes_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cached_geocodes_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE cached_geocodes_id_seq OWNED BY cached_geocodes.id;
 
 
 --
--- Name: cached_routes; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cached_routes; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE cached_routes (
@@ -1077,10 +1119,10 @@ CREATE TABLE cached_routes (
 );
 
 
-ALTER TABLE cached_routes OWNER TO "aaron.burgess";
+ALTER TABLE cached_routes OWNER TO geocoder_admins;
 
 --
--- Name: cascade_mem_address; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cascade_mem_address; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE cascade_mem_address (
@@ -1089,10 +1131,10 @@ CREATE TABLE cascade_mem_address (
 );
 
 
-ALTER TABLE cascade_mem_address OWNER TO "aaron.burgess";
+ALTER TABLE cascade_mem_address OWNER TO geocoder_admins;
 
 --
--- Name: cascade_mem_address_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cascade_mem_address_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE cascade_mem_address_id_seq
@@ -1103,10 +1145,10 @@ CREATE SEQUENCE cascade_mem_address_id_seq
     CACHE 1;
 
 
-ALTER TABLE cascade_mem_address_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE cascade_mem_address_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: cascade_mem_address_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cascade_mem_address_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE cascade_mem_address_id_seq OWNED BY cascade_mem_address.id;
@@ -1146,7 +1188,7 @@ ALTER SEQUENCE client_name_id_seq OWNED BY client_name.id;
 
 
 --
--- Name: clover_avoidable_by_zip; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_avoidable_by_zip; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE clover_avoidable_by_zip (
@@ -1156,10 +1198,10 @@ CREATE TABLE clover_avoidable_by_zip (
 );
 
 
-ALTER TABLE clover_avoidable_by_zip OWNER TO "aaron.burgess";
+ALTER TABLE clover_avoidable_by_zip OWNER TO geocoder_admins;
 
 --
--- Name: clover_avoidable_by_zip_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_avoidable_by_zip_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE clover_avoidable_by_zip_id_seq
@@ -1170,17 +1212,17 @@ CREATE SEQUENCE clover_avoidable_by_zip_id_seq
     CACHE 1;
 
 
-ALTER TABLE clover_avoidable_by_zip_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE clover_avoidable_by_zip_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: clover_avoidable_by_zip_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_avoidable_by_zip_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE clover_avoidable_by_zip_id_seq OWNED BY clover_avoidable_by_zip.id;
 
 
 --
--- Name: clover_zip_sum_geom; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_zip_sum_geom; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE clover_zip_sum_geom (
@@ -1199,10 +1241,10 @@ CREATE TABLE clover_zip_sum_geom (
 );
 
 
-ALTER TABLE clover_zip_sum_geom OWNER TO "aaron.burgess";
+ALTER TABLE clover_zip_sum_geom OWNER TO geocoder_admins;
 
 --
--- Name: clover_by_zip_sum; Type: VIEW; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_by_zip_sum; Type: VIEW; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE VIEW clover_by_zip_sum AS
@@ -1214,10 +1256,10 @@ CREATE VIEW clover_by_zip_sum AS
    FROM clover_zip_sum_geom;
 
 
-ALTER TABLE clover_by_zip_sum OWNER TO "aaron.burgess";
+ALTER TABLE clover_by_zip_sum OWNER TO geocoder_admins;
 
 --
--- Name: clover_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE clover_zip_freq (
@@ -1227,10 +1269,10 @@ CREATE TABLE clover_zip_freq (
 );
 
 
-ALTER TABLE clover_zip_freq OWNER TO "aaron.burgess";
+ALTER TABLE clover_zip_freq OWNER TO geocoder_admins;
 
 --
--- Name: clover_zip_freq_geom; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_zip_freq_geom; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE clover_zip_freq_geom (
@@ -1249,10 +1291,10 @@ CREATE TABLE clover_zip_freq_geom (
 );
 
 
-ALTER TABLE clover_zip_freq_geom OWNER TO "aaron.burgess";
+ALTER TABLE clover_zip_freq_geom OWNER TO geocoder_admins;
 
 --
--- Name: clover_zip_freq_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_zip_freq_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE clover_zip_freq_id_seq
@@ -1263,17 +1305,17 @@ CREATE SEQUENCE clover_zip_freq_id_seq
     CACHE 1;
 
 
-ALTER TABLE clover_zip_freq_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE clover_zip_freq_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: clover_zip_freq_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_zip_freq_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE clover_zip_freq_id_seq OWNED BY clover_zip_freq.id;
 
 
 --
--- Name: evh; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE evh (
@@ -1282,10 +1324,10 @@ CREATE TABLE evh (
 );
 
 
-ALTER TABLE evh OWNER TO "aaron.burgess";
+ALTER TABLE evh OWNER TO geocoder_admins;
 
 --
--- Name: evh_control; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_control; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE evh_control (
@@ -1296,10 +1338,10 @@ CREATE TABLE evh_control (
 );
 
 
-ALTER TABLE evh_control OWNER TO "aaron.burgess";
+ALTER TABLE evh_control OWNER TO geocoder_admins;
 
 --
--- Name: evh_evolution; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_evolution; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE evh_evolution (
@@ -1310,10 +1352,10 @@ CREATE TABLE evh_evolution (
 );
 
 
-ALTER TABLE evh_evolution OWNER TO "aaron.burgess";
+ALTER TABLE evh_evolution OWNER TO geocoder_admins;
 
 --
--- Name: evh_by_zip; Type: VIEW; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_by_zip; Type: VIEW; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE VIEW evh_by_zip AS
@@ -1346,10 +1388,10 @@ CREATE VIEW evh_by_zip AS
      LEFT JOIN evh_control c ON (((a.zcta5ce)::text = (c.zcta5ce)::text)));
 
 
-ALTER TABLE evh_by_zip OWNER TO "aaron.burgess";
+ALTER TABLE evh_by_zip OWNER TO geocoder_admins;
 
 --
--- Name: evh_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE evh_id_seq
@@ -1360,17 +1402,17 @@ CREATE SEQUENCE evh_id_seq
     CACHE 1;
 
 
-ALTER TABLE evh_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE evh_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: evh_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE evh_id_seq OWNED BY evh.id;
 
 
 --
--- Name: evh_pop_evo_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_pop_evo_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE evh_pop_evo_zip_freq (
@@ -1379,10 +1421,10 @@ CREATE TABLE evh_pop_evo_zip_freq (
 );
 
 
-ALTER TABLE evh_pop_evo_zip_freq OWNER TO "aaron.burgess";
+ALTER TABLE evh_pop_evo_zip_freq OWNER TO geocoder_admins;
 
 --
--- Name: evh_pop_nonevo_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_pop_nonevo_zip_freq; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE evh_pop_nonevo_zip_freq (
@@ -1391,10 +1433,10 @@ CREATE TABLE evh_pop_nonevo_zip_freq (
 );
 
 
-ALTER TABLE evh_pop_nonevo_zip_freq OWNER TO "aaron.burgess";
+ALTER TABLE evh_pop_nonevo_zip_freq OWNER TO geocoder_admins;
 
 --
--- Name: evh_population_evo; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_population_evo; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE evh_population_evo (
@@ -1405,10 +1447,10 @@ CREATE TABLE evh_population_evo (
 );
 
 
-ALTER TABLE evh_population_evo OWNER TO "aaron.burgess";
+ALTER TABLE evh_population_evo OWNER TO geocoder_admins;
 
 --
--- Name: evh_population_nonevo; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_population_nonevo; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE evh_population_nonevo (
@@ -1419,10 +1461,10 @@ CREATE TABLE evh_population_nonevo (
 );
 
 
-ALTER TABLE evh_population_nonevo OWNER TO "aaron.burgess";
+ALTER TABLE evh_population_nonevo OWNER TO geocoder_admins;
 
 --
--- Name: evh_test; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_test; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE evh_test (
@@ -1432,10 +1474,10 @@ CREATE TABLE evh_test (
 );
 
 
-ALTER TABLE evh_test OWNER TO "aaron.burgess";
+ALTER TABLE evh_test OWNER TO geocoder_admins;
 
 --
--- Name: evh_test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE evh_test_id_seq
@@ -1446,10 +1488,10 @@ CREATE SEQUENCE evh_test_id_seq
     CACHE 1;
 
 
-ALTER TABLE evh_test_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE evh_test_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: evh_test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE evh_test_id_seq OWNED BY evh_test.id;
@@ -1489,7 +1531,7 @@ ALTER SEQUENCE hi_id_seq OWNED BY hi.id;
 
 
 --
--- Name: silly_test; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: silly_test; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE silly_test (
@@ -1498,10 +1540,10 @@ CREATE TABLE silly_test (
 );
 
 
-ALTER TABLE silly_test OWNER TO "aaron.burgess";
+ALTER TABLE silly_test OWNER TO geocoder_admins;
 
 --
--- Name: silly_test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: silly_test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE silly_test_id_seq
@@ -1512,17 +1554,17 @@ CREATE SEQUENCE silly_test_id_seq
     CACHE 1;
 
 
-ALTER TABLE silly_test_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE silly_test_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: silly_test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: silly_test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE silly_test_id_seq OWNED BY silly_test.id;
 
 
 --
--- Name: temp_addresses; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: temp_addresses; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE temp_addresses (
@@ -1531,10 +1573,10 @@ CREATE TABLE temp_addresses (
 );
 
 
-ALTER TABLE temp_addresses OWNER TO "aaron.burgess";
+ALTER TABLE temp_addresses OWNER TO geocoder_admins;
 
 --
--- Name: test; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: test; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE test (
@@ -1543,10 +1585,10 @@ CREATE TABLE test (
 );
 
 
-ALTER TABLE test OWNER TO "aaron.burgess";
+ALTER TABLE test OWNER TO geocoder_admins;
 
 --
--- Name: test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: test_id_seq; Type: SEQUENCE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE test_id_seq
@@ -1557,17 +1599,17 @@ CREATE SEQUENCE test_id_seq
     CACHE 1;
 
 
-ALTER TABLE test_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE test_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: test_id_seq; Type: SEQUENCE OWNED BY; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE test_id_seq OWNED BY test.id;
 
 
 --
--- Name: woah; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: woah; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE woah (
@@ -1595,10 +1637,10 @@ CREATE TABLE woah (
 );
 
 
-ALTER TABLE woah OWNER TO "aaron.burgess";
+ALTER TABLE woah OWNER TO geocoder_admins;
 
 --
--- Name: woah_distance; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: woah_distance; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE woah_distance (
@@ -1608,10 +1650,10 @@ CREATE TABLE woah_distance (
 );
 
 
-ALTER TABLE woah_distance OWNER TO "aaron.burgess";
+ALTER TABLE woah_distance OWNER TO geocoder_admins;
 
 --
--- Name: woah_dummy; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: woah_dummy; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE woah_dummy (
@@ -1623,10 +1665,10 @@ CREATE TABLE woah_dummy (
 );
 
 
-ALTER TABLE woah_dummy OWNER TO "aaron.burgess";
+ALTER TABLE woah_dummy OWNER TO geocoder_admins;
 
 --
--- Name: woah_results; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: woah_results; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE woah_results (
@@ -1644,12 +1686,12 @@ CREATE TABLE woah_results (
 );
 
 
-ALTER TABLE woah_results OWNER TO "aaron.burgess";
+ALTER TABLE woah_results OWNER TO geocoder_admins;
 
 SET search_path = tiger_data, pg_catalog;
 
 --
--- Name: or_bg; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_bg; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_bg (
@@ -1658,12 +1700,12 @@ CREATE TABLE or_bg (
 INHERITS (tiger.bg);
 
 
-ALTER TABLE or_bg OWNER TO "aaron.burgess";
+ALTER TABLE or_bg OWNER TO geocoder_admins;
 
 SET search_path = geocoding_data, pg_catalog;
 
 --
--- Name: woah_geo_detail; Type: VIEW; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: woah_geo_detail; Type: VIEW; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE VIEW woah_geo_detail AS
@@ -1675,10 +1717,10 @@ CREATE VIEW woah_geo_detail AS
   GROUP BY g.gid, g.the_geom;
 
 
-ALTER TABLE woah_geo_detail OWNER TO "aaron.burgess";
+ALTER TABLE woah_geo_detail OWNER TO geocoder_admins;
 
 --
--- Name: woah_nodes; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: woah_nodes; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE woah_nodes (
@@ -1688,10 +1730,10 @@ CREATE TABLE woah_nodes (
 );
 
 
-ALTER TABLE woah_nodes OWNER TO "aaron.burgess";
+ALTER TABLE woah_nodes OWNER TO geocoder_admins;
 
 --
--- Name: woah_result_comp; Type: VIEW; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: woah_result_comp; Type: VIEW; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE VIEW woah_result_comp AS
@@ -1707,10 +1749,10 @@ CREATE VIEW woah_result_comp AS
   WHERE (a.member_id = b.member_id);
 
 
-ALTER TABLE woah_result_comp OWNER TO "aaron.burgess";
+ALTER TABLE woah_result_comp OWNER TO geocoder_admins;
 
 --
--- Name: woah_routing_sample; Type: TABLE; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: woah_routing_sample; Type: TABLE; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE TABLE woah_routing_sample (
@@ -1721,12 +1763,12 @@ CREATE TABLE woah_routing_sample (
 );
 
 
-ALTER TABLE woah_routing_sample OWNER TO "aaron.burgess";
+ALTER TABLE woah_routing_sample OWNER TO geocoder_admins;
 
 SET search_path = pierce, pg_catalog;
 
 --
--- Name: quotes; Type: TABLE; Schema: pierce; Owner: aaron.burgess
+-- Name: quotes; Type: TABLE; Schema: pierce; Owner: geocoder_admins
 --
 
 CREATE TABLE quotes (
@@ -1736,10 +1778,10 @@ CREATE TABLE quotes (
 );
 
 
-ALTER TABLE quotes OWNER TO "aaron.burgess";
+ALTER TABLE quotes OWNER TO geocoder_admins;
 
 --
--- Name: quotes_id_seq; Type: SEQUENCE; Schema: pierce; Owner: aaron.burgess
+-- Name: quotes_id_seq; Type: SEQUENCE; Schema: pierce; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE quotes_id_seq
@@ -1750,10 +1792,10 @@ CREATE SEQUENCE quotes_id_seq
     CACHE 1;
 
 
-ALTER TABLE quotes_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE quotes_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: quotes_id_seq; Type: SEQUENCE OWNED BY; Schema: pierce; Owner: aaron.burgess
+-- Name: quotes_id_seq; Type: SEQUENCE OWNED BY; Schema: pierce; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE quotes_id_seq OWNED BY quotes.id;
@@ -1762,7 +1804,40 @@ ALTER SEQUENCE quotes_id_seq OWNED BY quotes.id;
 SET search_path = public, pg_catalog;
 
 --
--- Name: cascade_mem_address; Type: TABLE; Schema: public; Owner: aaron.burgess
+-- Name: aaron_burgess; Type: TABLE; Schema: public; Owner: geocoder_admins
+--
+
+CREATE TABLE aaron_burgess (
+    id integer NOT NULL,
+    address text
+);
+
+
+ALTER TABLE aaron_burgess OWNER TO geocoder_admins;
+
+--
+-- Name: aaron_burgess_id_seq; Type: SEQUENCE; Schema: public; Owner: geocoder_admins
+--
+
+CREATE SEQUENCE aaron_burgess_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE aaron_burgess_id_seq OWNER TO geocoder_admins;
+
+--
+-- Name: aaron_burgess_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: geocoder_admins
+--
+
+ALTER SEQUENCE aaron_burgess_id_seq OWNED BY aaron_burgess.id;
+
+
+--
+-- Name: cascade_mem_address; Type: TABLE; Schema: public; Owner: geocoder_admins
 --
 
 CREATE TABLE cascade_mem_address (
@@ -1771,10 +1846,10 @@ CREATE TABLE cascade_mem_address (
 );
 
 
-ALTER TABLE cascade_mem_address OWNER TO "aaron.burgess";
+ALTER TABLE cascade_mem_address OWNER TO geocoder_admins;
 
 --
--- Name: cascade_mem_address_id_seq; Type: SEQUENCE; Schema: public; Owner: aaron.burgess
+-- Name: cascade_mem_address_id_seq; Type: SEQUENCE; Schema: public; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE cascade_mem_address_id_seq
@@ -1785,17 +1860,17 @@ CREATE SEQUENCE cascade_mem_address_id_seq
     CACHE 1;
 
 
-ALTER TABLE cascade_mem_address_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE cascade_mem_address_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: cascade_mem_address_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: aaron.burgess
+-- Name: cascade_mem_address_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE cascade_mem_address_id_seq OWNED BY cascade_mem_address.id;
 
 
 --
--- Name: cascade_member_points_201612; Type: VIEW; Schema: public; Owner: aaron.burgess
+-- Name: cascade_member_points_201612; Type: VIEW; Schema: public; Owner: geocoder_admins
 --
 
 CREATE VIEW cascade_member_points_201612 AS
@@ -1815,12 +1890,12 @@ CREATE VIEW cascade_member_points_201612 AS
      LEFT JOIN geocoding_data.cached_geocodes b ON ((a.address = b.base_address)));
 
 
-ALTER TABLE cascade_member_points_201612 OWNER TO "aaron.burgess";
+ALTER TABLE cascade_member_points_201612 OWNER TO geocoder_admins;
 
 SET search_path = tiger, pg_catalog;
 
 --
--- Name: temp_state; Type: TABLE; Schema: tiger; Owner: aaron.burgess
+-- Name: temp_state; Type: TABLE; Schema: tiger; Owner: geocoder_admins
 --
 
 CREATE TABLE temp_state (
@@ -1843,10 +1918,10 @@ CREATE TABLE temp_state (
 );
 
 
-ALTER TABLE temp_state OWNER TO "aaron.burgess";
+ALTER TABLE temp_state OWNER TO geocoder_admins;
 
 --
--- Name: temp_state_id_seq; Type: SEQUENCE; Schema: tiger; Owner: aaron.burgess
+-- Name: temp_state_id_seq; Type: SEQUENCE; Schema: tiger; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE temp_state_id_seq
@@ -1857,17 +1932,17 @@ CREATE SEQUENCE temp_state_id_seq
     CACHE 1;
 
 
-ALTER TABLE temp_state_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE temp_state_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: temp_state_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger; Owner: aaron.burgess
+-- Name: temp_state_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE temp_state_id_seq OWNED BY temp_state.id;
 
 
 --
--- Name: temp_zip; Type: TABLE; Schema: tiger; Owner: aaron.burgess
+-- Name: temp_zip; Type: TABLE; Schema: tiger; Owner: geocoder_admins
 --
 
 CREATE TABLE temp_zip (
@@ -1885,10 +1960,10 @@ CREATE TABLE temp_zip (
 );
 
 
-ALTER TABLE temp_zip OWNER TO "aaron.burgess";
+ALTER TABLE temp_zip OWNER TO geocoder_admins;
 
 --
--- Name: temp_zip_id_seq; Type: SEQUENCE; Schema: tiger; Owner: aaron.burgess
+-- Name: temp_zip_id_seq; Type: SEQUENCE; Schema: tiger; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE temp_zip_id_seq
@@ -1899,10 +1974,10 @@ CREATE SEQUENCE temp_zip_id_seq
     CACHE 1;
 
 
-ALTER TABLE temp_zip_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE temp_zip_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: temp_zip_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger; Owner: aaron.burgess
+-- Name: temp_zip_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE temp_zip_id_seq OWNED BY temp_zip.id;
@@ -1911,7 +1986,7 @@ ALTER SEQUENCE temp_zip_id_seq OWNED BY temp_zip.id;
 SET search_path = tiger_data, pg_catalog;
 
 --
--- Name: county_all; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: county_all; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE county_all (
@@ -1919,10 +1994,10 @@ CREATE TABLE county_all (
 INHERITS (tiger.county);
 
 
-ALTER TABLE county_all OWNER TO "aaron.burgess";
+ALTER TABLE county_all OWNER TO geocoder_admins;
 
 --
--- Name: county_all_lookup; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: county_all_lookup; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE county_all_lookup (
@@ -1930,10 +2005,10 @@ CREATE TABLE county_all_lookup (
 INHERITS (tiger.county_lookup);
 
 
-ALTER TABLE county_all_lookup OWNER TO "aaron.burgess";
+ALTER TABLE county_all_lookup OWNER TO geocoder_admins;
 
 --
--- Name: in_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_addr; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_addr (
@@ -1942,10 +2017,10 @@ CREATE TABLE in_addr (
 INHERITS (tiger.addr);
 
 
-ALTER TABLE in_addr OWNER TO "aaron.burgess";
+ALTER TABLE in_addr OWNER TO geocoder_admins;
 
 --
--- Name: in_bg; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_bg; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_bg (
@@ -1954,10 +2029,10 @@ CREATE TABLE in_bg (
 INHERITS (tiger.bg);
 
 
-ALTER TABLE in_bg OWNER TO "aaron.burgess";
+ALTER TABLE in_bg OWNER TO geocoder_admins;
 
 --
--- Name: in_cousub; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_cousub; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_cousub (
@@ -1966,10 +2041,10 @@ CREATE TABLE in_cousub (
 INHERITS (tiger.cousub);
 
 
-ALTER TABLE in_cousub OWNER TO "aaron.burgess";
+ALTER TABLE in_cousub OWNER TO geocoder_admins;
 
 --
--- Name: in_edges; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_edges; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_edges (
@@ -1981,10 +2056,10 @@ CREATE TABLE in_edges (
 INHERITS (tiger.edges);
 
 
-ALTER TABLE in_edges OWNER TO "aaron.burgess";
+ALTER TABLE in_edges OWNER TO geocoder_admins;
 
 --
--- Name: in_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_edges_vertices_pgr (
@@ -1997,10 +2072,10 @@ CREATE TABLE in_edges_vertices_pgr (
 );
 
 
-ALTER TABLE in_edges_vertices_pgr OWNER TO "aaron.burgess";
+ALTER TABLE in_edges_vertices_pgr OWNER TO geocoder_admins;
 
 --
--- Name: in_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE in_edges_vertices_pgr_id_seq
@@ -2011,17 +2086,17 @@ CREATE SEQUENCE in_edges_vertices_pgr_id_seq
     CACHE 1;
 
 
-ALTER TABLE in_edges_vertices_pgr_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE in_edges_vertices_pgr_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: in_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE in_edges_vertices_pgr_id_seq OWNED BY in_edges_vertices_pgr.id;
 
 
 --
--- Name: in_faces; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_faces; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_faces (
@@ -2030,10 +2105,10 @@ CREATE TABLE in_faces (
 INHERITS (tiger.faces);
 
 
-ALTER TABLE in_faces OWNER TO "aaron.burgess";
+ALTER TABLE in_faces OWNER TO geocoder_admins;
 
 --
--- Name: in_featnames; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_featnames; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_featnames (
@@ -2042,10 +2117,10 @@ CREATE TABLE in_featnames (
 INHERITS (tiger.featnames);
 
 
-ALTER TABLE in_featnames OWNER TO "aaron.burgess";
+ALTER TABLE in_featnames OWNER TO geocoder_admins;
 
 --
--- Name: in_place; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_place; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_place (
@@ -2054,10 +2129,10 @@ CREATE TABLE in_place (
 INHERITS (tiger.place);
 
 
-ALTER TABLE in_place OWNER TO "aaron.burgess";
+ALTER TABLE in_place OWNER TO geocoder_admins;
 
 --
--- Name: in_tabblock; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_tabblock; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_tabblock (
@@ -2066,10 +2141,10 @@ CREATE TABLE in_tabblock (
 INHERITS (tiger.tabblock);
 
 
-ALTER TABLE in_tabblock OWNER TO "aaron.burgess";
+ALTER TABLE in_tabblock OWNER TO geocoder_admins;
 
 --
--- Name: in_tract; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_tract; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_tract (
@@ -2078,10 +2153,10 @@ CREATE TABLE in_tract (
 INHERITS (tiger.tract);
 
 
-ALTER TABLE in_tract OWNER TO "aaron.burgess";
+ALTER TABLE in_tract OWNER TO geocoder_admins;
 
 --
--- Name: in_zcta5; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_zcta5; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_zcta5 (
@@ -2090,10 +2165,10 @@ CREATE TABLE in_zcta5 (
 INHERITS (tiger.zcta5);
 
 
-ALTER TABLE in_zcta5 OWNER TO "aaron.burgess";
+ALTER TABLE in_zcta5 OWNER TO geocoder_admins;
 
 --
--- Name: in_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_zip_lookup_base (
@@ -2106,10 +2181,10 @@ ALTER TABLE ONLY in_zip_lookup_base ALTER COLUMN city SET NOT NULL;
 ALTER TABLE ONLY in_zip_lookup_base ALTER COLUMN statefp SET NOT NULL;
 
 
-ALTER TABLE in_zip_lookup_base OWNER TO "aaron.burgess";
+ALTER TABLE in_zip_lookup_base OWNER TO geocoder_admins;
 
 --
--- Name: in_zip_state; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_zip_state; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_zip_state (
@@ -2118,10 +2193,10 @@ CREATE TABLE in_zip_state (
 INHERITS (tiger.zip_state);
 
 
-ALTER TABLE in_zip_state OWNER TO "aaron.burgess";
+ALTER TABLE in_zip_state OWNER TO geocoder_admins;
 
 --
--- Name: in_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE in_zip_state_loc (
@@ -2130,10 +2205,10 @@ CREATE TABLE in_zip_state_loc (
 INHERITS (tiger.zip_state_loc);
 
 
-ALTER TABLE in_zip_state_loc OWNER TO "aaron.burgess";
+ALTER TABLE in_zip_state_loc OWNER TO geocoder_admins;
 
 --
--- Name: or_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_addr; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_addr (
@@ -2142,10 +2217,10 @@ CREATE TABLE or_addr (
 INHERITS (tiger.addr);
 
 
-ALTER TABLE or_addr OWNER TO "aaron.burgess";
+ALTER TABLE or_addr OWNER TO geocoder_admins;
 
 --
--- Name: or_cousub; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_cousub; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_cousub (
@@ -2154,10 +2229,10 @@ CREATE TABLE or_cousub (
 INHERITS (tiger.cousub);
 
 
-ALTER TABLE or_cousub OWNER TO "aaron.burgess";
+ALTER TABLE or_cousub OWNER TO geocoder_admins;
 
 --
--- Name: or_edges; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_edges; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_edges (
@@ -2173,10 +2248,10 @@ CREATE TABLE or_edges (
 INHERITS (tiger.edges);
 
 
-ALTER TABLE or_edges OWNER TO "aaron.burgess";
+ALTER TABLE or_edges OWNER TO geocoder_admins;
 
 --
--- Name: or_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_edges_vertices_pgr (
@@ -2189,10 +2264,10 @@ CREATE TABLE or_edges_vertices_pgr (
 );
 
 
-ALTER TABLE or_edges_vertices_pgr OWNER TO "aaron.burgess";
+ALTER TABLE or_edges_vertices_pgr OWNER TO geocoder_admins;
 
 --
--- Name: or_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE or_edges_vertices_pgr_id_seq
@@ -2203,17 +2278,17 @@ CREATE SEQUENCE or_edges_vertices_pgr_id_seq
     CACHE 1;
 
 
-ALTER TABLE or_edges_vertices_pgr_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE or_edges_vertices_pgr_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: or_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE or_edges_vertices_pgr_id_seq OWNED BY or_edges_vertices_pgr.id;
 
 
 --
--- Name: or_faces; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_faces; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_faces (
@@ -2222,10 +2297,10 @@ CREATE TABLE or_faces (
 INHERITS (tiger.faces);
 
 
-ALTER TABLE or_faces OWNER TO "aaron.burgess";
+ALTER TABLE or_faces OWNER TO geocoder_admins;
 
 --
--- Name: or_featnames; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_featnames; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_featnames (
@@ -2234,10 +2309,10 @@ CREATE TABLE or_featnames (
 INHERITS (tiger.featnames);
 
 
-ALTER TABLE or_featnames OWNER TO "aaron.burgess";
+ALTER TABLE or_featnames OWNER TO geocoder_admins;
 
 --
--- Name: or_place; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_place; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_place (
@@ -2246,10 +2321,10 @@ CREATE TABLE or_place (
 INHERITS (tiger.place);
 
 
-ALTER TABLE or_place OWNER TO "aaron.burgess";
+ALTER TABLE or_place OWNER TO geocoder_admins;
 
 --
--- Name: or_tabblock; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_tabblock; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_tabblock (
@@ -2258,10 +2333,10 @@ CREATE TABLE or_tabblock (
 INHERITS (tiger.tabblock);
 
 
-ALTER TABLE or_tabblock OWNER TO "aaron.burgess";
+ALTER TABLE or_tabblock OWNER TO geocoder_admins;
 
 --
--- Name: or_tract; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_tract; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_tract (
@@ -2270,10 +2345,10 @@ CREATE TABLE or_tract (
 INHERITS (tiger.tract);
 
 
-ALTER TABLE or_tract OWNER TO "aaron.burgess";
+ALTER TABLE or_tract OWNER TO geocoder_admins;
 
 --
--- Name: or_zcta5; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_zcta5; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_zcta5 (
@@ -2282,10 +2357,10 @@ CREATE TABLE or_zcta5 (
 INHERITS (tiger.zcta5);
 
 
-ALTER TABLE or_zcta5 OWNER TO "aaron.burgess";
+ALTER TABLE or_zcta5 OWNER TO geocoder_admins;
 
 --
--- Name: or_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_zip_lookup_base (
@@ -2298,10 +2373,10 @@ ALTER TABLE ONLY or_zip_lookup_base ALTER COLUMN city SET NOT NULL;
 ALTER TABLE ONLY or_zip_lookup_base ALTER COLUMN statefp SET NOT NULL;
 
 
-ALTER TABLE or_zip_lookup_base OWNER TO "aaron.burgess";
+ALTER TABLE or_zip_lookup_base OWNER TO geocoder_admins;
 
 --
--- Name: or_zip_state; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_zip_state; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_zip_state (
@@ -2310,10 +2385,10 @@ CREATE TABLE or_zip_state (
 INHERITS (tiger.zip_state);
 
 
-ALTER TABLE or_zip_state OWNER TO "aaron.burgess";
+ALTER TABLE or_zip_state OWNER TO geocoder_admins;
 
 --
--- Name: or_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE or_zip_state_loc (
@@ -2322,10 +2397,10 @@ CREATE TABLE or_zip_state_loc (
 INHERITS (tiger.zip_state_loc);
 
 
-ALTER TABLE or_zip_state_loc OWNER TO "aaron.burgess";
+ALTER TABLE or_zip_state_loc OWNER TO geocoder_admins;
 
 --
--- Name: pa_addr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_addr; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_addr (
@@ -2334,10 +2409,10 @@ CREATE TABLE pa_addr (
 INHERITS (tiger.addr);
 
 
-ALTER TABLE pa_addr OWNER TO "aaron.burgess";
+ALTER TABLE pa_addr OWNER TO geocoder_admins;
 
 --
--- Name: pa_bg; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_bg; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_bg (
@@ -2346,10 +2421,10 @@ CREATE TABLE pa_bg (
 INHERITS (tiger.bg);
 
 
-ALTER TABLE pa_bg OWNER TO "aaron.burgess";
+ALTER TABLE pa_bg OWNER TO geocoder_admins;
 
 --
--- Name: pa_cousub; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_cousub; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_cousub (
@@ -2358,10 +2433,10 @@ CREATE TABLE pa_cousub (
 INHERITS (tiger.cousub);
 
 
-ALTER TABLE pa_cousub OWNER TO "aaron.burgess";
+ALTER TABLE pa_cousub OWNER TO geocoder_admins;
 
 --
--- Name: pa_edges; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_edges; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_edges (
@@ -2372,10 +2447,10 @@ CREATE TABLE pa_edges (
 INHERITS (tiger.edges);
 
 
-ALTER TABLE pa_edges OWNER TO "aaron.burgess";
+ALTER TABLE pa_edges OWNER TO geocoder_admins;
 
 --
--- Name: pa_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_edges_vertices_pgr; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_edges_vertices_pgr (
@@ -2388,10 +2463,10 @@ CREATE TABLE pa_edges_vertices_pgr (
 );
 
 
-ALTER TABLE pa_edges_vertices_pgr OWNER TO "aaron.burgess";
+ALTER TABLE pa_edges_vertices_pgr OWNER TO geocoder_admins;
 
 --
--- Name: pa_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_edges_vertices_pgr_id_seq; Type: SEQUENCE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE SEQUENCE pa_edges_vertices_pgr_id_seq
@@ -2402,17 +2477,17 @@ CREATE SEQUENCE pa_edges_vertices_pgr_id_seq
     CACHE 1;
 
 
-ALTER TABLE pa_edges_vertices_pgr_id_seq OWNER TO "aaron.burgess";
+ALTER TABLE pa_edges_vertices_pgr_id_seq OWNER TO geocoder_admins;
 
 --
--- Name: pa_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_edges_vertices_pgr_id_seq; Type: SEQUENCE OWNED BY; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER SEQUENCE pa_edges_vertices_pgr_id_seq OWNED BY pa_edges_vertices_pgr.id;
 
 
 --
--- Name: pa_faces; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_faces; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_faces (
@@ -2420,10 +2495,10 @@ CREATE TABLE pa_faces (
 INHERITS (tiger.faces);
 
 
-ALTER TABLE pa_faces OWNER TO "aaron.burgess";
+ALTER TABLE pa_faces OWNER TO geocoder_admins;
 
 --
--- Name: pa_featnames; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_featnames; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_featnames (
@@ -2432,10 +2507,10 @@ CREATE TABLE pa_featnames (
 INHERITS (tiger.featnames);
 
 
-ALTER TABLE pa_featnames OWNER TO "aaron.burgess";
+ALTER TABLE pa_featnames OWNER TO geocoder_admins;
 
 --
--- Name: pa_place; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_place; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_place (
@@ -2444,10 +2519,10 @@ CREATE TABLE pa_place (
 INHERITS (tiger.place);
 
 
-ALTER TABLE pa_place OWNER TO "aaron.burgess";
+ALTER TABLE pa_place OWNER TO geocoder_admins;
 
 --
--- Name: pa_tabblock; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_tabblock; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_tabblock (
@@ -2455,10 +2530,10 @@ CREATE TABLE pa_tabblock (
 INHERITS (tiger.tabblock);
 
 
-ALTER TABLE pa_tabblock OWNER TO "aaron.burgess";
+ALTER TABLE pa_tabblock OWNER TO geocoder_admins;
 
 --
--- Name: pa_tract; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_tract; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_tract (
@@ -2467,10 +2542,10 @@ CREATE TABLE pa_tract (
 INHERITS (tiger.tract);
 
 
-ALTER TABLE pa_tract OWNER TO "aaron.burgess";
+ALTER TABLE pa_tract OWNER TO geocoder_admins;
 
 --
--- Name: pa_zcta5; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_zcta5; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_zcta5 (
@@ -2478,10 +2553,10 @@ CREATE TABLE pa_zcta5 (
 INHERITS (tiger.zcta5);
 
 
-ALTER TABLE pa_zcta5 OWNER TO "aaron.burgess";
+ALTER TABLE pa_zcta5 OWNER TO geocoder_admins;
 
 --
--- Name: pa_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_zip_lookup_base; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_zip_lookup_base (
@@ -2494,10 +2569,10 @@ ALTER TABLE ONLY pa_zip_lookup_base ALTER COLUMN city SET NOT NULL;
 ALTER TABLE ONLY pa_zip_lookup_base ALTER COLUMN statefp SET NOT NULL;
 
 
-ALTER TABLE pa_zip_lookup_base OWNER TO "aaron.burgess";
+ALTER TABLE pa_zip_lookup_base OWNER TO geocoder_admins;
 
 --
--- Name: pa_zip_state; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_zip_state; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_zip_state (
@@ -2506,10 +2581,10 @@ CREATE TABLE pa_zip_state (
 INHERITS (tiger.zip_state);
 
 
-ALTER TABLE pa_zip_state OWNER TO "aaron.burgess";
+ALTER TABLE pa_zip_state OWNER TO geocoder_admins;
 
 --
--- Name: pa_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_zip_state_loc; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE pa_zip_state_loc (
@@ -2518,10 +2593,10 @@ CREATE TABLE pa_zip_state_loc (
 INHERITS (tiger.zip_state_loc);
 
 
-ALTER TABLE pa_zip_state_loc OWNER TO "aaron.burgess";
+ALTER TABLE pa_zip_state_loc OWNER TO geocoder_admins;
 
 --
--- Name: state_all; Type: TABLE; Schema: tiger_data; Owner: aaron.burgess
+-- Name: state_all; Type: TABLE; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE TABLE state_all (
@@ -2529,7 +2604,7 @@ CREATE TABLE state_all (
 INHERITS (tiger.state);
 
 
-ALTER TABLE state_all OWNER TO "aaron.burgess";
+ALTER TABLE state_all OWNER TO geocoder_admins;
 
 SET search_path = geocoding_data, pg_catalog;
 
@@ -2548,14 +2623,21 @@ ALTER TABLE ONLY "HI" ALTER COLUMN id SET DEFAULT nextval('"HI_id_seq"'::regclas
 
 
 --
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
+--
+
+ALTER TABLE ONLY aaron_burgess ALTER COLUMN id SET DEFAULT nextval('aaron_burgess_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY cached_geocodes ALTER COLUMN id SET DEFAULT nextval('cached_geocodes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY cascade_mem_address ALTER COLUMN id SET DEFAULT nextval('cascade_mem_address_id_seq'::regclass);
@@ -2569,28 +2651,28 @@ ALTER TABLE ONLY client_name ALTER COLUMN id SET DEFAULT nextval('client_name_id
 
 
 --
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY clover_avoidable_by_zip ALTER COLUMN id SET DEFAULT nextval('clover_avoidable_by_zip_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY clover_zip_freq ALTER COLUMN id SET DEFAULT nextval('clover_zip_freq_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY evh ALTER COLUMN id SET DEFAULT nextval('evh_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY evh_test ALTER COLUMN id SET DEFAULT nextval('evh_test_id_seq'::regclass);
@@ -2604,14 +2686,14 @@ ALTER TABLE ONLY hi ALTER COLUMN id SET DEFAULT nextval('hi_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY silly_test ALTER COLUMN id SET DEFAULT nextval('silly_test_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY test ALTER COLUMN id SET DEFAULT nextval('test_id_seq'::regclass);
@@ -2620,7 +2702,7 @@ ALTER TABLE ONLY test ALTER COLUMN id SET DEFAULT nextval('test_id_seq'::regclas
 SET search_path = pierce, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: pierce; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: pierce; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY quotes ALTER COLUMN id SET DEFAULT nextval('quotes_id_seq'::regclass);
@@ -2629,7 +2711,14 @@ ALTER TABLE ONLY quotes ALTER COLUMN id SET DEFAULT nextval('quotes_id_seq'::reg
 SET search_path = public, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: public; Owner: geocoder_admins
+--
+
+ALTER TABLE ONLY aaron_burgess ALTER COLUMN id SET DEFAULT nextval('aaron_burgess_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY cascade_mem_address ALTER COLUMN id SET DEFAULT nextval('cascade_mem_address_id_seq'::regclass);
@@ -2638,14 +2727,14 @@ ALTER TABLE ONLY cascade_mem_address ALTER COLUMN id SET DEFAULT nextval('cascad
 SET search_path = tiger, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: tiger; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: tiger; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY temp_state ALTER COLUMN id SET DEFAULT nextval('temp_state_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: tiger; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: tiger; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY temp_zip ALTER COLUMN id SET DEFAULT nextval('temp_zip_id_seq'::regclass);
@@ -2654,287 +2743,287 @@ ALTER TABLE ONLY temp_zip ALTER COLUMN id SET DEFAULT nextval('temp_zip_id_seq':
 SET search_path = tiger_data, pg_catalog;
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY county_all ALTER COLUMN gid SET DEFAULT nextval('tiger.county_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
 
 
 --
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_addr ALTER COLUMN statefp SET DEFAULT '18'::character varying;
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_bg ALTER COLUMN gid SET DEFAULT nextval('tiger.bg_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_cousub ALTER COLUMN gid SET DEFAULT nextval('tiger.cousub_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_edges ALTER COLUMN gid SET DEFAULT nextval('tiger.edges_gid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_edges_vertices_pgr ALTER COLUMN id SET DEFAULT nextval('in_edges_vertices_pgr_id_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_faces ALTER COLUMN gid SET DEFAULT nextval('tiger.faces_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_featnames ALTER COLUMN gid SET DEFAULT nextval('tiger.featnames_gid_seq'::regclass);
 
 
 --
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_featnames ALTER COLUMN statefp SET DEFAULT '18'::character varying;
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_place ALTER COLUMN gid SET DEFAULT nextval('tiger.place_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_tabblock ALTER COLUMN gid SET DEFAULT nextval('tiger.tabblock_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_tract ALTER COLUMN gid SET DEFAULT nextval('tiger.tract_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
 
 
 --
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_addr ALTER COLUMN statefp SET DEFAULT '41'::character varying;
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_bg ALTER COLUMN gid SET DEFAULT nextval('tiger.bg_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_cousub ALTER COLUMN gid SET DEFAULT nextval('tiger.cousub_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_edges ALTER COLUMN gid SET DEFAULT nextval('tiger.edges_gid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_edges_vertices_pgr ALTER COLUMN id SET DEFAULT nextval('or_edges_vertices_pgr_id_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_faces ALTER COLUMN gid SET DEFAULT nextval('tiger.faces_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_featnames ALTER COLUMN gid SET DEFAULT nextval('tiger.featnames_gid_seq'::regclass);
 
 
 --
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_featnames ALTER COLUMN statefp SET DEFAULT '41'::character varying;
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_place ALTER COLUMN gid SET DEFAULT nextval('tiger.place_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_tabblock ALTER COLUMN gid SET DEFAULT nextval('tiger.tabblock_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_tract ALTER COLUMN gid SET DEFAULT nextval('tiger.tract_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_addr ALTER COLUMN gid SET DEFAULT nextval('tiger.addr_gid_seq'::regclass);
 
 
 --
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_addr ALTER COLUMN statefp SET DEFAULT '42'::character varying;
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_bg ALTER COLUMN gid SET DEFAULT nextval('tiger.bg_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_cousub ALTER COLUMN gid SET DEFAULT nextval('tiger.cousub_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_edges ALTER COLUMN gid SET DEFAULT nextval('tiger.edges_gid_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: id; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_edges_vertices_pgr ALTER COLUMN id SET DEFAULT nextval('pa_edges_vertices_pgr_id_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_faces ALTER COLUMN gid SET DEFAULT nextval('tiger.faces_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_featnames ALTER COLUMN gid SET DEFAULT nextval('tiger.featnames_gid_seq'::regclass);
 
 
 --
--- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: statefp; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_featnames ALTER COLUMN statefp SET DEFAULT '42'::character varying;
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_place ALTER COLUMN gid SET DEFAULT nextval('tiger.place_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_tabblock ALTER COLUMN gid SET DEFAULT nextval('tiger.tabblock_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_tract ALTER COLUMN gid SET DEFAULT nextval('tiger.tract_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_zcta5 ALTER COLUMN gid SET DEFAULT nextval('tiger.zcta5_gid_seq'::regclass);
 
 
 --
--- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: gid; Type: DEFAULT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY state_all ALTER COLUMN gid SET DEFAULT nextval('tiger.state_gid_seq'::regclass);
@@ -2959,7 +3048,15 @@ ALTER TABLE ONLY "HI"
 
 
 --
--- Name: cached_geocodes_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: aaron_burgess_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
+--
+
+ALTER TABLE ONLY aaron_burgess
+    ADD CONSTRAINT aaron_burgess_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cached_geocodes_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY cached_geocodes
@@ -2967,7 +3064,7 @@ ALTER TABLE ONLY cached_geocodes
 
 
 --
--- Name: cascade_mem_address_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cascade_mem_address_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY cascade_mem_address
@@ -2983,7 +3080,7 @@ ALTER TABLE ONLY client_name
 
 
 --
--- Name: clover_avoidable_by_zip_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_avoidable_by_zip_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY clover_avoidable_by_zip
@@ -2991,7 +3088,7 @@ ALTER TABLE ONLY clover_avoidable_by_zip
 
 
 --
--- Name: clover_zip_freq_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: clover_zip_freq_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY clover_zip_freq
@@ -2999,7 +3096,7 @@ ALTER TABLE ONLY clover_zip_freq
 
 
 --
--- Name: evh_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY evh
@@ -3007,7 +3104,7 @@ ALTER TABLE ONLY evh
 
 
 --
--- Name: evh_test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: evh_test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY evh_test
@@ -3023,7 +3120,7 @@ ALTER TABLE ONLY hi
 
 
 --
--- Name: silly_test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: silly_test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY silly_test
@@ -3031,7 +3128,7 @@ ALTER TABLE ONLY silly_test
 
 
 --
--- Name: test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: test_pkey; Type: CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY test
@@ -3041,7 +3138,7 @@ ALTER TABLE ONLY test
 SET search_path = pierce, pg_catalog;
 
 --
--- Name: quotes_pkey; Type: CONSTRAINT; Schema: pierce; Owner: aaron.burgess
+-- Name: quotes_pkey; Type: CONSTRAINT; Schema: pierce; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY quotes
@@ -3051,7 +3148,15 @@ ALTER TABLE ONLY quotes
 SET search_path = public, pg_catalog;
 
 --
--- Name: cascade_mem_address_pkey; Type: CONSTRAINT; Schema: public; Owner: aaron.burgess
+-- Name: aaron_burgess_pkey; Type: CONSTRAINT; Schema: public; Owner: geocoder_admins
+--
+
+ALTER TABLE ONLY aaron_burgess
+    ADD CONSTRAINT aaron_burgess_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cascade_mem_address_pkey; Type: CONSTRAINT; Schema: public; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY cascade_mem_address
@@ -3061,7 +3166,7 @@ ALTER TABLE ONLY cascade_mem_address
 SET search_path = tiger, pg_catalog;
 
 --
--- Name: temp_state_pkey; Type: CONSTRAINT; Schema: tiger; Owner: aaron.burgess
+-- Name: temp_state_pkey; Type: CONSTRAINT; Schema: tiger; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY temp_state
@@ -3069,7 +3174,7 @@ ALTER TABLE ONLY temp_state
 
 
 --
--- Name: temp_zip_pkey; Type: CONSTRAINT; Schema: tiger; Owner: aaron.burgess
+-- Name: temp_zip_pkey; Type: CONSTRAINT; Schema: tiger; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY temp_zip
@@ -3079,7 +3184,7 @@ ALTER TABLE ONLY temp_zip
 SET search_path = tiger_data, pg_catalog;
 
 --
--- Name: in_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_edges_vertices_pgr
@@ -3087,7 +3192,7 @@ ALTER TABLE ONLY in_edges_vertices_pgr
 
 
 --
--- Name: or_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_edges_vertices_pgr
@@ -3095,7 +3200,7 @@ ALTER TABLE ONLY or_edges_vertices_pgr
 
 
 --
--- Name: pa_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_edges_vertices_pgr_pkey; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_edges_vertices_pgr
@@ -3103,7 +3208,7 @@ ALTER TABLE ONLY pa_edges_vertices_pgr
 
 
 --
--- Name: pk_county_all_lookup; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_county_all_lookup; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY county_all_lookup
@@ -3111,7 +3216,7 @@ ALTER TABLE ONLY county_all_lookup
 
 
 --
--- Name: pk_in_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_addr
@@ -3119,7 +3224,7 @@ ALTER TABLE ONLY in_addr
 
 
 --
--- Name: pk_in_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_bg
@@ -3127,7 +3232,7 @@ ALTER TABLE ONLY in_bg
 
 
 --
--- Name: pk_in_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_cousub
@@ -3135,7 +3240,7 @@ ALTER TABLE ONLY in_cousub
 
 
 --
--- Name: pk_in_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_edges
@@ -3143,7 +3248,7 @@ ALTER TABLE ONLY in_edges
 
 
 --
--- Name: pk_in_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_faces
@@ -3151,7 +3256,7 @@ ALTER TABLE ONLY in_faces
 
 
 --
--- Name: pk_in_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_featnames
@@ -3159,7 +3264,7 @@ ALTER TABLE ONLY in_featnames
 
 
 --
--- Name: pk_in_place; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_place; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_place
@@ -3167,7 +3272,7 @@ ALTER TABLE ONLY in_place
 
 
 --
--- Name: pk_in_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_tabblock
@@ -3175,7 +3280,7 @@ ALTER TABLE ONLY in_tabblock
 
 
 --
--- Name: pk_in_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_tract
@@ -3183,7 +3288,7 @@ ALTER TABLE ONLY in_tract
 
 
 --
--- Name: pk_in_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_zcta5
@@ -3191,7 +3296,7 @@ ALTER TABLE ONLY in_zcta5
 
 
 --
--- Name: pk_in_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_zip_state
@@ -3199,7 +3304,7 @@ ALTER TABLE ONLY in_zip_state
 
 
 --
--- Name: pk_in_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_zip_state_loc
@@ -3207,7 +3312,7 @@ ALTER TABLE ONLY in_zip_state_loc
 
 
 --
--- Name: pk_in_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_in_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_zip_lookup_base
@@ -3215,7 +3320,7 @@ ALTER TABLE ONLY in_zip_lookup_base
 
 
 --
--- Name: pk_or_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_addr
@@ -3223,7 +3328,7 @@ ALTER TABLE ONLY or_addr
 
 
 --
--- Name: pk_or_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_bg
@@ -3231,7 +3336,7 @@ ALTER TABLE ONLY or_bg
 
 
 --
--- Name: pk_or_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_cousub
@@ -3239,7 +3344,7 @@ ALTER TABLE ONLY or_cousub
 
 
 --
--- Name: pk_or_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_edges
@@ -3247,7 +3352,7 @@ ALTER TABLE ONLY or_edges
 
 
 --
--- Name: pk_or_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_faces
@@ -3255,7 +3360,7 @@ ALTER TABLE ONLY or_faces
 
 
 --
--- Name: pk_or_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_featnames
@@ -3263,7 +3368,7 @@ ALTER TABLE ONLY or_featnames
 
 
 --
--- Name: pk_or_place; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_place; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_place
@@ -3271,7 +3376,7 @@ ALTER TABLE ONLY or_place
 
 
 --
--- Name: pk_or_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_tabblock
@@ -3279,7 +3384,7 @@ ALTER TABLE ONLY or_tabblock
 
 
 --
--- Name: pk_or_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_tract
@@ -3287,7 +3392,7 @@ ALTER TABLE ONLY or_tract
 
 
 --
--- Name: pk_or_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_zcta5
@@ -3295,7 +3400,7 @@ ALTER TABLE ONLY or_zcta5
 
 
 --
--- Name: pk_or_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_zip_state
@@ -3303,7 +3408,7 @@ ALTER TABLE ONLY or_zip_state
 
 
 --
--- Name: pk_or_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_zip_state_loc
@@ -3311,7 +3416,7 @@ ALTER TABLE ONLY or_zip_state_loc
 
 
 --
--- Name: pk_or_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_or_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_zip_lookup_base
@@ -3319,7 +3424,7 @@ ALTER TABLE ONLY or_zip_lookup_base
 
 
 --
--- Name: pk_pa_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_addr; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_addr
@@ -3327,7 +3432,7 @@ ALTER TABLE ONLY pa_addr
 
 
 --
--- Name: pk_pa_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_bg; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_bg
@@ -3335,7 +3440,7 @@ ALTER TABLE ONLY pa_bg
 
 
 --
--- Name: pk_pa_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_cousub; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_cousub
@@ -3343,7 +3448,7 @@ ALTER TABLE ONLY pa_cousub
 
 
 --
--- Name: pk_pa_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_edges; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_edges
@@ -3351,7 +3456,7 @@ ALTER TABLE ONLY pa_edges
 
 
 --
--- Name: pk_pa_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_faces; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_faces
@@ -3359,7 +3464,7 @@ ALTER TABLE ONLY pa_faces
 
 
 --
--- Name: pk_pa_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_featnames; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_featnames
@@ -3367,7 +3472,7 @@ ALTER TABLE ONLY pa_featnames
 
 
 --
--- Name: pk_pa_place; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_place; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_place
@@ -3375,7 +3480,7 @@ ALTER TABLE ONLY pa_place
 
 
 --
--- Name: pk_pa_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_tabblock; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_tabblock
@@ -3383,7 +3488,7 @@ ALTER TABLE ONLY pa_tabblock
 
 
 --
--- Name: pk_pa_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_tract; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_tract
@@ -3391,7 +3496,7 @@ ALTER TABLE ONLY pa_tract
 
 
 --
--- Name: pk_pa_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_zcta5; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_zcta5
@@ -3399,7 +3504,7 @@ ALTER TABLE ONLY pa_zcta5
 
 
 --
--- Name: pk_pa_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_zip_state; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_zip_state
@@ -3407,7 +3512,7 @@ ALTER TABLE ONLY pa_zip_state
 
 
 --
--- Name: pk_pa_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_zip_state_loc; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_zip_state_loc
@@ -3415,7 +3520,7 @@ ALTER TABLE ONLY pa_zip_state_loc
 
 
 --
--- Name: pk_pa_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_pa_zip_state_loc_city; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_zip_lookup_base
@@ -3423,7 +3528,7 @@ ALTER TABLE ONLY pa_zip_lookup_base
 
 
 --
--- Name: pk_state_all; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_state_all; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY state_all
@@ -3431,7 +3536,7 @@ ALTER TABLE ONLY state_all
 
 
 --
--- Name: pk_tiger_data_county_all; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pk_tiger_data_county_all; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY county_all
@@ -3439,7 +3544,7 @@ ALTER TABLE ONLY county_all
 
 
 --
--- Name: uidx_in_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_in_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_cousub
@@ -3447,7 +3552,7 @@ ALTER TABLE ONLY in_cousub
 
 
 --
--- Name: uidx_in_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_in_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_place
@@ -3455,7 +3560,7 @@ ALTER TABLE ONLY in_place
 
 
 --
--- Name: uidx_in_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_in_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY in_zcta5
@@ -3463,7 +3568,7 @@ ALTER TABLE ONLY in_zcta5
 
 
 --
--- Name: uidx_or_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_or_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_cousub
@@ -3471,7 +3576,7 @@ ALTER TABLE ONLY or_cousub
 
 
 --
--- Name: uidx_or_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_or_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_place
@@ -3479,7 +3584,7 @@ ALTER TABLE ONLY or_place
 
 
 --
--- Name: uidx_or_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_or_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY or_zcta5
@@ -3487,7 +3592,7 @@ ALTER TABLE ONLY or_zcta5
 
 
 --
--- Name: uidx_pa_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_pa_cousub_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_cousub
@@ -3495,7 +3600,7 @@ ALTER TABLE ONLY pa_cousub
 
 
 --
--- Name: uidx_pa_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_pa_place_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_place
@@ -3503,7 +3608,7 @@ ALTER TABLE ONLY pa_place
 
 
 --
--- Name: uidx_pa_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_pa_zcta5_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY pa_zcta5
@@ -3511,7 +3616,7 @@ ALTER TABLE ONLY pa_zcta5
 
 
 --
--- Name: uidx_state_all_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_state_all_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY state_all
@@ -3519,7 +3624,7 @@ ALTER TABLE ONLY state_all
 
 
 --
--- Name: uidx_state_all_stusps; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_state_all_stusps; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY state_all
@@ -3527,7 +3632,7 @@ ALTER TABLE ONLY state_all
 
 
 --
--- Name: uidx_tiger_data_county_all_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_tiger_data_county_all_gid; Type: CONSTRAINT; Schema: tiger_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY county_all
@@ -3537,56 +3642,56 @@ ALTER TABLE ONLY county_all
 SET search_path = geocoding_data, pg_catalog;
 
 --
--- Name: idx_base_address; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: idx_base_address; Type: INDEX; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_base_address ON cached_geocodes USING btree (base_address);
 
 
 --
--- Name: idx_composite_route; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: idx_composite_route; Type: INDEX; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_composite_route ON cached_routes USING btree (start_node, end_node);
 
 
 --
--- Name: idx_geom_cached; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: idx_geom_cached; Type: INDEX; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_geom_cached ON cached_geocodes USING gist (geom);
 
 
 --
--- Name: idx_woah_member_geom; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: idx_woah_member_geom; Type: INDEX; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_woah_member_geom ON woah_results USING gist (member_geom);
 
 
 --
--- Name: idx_woah_member_geom_transformed; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: idx_woah_member_geom_transformed; Type: INDEX; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_woah_member_geom_transformed ON woah_results USING gist (public.st_transform(member_geom, 2163));
 
 
 --
--- Name: idx_woah_prov_geom; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: idx_woah_prov_geom; Type: INDEX; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_woah_prov_geom ON woah_results USING gist (prov_geom);
 
 
 --
--- Name: idx_woah_prov_geom_transformed; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: idx_woah_prov_geom_transformed; Type: INDEX; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_woah_prov_geom_transformed ON woah_results USING gist (public.st_transform(prov_geom, 2163));
 
 
 --
--- Name: ix_geocoding_data_woah_index; Type: INDEX; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: ix_geocoding_data_woah_index; Type: INDEX; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 CREATE INDEX ix_geocoding_data_woah_index ON woah USING btree (index);
@@ -3595,616 +3700,616 @@ CREATE INDEX ix_geocoding_data_woah_index ON woah USING btree (index);
 SET search_path = tiger_data, pg_catalog;
 
 --
--- Name: idx_in_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_in_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_in_place_soundex_name ON in_place USING btree (public.soundex((name)::text));
 
 
 --
--- Name: idx_or_edges_vertices_transformed; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_or_edges_vertices_transformed; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_or_edges_vertices_transformed ON or_edges_vertices_pgr USING gist (public.st_transform(the_geom, 2163));
 
 
 --
--- Name: idx_or_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_or_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_or_place_soundex_name ON or_place USING btree (public.soundex((name)::text));
 
 
 --
--- Name: idx_pa_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_pa_place_soundex_name; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_pa_place_soundex_name ON pa_place USING btree (public.soundex((name)::text));
 
 
 --
--- Name: idx_tiger_data_in_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_addr_least_address ON in_addr USING btree (tiger.least_hn(fromhn, tohn));
 
 
 --
--- Name: idx_tiger_data_in_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_addr_tlid_statefp ON in_addr USING btree (tlid, statefp);
 
 
 --
--- Name: idx_tiger_data_in_addr_zip; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_addr_zip; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_addr_zip ON in_addr USING btree (zip);
 
 
 --
--- Name: idx_tiger_data_in_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_cousub_countyfp ON in_cousub USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_in_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_edges_countyfp ON in_edges USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_in_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_edges_tfidl ON in_edges USING btree (tfidl);
 
 
 --
--- Name: idx_tiger_data_in_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_edges_tlid ON in_edges USING btree (tlid);
 
 
 --
--- Name: idx_tiger_data_in_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_edges_zipl ON in_edges USING btree (zipl);
 
 
 --
--- Name: idx_tiger_data_in_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_edgestfidr ON in_edges USING btree (tfidr);
 
 
 --
--- Name: idx_tiger_data_in_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_faces_countyfp ON in_faces USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_in_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_faces_tfid ON in_faces USING btree (tfid);
 
 
 --
--- Name: idx_tiger_data_in_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_featnames_lname ON in_featnames USING btree (lower((name)::text));
 
 
 --
--- Name: idx_tiger_data_in_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_featnames_snd_name ON in_featnames USING btree (public.soundex((name)::text));
 
 
 --
--- Name: idx_tiger_data_in_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_featnames_tlid_statefp ON in_featnames USING btree (tlid, statefp);
 
 
 --
--- Name: idx_tiger_data_in_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_zip_lookup_base_citysnd ON in_zip_lookup_base USING btree (public.soundex((city)::text));
 
 
 --
--- Name: idx_tiger_data_in_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_in_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_in_zip_state_loc_place ON in_zip_state_loc USING btree (public.soundex((place)::text));
 
 
 --
--- Name: idx_tiger_data_or_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_addr_least_address ON or_addr USING btree (tiger.least_hn(fromhn, tohn));
 
 
 --
--- Name: idx_tiger_data_or_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_addr_tlid_statefp ON or_addr USING btree (tlid, statefp);
 
 
 --
--- Name: idx_tiger_data_or_addr_zip; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_addr_zip; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_addr_zip ON or_addr USING btree (zip);
 
 
 --
--- Name: idx_tiger_data_or_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_cousub_countyfp ON or_cousub USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_or_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_edges_countyfp ON or_edges USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_or_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_edges_tfidl ON or_edges USING btree (tfidl);
 
 
 --
--- Name: idx_tiger_data_or_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_edges_tlid ON or_edges USING btree (tlid);
 
 
 --
--- Name: idx_tiger_data_or_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_edges_zipl ON or_edges USING btree (zipl);
 
 
 --
--- Name: idx_tiger_data_or_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_edgestfidr ON or_edges USING btree (tfidr);
 
 
 --
--- Name: idx_tiger_data_or_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_faces_countyfp ON or_faces USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_or_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_faces_tfid ON or_faces USING btree (tfid);
 
 
 --
--- Name: idx_tiger_data_or_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_featnames_lname ON or_featnames USING btree (lower((name)::text));
 
 
 --
--- Name: idx_tiger_data_or_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_featnames_snd_name ON or_featnames USING btree (public.soundex((name)::text));
 
 
 --
--- Name: idx_tiger_data_or_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_featnames_tlid_statefp ON or_featnames USING btree (tlid, statefp);
 
 
 --
--- Name: idx_tiger_data_or_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_zip_lookup_base_citysnd ON or_zip_lookup_base USING btree (public.soundex((city)::text));
 
 
 --
--- Name: idx_tiger_data_or_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_or_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_or_zip_state_loc_place ON or_zip_state_loc USING btree (public.soundex((place)::text));
 
 
 --
--- Name: idx_tiger_data_pa_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_addr_least_address; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_addr_least_address ON pa_addr USING btree (tiger.least_hn(fromhn, tohn));
 
 
 --
--- Name: idx_tiger_data_pa_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_addr_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_addr_tlid_statefp ON pa_addr USING btree (tlid, statefp);
 
 
 --
--- Name: idx_tiger_data_pa_addr_zip; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_addr_zip; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_addr_zip ON pa_addr USING btree (zip);
 
 
 --
--- Name: idx_tiger_data_pa_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_cousub_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_cousub_countyfp ON pa_cousub USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_pa_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_edges_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_edges_countyfp ON pa_edges USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_pa_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_edges_tfidl; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_edges_tfidl ON pa_edges USING btree (tfidl);
 
 
 --
--- Name: idx_tiger_data_pa_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_edges_tlid; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_edges_tlid ON pa_edges USING btree (tlid);
 
 
 --
--- Name: idx_tiger_data_pa_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_edges_zipl; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_edges_zipl ON pa_edges USING btree (zipl);
 
 
 --
--- Name: idx_tiger_data_pa_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_edgestfidr; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_edgestfidr ON pa_edges USING btree (tfidr);
 
 
 --
--- Name: idx_tiger_data_pa_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_faces_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_faces_countyfp ON pa_faces USING btree (countyfp);
 
 
 --
--- Name: idx_tiger_data_pa_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_faces_tfid; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_faces_tfid ON pa_faces USING btree (tfid);
 
 
 --
--- Name: idx_tiger_data_pa_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_featnames_lname; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_featnames_lname ON pa_featnames USING btree (lower((name)::text));
 
 
 --
--- Name: idx_tiger_data_pa_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_featnames_snd_name; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_featnames_snd_name ON pa_featnames USING btree (public.soundex((name)::text));
 
 
 --
--- Name: idx_tiger_data_pa_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_featnames_tlid_statefp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_featnames_tlid_statefp ON pa_featnames USING btree (tlid, statefp);
 
 
 --
--- Name: idx_tiger_data_pa_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_zip_lookup_base_citysnd; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_zip_lookup_base_citysnd ON pa_zip_lookup_base USING btree (public.soundex((city)::text));
 
 
 --
--- Name: idx_tiger_data_pa_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: idx_tiger_data_pa_zip_state_loc_place; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX idx_tiger_data_pa_zip_state_loc_place ON pa_zip_state_loc USING btree (public.soundex((place)::text));
 
 
 --
--- Name: in_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX in_edges_source_idx ON in_edges USING btree (source);
 
 
 --
--- Name: in_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX in_edges_target_idx ON in_edges USING btree (target);
 
 
 --
--- Name: in_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: in_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX in_edges_vertices_pgr_the_geom_idx ON in_edges_vertices_pgr USING gist (the_geom);
 
 
 --
--- Name: or_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX or_edges_source_idx ON or_edges USING btree (source);
 
 
 --
--- Name: or_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX or_edges_target_idx ON or_edges USING btree (target);
 
 
 --
--- Name: or_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: or_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX or_edges_vertices_pgr_the_geom_idx ON or_edges_vertices_pgr USING gist (the_geom);
 
 
 --
--- Name: pa_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_edges_source_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX pa_edges_source_idx ON pa_edges USING btree (source);
 
 
 --
--- Name: pa_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_edges_target_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX pa_edges_target_idx ON pa_edges USING btree (target);
 
 
 --
--- Name: pa_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: pa_edges_vertices_pgr_the_geom_idx; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX pa_edges_vertices_pgr_the_geom_idx ON pa_edges_vertices_pgr USING gist (the_geom);
 
 
 --
--- Name: tiger_data_county_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_county_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_county_the_geom_gist ON county_all USING gist (the_geom);
 
 
 --
--- Name: tiger_data_in_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_in_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_in_bg_the_geom_gist ON in_bg USING gist (the_geom);
 
 
 --
--- Name: tiger_data_in_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_in_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_in_cousub_the_geom_gist ON in_cousub USING gist (the_geom);
 
 
 --
--- Name: tiger_data_in_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_in_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_in_edges_the_geom_gist ON in_edges USING gist (the_geom);
 
 
 --
--- Name: tiger_data_in_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_in_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_in_faces_the_geom_gist ON in_faces USING gist (the_geom);
 
 
 --
--- Name: tiger_data_in_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_in_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_in_place_the_geom_gist ON in_place USING gist (the_geom);
 
 
 --
--- Name: tiger_data_in_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_in_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_in_tabblock_the_geom_gist ON in_tabblock USING gist (the_geom);
 
 
 --
--- Name: tiger_data_in_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_in_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_in_tract_the_geom_gist ON in_tract USING gist (the_geom);
 
 
 --
--- Name: tiger_data_in_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_in_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_in_zcta5_the_geom_gist ON in_zcta5 USING gist (the_geom);
 
 
 --
--- Name: tiger_data_or_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_or_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_or_bg_the_geom_gist ON or_bg USING gist (the_geom);
 
 
 --
--- Name: tiger_data_or_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_or_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_or_cousub_the_geom_gist ON or_cousub USING gist (the_geom);
 
 
 --
--- Name: tiger_data_or_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_or_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_or_edges_the_geom_gist ON or_edges USING gist (the_geom);
 
 
 --
--- Name: tiger_data_or_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_or_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_or_faces_the_geom_gist ON or_faces USING gist (the_geom);
 
 
 --
--- Name: tiger_data_or_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_or_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_or_place_the_geom_gist ON or_place USING gist (the_geom);
 
 
 --
--- Name: tiger_data_or_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_or_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_or_tabblock_the_geom_gist ON or_tabblock USING gist (the_geom);
 
 
 --
--- Name: tiger_data_or_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_or_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_or_tract_the_geom_gist ON or_tract USING gist (the_geom);
 
 
 --
--- Name: tiger_data_or_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_or_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_or_zcta5_the_geom_gist ON or_zcta5 USING gist (the_geom);
 
 
 --
--- Name: tiger_data_pa_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_pa_bg_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_pa_bg_the_geom_gist ON pa_bg USING gist (the_geom);
 
 
 --
--- Name: tiger_data_pa_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_pa_cousub_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_pa_cousub_the_geom_gist ON pa_cousub USING gist (the_geom);
 
 
 --
--- Name: tiger_data_pa_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_pa_edges_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_pa_edges_the_geom_gist ON pa_edges USING gist (the_geom);
 
 
 --
--- Name: tiger_data_pa_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_pa_faces_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_pa_faces_the_geom_gist ON pa_faces USING gist (the_geom);
 
 
 --
--- Name: tiger_data_pa_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_pa_place_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_pa_place_the_geom_gist ON pa_place USING gist (the_geom);
 
 
 --
--- Name: tiger_data_pa_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_pa_tabblock_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_pa_tabblock_the_geom_gist ON pa_tabblock USING gist (the_geom);
 
 
 --
--- Name: tiger_data_pa_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_pa_tract_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_pa_tract_the_geom_gist ON pa_tract USING gist (the_geom);
 
 
 --
--- Name: tiger_data_pa_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_pa_zcta5_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_pa_zcta5_the_geom_gist ON pa_zcta5 USING gist (the_geom);
 
 
 --
--- Name: tiger_data_state_all_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: tiger_data_state_all_the_geom_gist; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE INDEX tiger_data_state_all_the_geom_gist ON state_all USING gist (the_geom);
 
 
 --
--- Name: uidx_tiger_data_county_all_statefp_countyfp; Type: INDEX; Schema: tiger_data; Owner: aaron.burgess
+-- Name: uidx_tiger_data_county_all_statefp_countyfp; Type: INDEX; Schema: tiger_data; Owner: geocoder_admins
 --
 
 CREATE UNIQUE INDEX uidx_tiger_data_county_all_statefp_countyfp ON county_all USING btree (statefp, countyfp);
@@ -4213,7 +4318,7 @@ CREATE UNIQUE INDEX uidx_tiger_data_county_all_statefp_countyfp ON county_all US
 SET search_path = geocoding_data, pg_catalog;
 
 --
--- Name: cached_routes_end_id_fkey; Type: FK CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cached_routes_end_id_fkey; Type: FK CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY cached_routes
@@ -4221,7 +4326,7 @@ ALTER TABLE ONLY cached_routes
 
 
 --
--- Name: cached_routes_start_id_fkey; Type: FK CONSTRAINT; Schema: geocoding_data; Owner: aaron.burgess
+-- Name: cached_routes_start_id_fkey; Type: FK CONSTRAINT; Schema: geocoding_data; Owner: geocoder_admins
 --
 
 ALTER TABLE ONLY cached_routes
@@ -4229,12 +4334,12 @@ ALTER TABLE ONLY cached_routes
 
 
 --
--- Name: geocoding_data; Type: ACL; Schema: -; Owner: aaron.burgess
+-- Name: geocoding_data; Type: ACL; Schema: -; Owner: geocoder_admins
 --
 
 REVOKE ALL ON SCHEMA geocoding_data FROM PUBLIC;
-REVOKE ALL ON SCHEMA geocoding_data FROM "aaron.burgess";
-GRANT ALL ON SCHEMA geocoding_data TO "aaron.burgess";
+REVOKE ALL ON SCHEMA geocoding_data FROM geocoder_admins;
+GRANT ALL ON SCHEMA geocoding_data TO geocoder_admins;
 GRANT CREATE ON SCHEMA geocoding_data TO geocoder_users;
 
 
@@ -4246,75 +4351,76 @@ REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO "aaron.burgess";
+GRANT ALL ON SCHEMA public TO geocoder_admins;
 
 
 --
--- Name: tiger; Type: ACL; Schema: -; Owner: aaron.burgess
+-- Name: tiger; Type: ACL; Schema: -; Owner: geocoder_admins
 --
 
 REVOKE ALL ON SCHEMA tiger FROM PUBLIC;
-REVOKE ALL ON SCHEMA tiger FROM "aaron.burgess";
-GRANT ALL ON SCHEMA tiger TO "aaron.burgess";
+REVOKE ALL ON SCHEMA tiger FROM geocoder_admins;
+GRANT ALL ON SCHEMA tiger TO geocoder_admins;
 
 
 --
--- Name: topology; Type: ACL; Schema: -; Owner: aaron.burgess
+-- Name: topology; Type: ACL; Schema: -; Owner: geocoder_admins
 --
 
 REVOKE ALL ON SCHEMA topology FROM PUBLIC;
-REVOKE ALL ON SCHEMA topology FROM "aaron.burgess";
-GRANT ALL ON SCHEMA topology TO "aaron.burgess";
+REVOKE ALL ON SCHEMA topology FROM geocoder_admins;
+GRANT ALL ON SCHEMA topology TO geocoder_admins;
 
 
 SET search_path = public, pg_catalog;
 
 --
--- Name: prm_generate_routing_query(integer, integer, text); Type: ACL; Schema: public; Owner: aaron.burgess
+-- Name: prm_generate_routing_query(integer, integer, text); Type: ACL; Schema: public; Owner: geocoder_admins
 --
 
 REVOKE ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) FROM PUBLIC;
-REVOKE ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) FROM "aaron.burgess";
-GRANT ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) TO "aaron.burgess";
+REVOKE ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) FROM geocoder_admins;
+GRANT ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) TO geocoder_admins;
 GRANT ALL ON FUNCTION prm_generate_routing_query(start_node integer, end_node integer, stateabbrev text) TO PUBLIC;
 
 
 --
--- Name: prm_geocode(text, text); Type: ACL; Schema: public; Owner: aaron.burgess
+-- Name: prm_geocode(text, text); Type: ACL; Schema: public; Owner: geocoder_admins
 --
 
 REVOKE ALL ON FUNCTION prm_geocode(_tbl text, statefips text) FROM PUBLIC;
-REVOKE ALL ON FUNCTION prm_geocode(_tbl text, statefips text) FROM "aaron.burgess";
-GRANT ALL ON FUNCTION prm_geocode(_tbl text, statefips text) TO "aaron.burgess";
+REVOKE ALL ON FUNCTION prm_geocode(_tbl text, statefips text) FROM geocoder_admins;
+GRANT ALL ON FUNCTION prm_geocode(_tbl text, statefips text) TO geocoder_admins;
 GRANT ALL ON FUNCTION prm_geocode(_tbl text, statefips text) TO PUBLIC;
 
 
 --
--- Name: prm_network_node(geometry, text); Type: ACL; Schema: public; Owner: aaron.burgess
+-- Name: prm_network_node(geometry, text); Type: ACL; Schema: public; Owner: geocoder_admins
 --
 
 REVOKE ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) FROM PUBLIC;
-REVOKE ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) FROM "aaron.burgess";
-GRANT ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) TO "aaron.burgess";
+REVOKE ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) FROM geocoder_admins;
+GRANT ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) TO geocoder_admins;
 GRANT ALL ON FUNCTION prm_network_node(point geometry, stateabbrev text) TO PUBLIC;
 
 
 --
--- Name: prm_routing(text, integer, integer); Type: ACL; Schema: public; Owner: aaron.burgess
+-- Name: prm_routing(text, integer, integer); Type: ACL; Schema: public; Owner: geocoder_admins
 --
 
 REVOKE ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) FROM PUBLIC;
-REVOKE ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) FROM "aaron.burgess";
-GRANT ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) TO "aaron.burgess";
+REVOKE ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) FROM geocoder_admins;
+GRANT ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) TO geocoder_admins;
 GRANT ALL ON FUNCTION prm_routing(routing_query text, start_node integer, end_node integer) TO PUBLIC;
 
 
 --
--- Name: prm_table_routing(text, text, text, text); Type: ACL; Schema: public; Owner: aaron.burgess
+-- Name: prm_table_routing(text, text, text, text); Type: ACL; Schema: public; Owner: geocoder_admins
 --
 
 REVOKE ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) FROM PUBLIC;
-REVOKE ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) FROM "aaron.burgess";
-GRANT ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) TO "aaron.burgess";
+REVOKE ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) FROM geocoder_admins;
+GRANT ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) TO geocoder_admins;
 GRANT ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, gc_id_field2 text, stateabbrev text) TO PUBLIC;
 
 
@@ -4325,6 +4431,7 @@ GRANT ALL ON FUNCTION prm_table_routing(routing_table text, gc_id_field1 text, g
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM "ben.wyatt";
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON SEQUENCES  TO "aaron.burgess";
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO geocoder_admins;
 
 
 --
@@ -4334,6 +4441,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON SEQU
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM "ben.wyatt";
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON FUNCTIONS  TO "aaron.burgess";
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON FUNCTIONS  TO geocoder_admins;
 
 
 --
@@ -4343,6 +4451,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON FUNC
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON TABLES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public REVOKE ALL ON TABLES  FROM "ben.wyatt";
 ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON TABLES  TO "aaron.burgess";
+ALTER DEFAULT PRIVILEGES FOR ROLE "ben.wyatt" IN SCHEMA public GRANT ALL ON TABLES  TO geocoder_admins;
 
 
 --
