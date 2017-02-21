@@ -328,6 +328,7 @@ GRANT "Indy_ePHI_0273CHA" TO "jacob.krebs" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHA" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHA" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHA" TO "shea.parkes" GRANTED BY postgres;
+GRANT "Indy_ePHI_0273CHC" TO "aaron.burgess" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHC" TO "jason.altieri" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHC" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHI" TO "aaron.burgess" GRANTED BY postgres;
