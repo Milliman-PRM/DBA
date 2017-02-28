@@ -78,7 +78,9 @@ BEGIN
 					(
 						ID = @LastFullID
 						OR ID = @LastDiffID
-						OR (StartTime > @LastDiffDate AND Backup_Type = 'LOG') -- Only pull log backups that have happened since the last diff
+						OR (
+                (StartTime > @LastDiffDate OR @LastDiffDate IS NULL)
+                AND Backup_Type = 'LOG') -- Only pull log backups that have happened since the last diff
 					)
 		UNION
 		-- Include a final statement to initiate recovery (complete backup cycle)
