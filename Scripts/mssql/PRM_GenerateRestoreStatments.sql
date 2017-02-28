@@ -87,7 +87,7 @@ BEGIN
 		select 
 			-- Include file moves for the full backup
 			CASE WHEN Backup_Type = 'FULL' THEN
-				'RESTORE ' + Restore_Type + ' ' + DatabaseName + ' FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @databasename + ''' TO ''' + @data_file_path + @databasename + '.mdf'', MOVE ''' + @databasename + '_log'' TO ''' + @log_file_path + @databasename + '_log'', REPLACE, NORECOVERY;' 
+				'RESTORE ' + Restore_Type + ' ' + DatabaseName + ' FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @databasename + ''' TO ''' + @data_file_path + @databasename + '.mdf'', MOVE ''' + @databasename + '_log'' TO ''' + @log_file_path + @databasename + '_log.ldf'', REPLACE, NORECOVERY;' 
 			ELSE
 				'RESTORE ' + Restore_Type + ' ' + DatabaseName + ' FROM DISK = ''' + FilePath + ''' WITH NORECOVERY;'
 			END as Restore_command, StartTime
