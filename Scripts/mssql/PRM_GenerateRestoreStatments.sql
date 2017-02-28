@@ -94,13 +94,11 @@ BEGIN
 		
 		from #BackupInfo
 		where StartTime >= @LastFullDate -- We don't need to test anything older than the latest full backup
-				AND
+				AND 
 					(
-						ID = @LastFullID
-						OR ID = @LastDiffID
-						OR (
-                (StartTime > @LastDiffDate OR @LastDiffDate IS NULL)
-                AND Backup_Type = 'LOG') -- Only pull log backups that have happened since the last diff
+						ID = @LastFullID 
+						OR ID = @LastDiffID  
+						OR (StartTime > @LastDiffDate AND Backup_Type = 'LOG') -- Only pull log backups that have happened since the last diff
 					)
 		
 		UNION
