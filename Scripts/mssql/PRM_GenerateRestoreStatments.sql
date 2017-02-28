@@ -1,14 +1,29 @@
+/*
+    ## CODE OWNERS: Ben Wyatt
+
+    ### OBJECTIVE:
+		Generate commands to restore a database from its current backup chain.
+
+    ### DEVELOPER NOTES:
+    This is intended for scheduled usage, as a tool to aid with backup restore validation.
+
+    ### PREREQUISITES:
+    This script assumes that backups are being done via Ola Hallengren's maintenance scripts,
+      with maintenance history written to dbo.CommandLog in a database named Admin.
+
+    Ola's scripts can be found at https://ola.hallengren.com/
+
+*/
+
+USE [Admin]
+
+-- If the procedure already exists, drop it so we can update to the latest version
 IF OBJECT_ID('PRM_GenerateRestoreStatements') IS NOT NULL DROP PROCEDURE PRM_GenerateRestoreStatements;
 
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--- =============================================
--- Author:		Ben Wyatt
--- Create date: 2/28/2017
--- Description:	Generate commands to restore a database from its current backup chain.
--- =============================================
 CREATE PROCEDURE dbo.PRM_GenerateRestoreStatements
 (
 	-- Add the parameters for the function here
