@@ -18,6 +18,8 @@ Execute database restore tests
 Test restoring specified databases from a source server to a target server. The target server should be a test server that is used for no other purpose.
 
 You must specify either -includeDatabases, -excludeDatabases or -allDatabases. No assumptions are made about the set of databases that will be restored.
+
+As a protective feature, databases that already exist on the target server will not be overwritten. A pre-existing datbase will trigger an error and fail the script.
 .PARAMETER sourceServer
 
 The source SQL Server's name. For named instances, include the instance name in this parameter (i.e., server\instance)
@@ -54,6 +56,21 @@ The files are deleted after the test is complete.
 .PARAMETER procedurePath
 
 Specifies the path to the .sql file that defines the stored procedure to generate restore commands for the selected datbases.
+
+.EXAMPLE
+.\TestDatbaseRestores.ps1 -sourceServer indy-ss01\SQLEXPRESS -targetServer indy-dbatest01 -alldatabases
+
+Will restore all backups from indy-sql02, onto indy-dbatest01. Each database will be dropped after it is tested successfully.
+
+.EXAMPLE
+.\TestDatbaseRestores.ps1 -sourceServer "indy-sql02" -targetServer indy-dbatest01 -includeDatabases Admin, CMS, SAS201
+
+Will restore only backups of Admin, CMS, and SAS201 from indy-sql02, onto indy-dbatest01. Each database will be dropped after it is tested successfully.
+
+.EXAMPLE
+.\TestDatbaseRestores.ps1 -sourceServer indy-sql02 -targetServer indy-dbatest01 -excludeDatbases 0032ODM, SSC_HCG_2014
+
+Will restore all backups from indy-sql02, with the exception of 0032ODM and SSC_HCG_2014, onto indy-dbatest01. Each database will be dropped after it is tested successfully.
 #>
 
 [CmdletBinding()]
