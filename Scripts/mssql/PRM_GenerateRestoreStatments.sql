@@ -50,10 +50,16 @@ BEGIN
 
 		SELECT @ServerName = cast(SERVERPROPERTY('ServerName') as varchar(80))
 
+		-- Handle special-case filenames and set defaults otherwise
 		IF @ServerName = 'Indy-SQL02' AND @databasename = 'SSS_HCG_2014'
 		BEGIN
 			SET @DataFileName = 'SSC_HCG_2014'
 			SET @LogFileName = 'SSC_HCG_2014_log'
+		END
+		ELSE IF @ServerName = 'indy-ss01\sqlexpress' and @databasename = 'NewPortalDB'
+		BEGIN
+			set @DataFileName = 'dbMyCMS'
+			set @LogFileName = 'dbMyCMS_log'
 		END
 		ELSE
 		BEGIN
