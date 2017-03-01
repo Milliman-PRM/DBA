@@ -81,10 +81,10 @@ Param(
 #>
 # Execute the script at $procedurePath against the source server
 
-sqlcmd -S $sourceServer -i $procedurePath
+sqlcmd -S $sourceServer -i $procedurePath -b
 
 if ($LASTEXITCODE -ne 0) {
-    write-output "An error occurred while installing the stored procedure. Make sure the source server has an Admin database with a CommandLog table and that the current user has permission to create objects in that datbase."
+    write-output "An error occurred while installing the stored procedure."
     exit $LASTEXITCODE
 }
 else
@@ -140,7 +140,7 @@ $queryString = "select name from sys.databases where name not in ('master', 'mod
 
 # Query $sourceServer for a list of databases to be backed up, and store the output in a file
 
-sqlcmd -S $sourceServer -Q "$queryString" -o databases.txt -h -1 -W
+sqlcmd -S $sourceServer -Q "$queryString" -o databases.txt -h -1 -W -b
 if ($LASTEXITCODE -ne 0) {
     write-output "Unable to retrieve a list of databases."
     exit $LASTEXITCODE
@@ -167,7 +167,7 @@ foreach ($database in $databases)
     write-output "Generating restore commands for $database from $sourceServer"
 
     $queryString = "exec PRM_GenerateRestoreStatements '$database', '$dataFilePath', '$logFilePath'"
-    sqlcmd -S $sourceServer -d Admin -Q $queryString -o restoreCommands.txt -y 0
+    sqlcmd -S $sourceServer -d Admin -Q $queryString -o restoreCommands.txt -y 0 -b
 
     if ($LASTEXITCODE -ne 0) {
         write-output "Unable to retrieve restore commands."
@@ -182,7 +182,7 @@ foreach ($database in $databases)
 
     foreach ($command in $restoreCommands)
     {
-        sqlcmd -S $targetServer -Q $command -e
+        sqlcmd -S $targetServer -Q $command -e -b
 
         if ($LASTEXITCODE -ne 0) 
         {
