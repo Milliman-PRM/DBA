@@ -92,13 +92,19 @@ BEGIN
 		where Backup_Type = 'DIFFERENTIAL' AND StartTime > @LastFullDate
 		order by starttime desc
 
-		-- Prep commands for restore statements, with timestamp for ordering
-		-- Include create database statement and drop database statement
-		select top 1 'If not exists (select name from master.sys.databases where name = ''' + @databasename + ''') create database ' + @databasename + ';'
+		-- Prep commands, with timestamp for ordering
+		-- Block overwriting an existing datbase, for safety's sake
+		select 'If  exists (select name from master.sys.databases where name = ''' + @databasename + ''') RAISERROR(''Database %s already exists. Exiting to avoid data loss.'', 12, 42, ''' + @databasename + ''');'
 				 as Restore_Command, 
 				 cast('1/1/1900' as datetime) as StartTime -- Sentinel value. Yeah, I know.
 		into #BackupCommands
 		
+		UNION
+
+		select 'create database ' + @databasename + ';',
+				 
+				 cast('1/1/1901' as datetime)
+
 		UNION
 		
 		-- Get the commands for each relevant backup file
