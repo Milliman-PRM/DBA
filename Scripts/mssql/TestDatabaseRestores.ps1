@@ -41,11 +41,15 @@ If this flag parameter is present, all non-system databases will be restored.
 
 .PARAMETER dataFilePath
 
-Specifies the target directory for SQL data files post-restore. The files are deleted after the test is complete.
+Specifies the target directory for SQL data files post-restore. The full path, including the trailing slash, must be specified.
+
+The files are deleted after the test is complete.
 
 .PARAMETER logFilePath
 
-Specifies the target directory for SQL data files post-restore. The files are deleted after the test is complete.
+Specifies the target directory for SQL data files post-restore. The full path, including the trailing slash, must be specified.
+
+The files are deleted after the test is complete.
 
 .PARAMETER procedurePath
 
@@ -69,9 +73,9 @@ Param(
    [Parameter(ParameterSetName="set3", Mandatory=$True)]
    [switch]$allDatabases,
 
-   [string]$dataFilePath="C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\mssql\DATA",
+   [string]$dataFilePath="E:\Data\",
 
-   [string]$logFilePath="C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\mssql\DATA",
+   [string]$logFilePath="E:\Logs\",
 
    [string]$procedurePath="scripts\mssql\PRM_GenerateRestoreStatements.sql"
 )
