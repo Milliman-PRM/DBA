@@ -43,6 +43,24 @@ BEGIN
 		DECLARE @LastDiffDate datetime
 		DECLARE @LastDiffID int
 
+		DECLARE @DataFileName varchar(100)
+		DECLARE @LogFileName varchar(100)
+
+		DECLARE @ServerName varchar(80)
+
+		SELECT @ServerName = cast(SERVERPROPERTY('ServerName') as varchar(80))
+
+		IF @ServerName = 'Indy-SQL02' AND @databasename = 'SSS_HCG_2014'
+		BEGIN
+			SET @DataFileName = 'SSC_HCG_2014'
+			SET @LogFileName = 'SSC_HCG_2014_log'
+		END
+		ELSE
+		BEGIN
+			SET @DataFileName = @databasename
+			SET @LogFileName = @databasename + '_log'
+		END
+
 		IF OBJECT_ID('tempdb..#BackupInfo') IS NOT NULL DROP TABLE #BackupInfo
 		IF OBJECT_ID('tempdb..#BackupCommands') IS NOT NULL DROP TABLE #BackupCommands
 
@@ -87,7 +105,7 @@ BEGIN
 		select 
 			-- Include file moves for the full backup
 			CASE WHEN Backup_Type = 'FULL' THEN
-				'RESTORE ' + Restore_Type + ' ' + DatabaseName + ' FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @databasename + ''' TO ''' + @data_file_path + @databasename + '.mdf'', MOVE ''' + @databasename + '_log'' TO ''' + @log_file_path + @databasename + '_log.ldf'', REPLACE, NORECOVERY;' 
+				'RESTORE ' + Restore_Type + ' ' + DatabaseName + ' FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @DataFileName + ''' TO ''' + @data_file_path + @databasename + '.mdf'', MOVE ''' + @LogFileName + ''' TO ''' + @log_file_path + @databasename + '_log.ldf'', REPLACE, NORECOVERY;' 
 			ELSE
 				'RESTORE ' + Restore_Type + ' ' + DatabaseName + ' FROM DISK = ''' + FilePath + ''' WITH NORECOVERY;'
 			END as Restore_command, StartTime
