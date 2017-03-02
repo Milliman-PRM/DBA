@@ -210,6 +210,8 @@ foreach ($database in $databases)
             write-output "Command failed."
             exit $LASTEXITCODE
         }
+
+        write-output ""
     }
 
     write-output "$database was restored successfully on $targetServer"
