@@ -264,7 +264,7 @@ foreach ($database in $databases)
     write-output "Restoring from $filepath"
 
     # Create empty database to restore into
-    $command = $targetHotwarePath + "psql.exe --host=$targetServer --username=$username --dbname=postgres -q --command='create database $database;'"
+    $command = $targetHotwarePath + "psql.exe --host=$targetServer --username=$username --dbname=postgres -e -q --command='create database $database;'"
     invoke-expression $command
     
     if ($LASTEXITCODE -ne 0)
