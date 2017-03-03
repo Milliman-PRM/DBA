@@ -203,7 +203,7 @@ if ($LASTEXITCODE -ne 0)
     exit $LASTEXITCODE
 }
 
-$databases = get-content databases.txt | where {$_.trim().length -gt 0} | foreach {$_.trim()}
+$databases = get-content databases.txt | where {$_.trim().length -gt 0} | foreach {$_.trim().tolower()}
 rm databases.txt
 
 write-output "Databases to be restored:"
@@ -255,7 +255,6 @@ write-output ""
 
 foreach ($database in $databases)
 {
-    $database = $database.trim()
     write-output "Preparing to restore $database"
 
     # Build filepath to backup file
