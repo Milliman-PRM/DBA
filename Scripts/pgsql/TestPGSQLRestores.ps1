@@ -91,7 +91,7 @@ Param(
 )
 
 # Store username in a variable, in the format that PostgreSQL wants in our environment.
-$username = "'" + $env:USERNAME.ToLower() + "'"
+$username = $env:USERNAME.ToLower()
 
 <#
     Determine hotware paths
@@ -141,10 +141,11 @@ if ($LASTEXITCODE -ne 0)
 }
 
 $targetDatabases = get-content targetdatabases.txt
+rm targetdatabases.txt
 
 if ($targetDatabases.Length -gt 0)
 {
-    write-output "Multiple databases were found on the target server. In order to protect that data, the script will now terminate."
+    write-output "Existing databases were found on the target server. In order to protect that data, the script will now terminate."
     exit 1
 }
 
@@ -202,10 +203,12 @@ if ($LASTEXITCODE -ne 0)
     exit $LASTEXITCODE
 }
 
-$databases = get-content databases.txt
+$databases = get-content databases.txt | where {$_.trim().length -gt 0} | foreach {$_.trim()}
+rm databases.txt
 
 write-output "Databases to be restored:"
 $databases
+write-output ""
 
 <# 
 
@@ -223,7 +226,12 @@ if ($LASTEXITCODE -ne 0)
     exit $LASTEXITCODE
 }
 
-$command = $targetHotwarePath + "psql.exe --dbname=postgres --username=$username --host=$targetServer --file=create_roles.sql --echo-errors"
+$dropCommands = get-content create_roles.sql
+$dropcommands = $dropcommands | where {$_ -notlike "*"+$env:username.toLower()+"*" -and $_ -notlike "*postgres*"}
+$dropCommands | set-content create_roles.sql
+rm create_roles.sql
+
+$command = $targetHotwarePath + "psql.exe --dbname=postgres --username=$username --host=$targetServer --file=create_roles.sql --echo-errors -q  --set=ON_ERROR_STOP"
 Invoke-Expression $command
 
 if ($LASTEXITCODE -ne 0)
@@ -244,14 +252,28 @@ write-output ""
 
 foreach ($database in $databases)
 {
+    $database = $database.trim()
+    write-output "Preparing to restore $database"
 
     # Build filepath to backup file
     $datestring = get-date -Format "yyyyMMdd"
     $filepath = "\\indy-syn01\indy-resources\backups-pgsql\" + $sourceServer + "_" + $datestring + "_" + $database + ".bak"
 
+    write-output "Restoring from $filepath"
+
+    # Create empty database to restore into
+    $command = $targetHotwarePath + "psql.exe --host=$targetServer --username=$username --dbname=postgres -q --command='create database $database;'"
+    invoke-expression $command
+    
+    if ($LASTEXITCODE -ne 0)
+    {
+        write-output "Error creating $database on $targetServer."
+        exit $LASTEXITCODE
+    }
+
     # Attempt restore
-    $command = $targetHotwarePath + "pg_restore.exe --host=$targetServer --username=$username --dbname=$database --create --exit-on-error $filepath"
-    Invoke-Command $command
+    $command = $targetHotwarePath + "pg_restore.exe --host=$targetServer --username=$username -e  --dbname=$database $filepath"
+    Invoke-Expression $command
 
     if ($LASTEXITCODE -ne 0)
     {
@@ -260,9 +282,10 @@ foreach ($database in $databases)
         exit $LASTEXITCODE
     }
 
+    write-output "Restore completed. Dropping database $database"
     # Drop restored database
-    $command = $targetHotwarePath + "psql.exe --host=$targetserver --username=$username --dbname=postgres --echo-errors --command=`"drop database $database ;`""
-    invoke-command $command
+    $command = $targetHotwarePath + "psql.exe --host=$targetServer --username=$username --dbname=postgres -q --command='drop database $database;'"
+    invoke-expression $command
 
     if ($LASTEXITCODE -ne 0)
     {
