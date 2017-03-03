@@ -1,5 +1,5 @@
 ﻿<#
-    ## CODE OWNERS: Ben Wyatt
+    ## CODE OWNERS: Ben Wyatt, Steve Gredell
 
     ### OBJECTIVE:
 		Execute test database restores from a source server against a target
