@@ -229,16 +229,19 @@ if ($LASTEXITCODE -ne 0)
 $dropCommands = get-content create_roles.sql
 $dropcommands = $dropcommands | where {$_ -notlike "*"+$env:username.toLower()+"*" -and $_ -notlike "*postgres*"}
 $dropCommands | set-content create_roles.sql
-rm create_roles.sql
 
 $command = $targetHotwarePath + "psql.exe --dbname=postgres --username=$username --host=$targetServer --file=create_roles.sql --echo-errors -q  --set=ON_ERROR_STOP"
 Invoke-Expression $command
 
 if ($LASTEXITCODE -ne 0)
 {
+    
+    rm create_roles.sql
     write-output "Error creating roles on $targetServer."
     exit $LASTEXITCODE
 }
+
+rm create_roles.sql
 
 write-output ""
 
