@@ -1,0 +1,224 @@
+﻿<#
+    ## CODE OWNERS: Ben Wyatt, Steve Gredell
+
+    ### OBJECTIVE:
+		Execute test database restores from a source server against a target
+
+    ### DEVELOPER NOTES:
+    
+
+#> 
+
+<#
+.SYNOPSIS
+
+Execute database restore tests
+.DESCRIPTION
+
+Test restoring specified databases from a source server to a target server. The target server should be a test server that is used for no other purpose.
+
+You must specify either -includeDatabases, -excludeDatabases or -allDatabases. No assumptions are made about the set of databases that will be restored.
+
+As a protective feature, databases that already exist on the target server will not be overwritten. A pre-existing datbase will trigger an error and fail the script.
+.PARAMETER sourceServer
+
+The source SQL Server's name. For named instances, include the instance name in this parameter (i.e., server\instance)
+.PARAMETER targetServer
+
+The server the datbase will be restored to. This server should not be used for any other work. For named instances, include the instance name in this parameter (i.e., server\instance)
+
+.PARAMETER includeDatabases
+
+A list of databases to be restored to the target server. You must supply either this parameter or the excludeDatabases parameter.
+
+If this parameter is specified, only the listed databases will be restored.
+
+.PARAMETER excludeDatabases
+
+If this parameter is specified, all non-system databases will be restored except for those listed in this parameter.
+
+.PARAMETER allDatabases
+
+If this flag parameter is present, all non-system databases will be restored.
+
+.PARAMETER dataFilePath
+
+Specifies the target directory for SQL data files post-restore. The full path, including the trailing slash, must be specified.
+
+The files are deleted after the test is complete.
+
+.PARAMETER logFilePath
+
+Specifies the target directory for SQL data files post-restore. The full path, including the trailing slash, must be specified.
+
+The files are deleted after the test is complete.
+
+.PARAMETER procedurePath
+
+Specifies the path to the .sql file that defines the stored procedure to generate restore commands for the selected datbases.
+
+.EXAMPLE
+.\TestDatbaseRestores.ps1 -sourceServer indy-ss01\SQLEXPRESS -targetServer indy-dbatest01 -alldatabases
+
+Will restore all backups from indy-sql02, onto indy-dbatest01. Each database will be dropped after it is tested successfully.
+
+.EXAMPLE
+.\TestDatbaseRestores.ps1 -sourceServer "indy-sql02" -targetServer indy-dbatest01 -includeDatabases Admin, CMS, SAS201
+
+Will restore only backups of Admin, CMS, and SAS201 from indy-sql02, onto indy-dbatest01. Each database will be dropped after it is tested successfully.
+
+.EXAMPLE
+.\TestDatbaseRestores.ps1 -sourceServer indy-sql02 -targetServer indy-dbatest01 -excludeDatbases 0032ODM, SSC_HCG_2014
+
+Will restore all backups from indy-sql02, with the exception of 0032ODM and SSC_HCG_2014, onto indy-dbatest01. Each database will be dropped after it is tested successfully.
+#>
+
+[CmdletBinding()]
+Param(
+   [Parameter(Mandatory=$True)]
+   [string]$sourceServer,
+	
+   [Parameter(Mandatory=$True)]
+   [string]$targetServer,
+
+   [Parameter(ParameterSetName="set1", Mandatory=$True)]
+   [string[]]$includeDatabases,
+
+   [Parameter(ParameterSetName="set2", Mandatory=$True)]
+   [string[]]$excludeDatabases,
+
+   [Parameter(ParameterSetName="set3", Mandatory=$True)]
+   [switch]$allDatabases,
+
+   [string]$dataFilePath="E:\Data\",
+
+   [string]$logFilePath="E:\Logs\",
+
+   [string]$procedurePath="dba\scripts\mssql\PRM_GenerateRestoreStatements.sql"
+)
+
+<#
+    INSTALL THE STORED PROCEDURE ON $SOURCESERVER
+#>
+# Execute the script at $procedurePath against the source server
+
+sqlcmd -S $sourceServer -i $procedurePath -b
+
+if ($LASTEXITCODE -ne 0) {
+    write-output "An error occurred while installing the stored procedure."
+    exit $LASTEXITCODE
+}
+else
+{
+    Write-Output "Successfully installed stored procedure on $sourceServer"
+}
+
+<#
+    BUILD A LIST OF DATABASES TO BE TESTED
+#>
+# Build a where clause here for a query to pull a list of datbase names from the source server
+if ($PSCmdlet.ParameterSetName -eq "set1") #includeDatabases
+{
+    $lastIndex = $includeDatabases.GetUpperBound(0)
+    $dbList = ""
+
+    foreach ($d in $includeDatabases)
+     {
+        $dbList = $dbList + "'$d'"
+
+        if ($d -ne $includeDatabases[$lastIndex])
+        {
+            $dbList = $dblist + ', '
+        }
+     }
+
+    $whereClauseCondition = "AND name in ($dbList)"
+}
+elseif ($PSCmdlet.ParameterSetName -eq "set2") #excludeDatabases
+{
+    $lastIndex = $excludeDatabases.GetUpperBound(0)
+    $dbList = ""
+
+    foreach ($d in $excludeDatabases)
+     {
+        $dbList = $dbList + "'$d'"
+
+        if ($d -ne $excludeDatabases[$lastIndex])
+        {
+            $dbList = $dblist + ', '
+        }
+     }
+
+    $whereClauseCondition = "AND name not in ($dbList)"
+}
+else #allDatabases
+{
+    Write-Output "All user datbases will be included."
+    $whereClauseCondition = ""
+}
+
+$queryString = "select name from sys.databases where name not in ('master', 'model', 'tempdb', 'msdb') $whereclausecondition"
+
+# Query $sourceServer for a list of databases to be backed up, and store the output in a file
+
+sqlcmd -S $sourceServer -Q "$queryString" -o databases.txt -h -1 -W -b
+if ($LASTEXITCODE -ne 0) {
+    write-output "Unable to retrieve a list of databases."
+    exit $LASTEXITCODE
+}
+$databases = get-content databases.txt | where {$_.trim().length -gt 0 -and $_.trim() -notlike "* rows affected)"}
+rm databases.txt
+
+write-output ""
+Write-Output "List of databases to be restore-tested:"
+$databases
+
+<#
+    ITERATE OVER DATABASES AND PERFORM TEST RESTORES
+#>
+
+write-output ""
+write-output "Preparing to perform test restores"
+write-output "Data files will be written in $datafilepath"
+write-output "Log files will be written in $logFilePath"
+
+foreach ($database in $databases)
+{
+    write-output ""
+    write-output "Generating restore commands for $database from $sourceServer"
+
+    $queryString = "exec PRM_GenerateRestoreStatements '$database', '$dataFilePath', '$logFilePath'"
+    sqlcmd -S $sourceServer -d Admin -Q $queryString -o restoreCommands.txt -y 0 -b
+
+    if ($LASTEXITCODE -ne 0) {
+        write-output "Unable to retrieve restore commands."
+        exit $LASTEXITCODE
+    }
+
+    $restoreCommands = get-content restoreCommands.txt | where {$_.trim().length -gt 0 -and $_.trim() -notlike "* rows affected)"}
+    rm restoreCommands.txt
+
+    write-output ""
+    write-output "Restoring $database on $targetServer"
+
+    foreach ($command in $restoreCommands)
+    {
+        sqlcmd -S $targetServer -Q $command -e -b
+
+        if ($LASTEXITCODE -ne 0) 
+        {
+            write-output "Command failed."
+            exit $LASTEXITCODE
+        }
+
+        write-output ""
+    }
+
+    write-output "$database was restored successfully on $targetServer"
+}
+
+<#
+    SUCCESS
+#>
+write-output ""
+write-output "All restore tests were successful on $targetServer"
