@@ -91,7 +91,14 @@ Param(
 )
 
 # Store username in a variable, in the format that PostgreSQL wants in our environment.
-$username = $env:USERNAME.ToLower()
+if (test-path env:\ephi_username)
+{
+    $username = $env:ephi_username.ToLower()
+}
+else
+{
+    $username = $env:USERNAME.ToLower()
+}
 
 <#
     Determine hotware paths
