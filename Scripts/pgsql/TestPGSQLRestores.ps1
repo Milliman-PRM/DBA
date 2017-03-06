@@ -234,7 +234,7 @@ if ($LASTEXITCODE -ne 0)
 }
 
 $dropCommands = get-content create_roles.sql
-$dropcommands = $dropcommands | where {$_ -notlike "*"+$env:username.toLower()+"*" -and $_ -notlike "*postgres*"}
+$dropcommands = $dropcommands | where {$_ -notlike "*"+$username.toLower()+"*" -and $_ -notlike "*postgres*"}
 $dropCommands | set-content create_roles.sql
 
 $command = $targetHotwarePath + "psql.exe --dbname=postgres --username=$username --host=$targetServer --file=create_roles.sql --echo-errors -q  --set=ON_ERROR_STOP"
