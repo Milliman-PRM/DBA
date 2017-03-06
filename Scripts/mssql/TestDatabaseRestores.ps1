@@ -94,7 +94,7 @@ Param(
 
    [string]$logFilePath="E:\Logs\",
 
-   [string]$procedurePath="dba\scripts\mssql\PRM_GenerateRestoreStatements.sql"
+   [string]$procedurePath="scripts\mssql\PRM_GenerateRestoreStatements.sql"
 )
 
 <#
