@@ -107,7 +107,7 @@ BEGIN
 		
 		UNION
 
-		select 'create database ' + @databasename + ';',
+		select 'create database [' + @databasename + '];',
 				 
 				 cast('1/1/1901' as datetime)
 
@@ -117,9 +117,9 @@ BEGIN
 		select 
 			-- Include file moves for the full backup
 			CASE WHEN Backup_Type = 'FULL' THEN
-				'RESTORE ' + Restore_Type + ' ' + DatabaseName + ' FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @DataFileName + ''' TO ''' + @data_file_path + @databasename + '.mdf'', MOVE ''' + @LogFileName + ''' TO ''' + @log_file_path + @databasename + '_log.ldf'', REPLACE, NORECOVERY;' 
+				'RESTORE ' + Restore_Type + ' [' + DatabaseName + '] FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @DataFileName + ''' TO ''' + @data_file_path + @databasename + '.mdf'', MOVE ''' + @LogFileName + ''' TO ''' + @log_file_path + @databasename + '_log.ldf'', REPLACE, NORECOVERY;' 
 			ELSE
-				'RESTORE ' + Restore_Type + ' ' + DatabaseName + ' FROM DISK = ''' + FilePath + ''' WITH NORECOVERY;'
+				'RESTORE ' + Restore_Type + ' [' + DatabaseName + '] FROM DISK = ''' + FilePath + ''' WITH NORECOVERY;'
 			END as Restore_command, StartTime
 		
 		from #BackupInfo
@@ -134,12 +134,12 @@ BEGIN
 		UNION
 		
 		-- Include a final statement to initiate recovery (complete backup cycle)
-		select 'RESTORE DATABASE ' + @DatabaseName + ' WITH RECOVERY;', getdate()
+		select 'RESTORE DATABASE [' + @DatabaseName + '] WITH RECOVERY;', getdate()
 
 		UNION
 
 		-- Add a drop database statement to the end, because we don't want to retain the database
-		select top 1 'drop database ' + @databasename + ';'
+		select top 1 'drop database [' + @databasename + '];'
 			, cast('1/1/2100' as datetime) -- Sentinel value. Yeah, I know.
 		
 
