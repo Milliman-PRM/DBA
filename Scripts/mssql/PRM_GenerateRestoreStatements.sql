@@ -56,6 +56,16 @@ BEGIN
 			SET @DataFileName = 'SSC_HCG_2014'
 			SET @LogFileName = 'SSC_HCG_2014_log'
 		END
+		ELSE IF @ServerName = 'Indy-SQL02' AND @databasename = 'SSC_CORE'
+		BEGIN
+			SET @DataFileName = 'ICD10_SSC_CORE'
+			SET @LogFileName = 'ICD10_SSC_CORE_log'
+		END
+		ELSE IF @ServerName = 'Indy-SQL02' AND @databasename = 'SSC_SOURCE'
+		BEGIN
+			SET @DataFileName = 'ICD10_SSC_SOURCE'
+			SET @LogFileName = 'ICD10_SSC_SOURCE_log'
+		END
 		ELSE IF @ServerName = 'indy-ss01\sqlexpress' and @databasename = 'NewPortalDB'
 		BEGIN
 			set @DataFileName = 'dbMyCMS'
