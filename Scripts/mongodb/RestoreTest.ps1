@@ -79,8 +79,7 @@ foreach ($database in $includeDatabases)
     # Derive the backup file path and make sure it exists before moving forward
     $datestring = get-date -Format "yyyyMMdd"
     $filepath = "\\indy-backup\prm-mongodb\" + $sourceserver + "\" + $sourceServer + "_" + $datestring + "_" + $database + ".gzip"
-    $fileExists = test-path $filepath
-    if ($fileExists -eq $false)
+    if ((test-path $filepath) -eq $false)
     {
         write-output "File does not exist: $filepath"
         write-output "Failed to restore $database"
