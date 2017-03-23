@@ -55,6 +55,18 @@ Param(
 
 )
 
+# Make sure the required executables exist
+$executables = @("c:\mongodb\bin\mongo.exe", "c:\mongodb\bin\mongorestore.exe")
+foreach ($file in $executables)
+{
+    if ((test-path $file) -eq $false)
+    {
+        write-output "$file was not found. Tests cannot be completed on this machine."
+        exit 42
+    }
+}
+
+# Make sure no databases exist on the target server
 get-date
 write-output "Preparing to restore MongoDB backups from $sourceServer to $targetServer"
 write-output "Databases to be restored:"
