@@ -61,7 +61,7 @@ foreach ($file in $executables)
 {
     if ((test-path $file) -eq $false)
     {
-        write-output "$file was not found. Tests cannot be completed on this machine."
+        write-output "ERROR: $file was not found. Tests cannot be completed on this machine."
         exit 42
     }
 }
@@ -93,7 +93,7 @@ foreach ($database in $includeDatabases)
     $filepath = "\\indy-backup\prm-mongodb\" + $sourceserver + "\" + $sourceServer + "_" + $datestring + "_" + $database + ".gzip"
     if ((test-path $filepath) -eq $false)
     {
-        write-output "File does not exist: $filepath"
+        write-output "ERROR: File does not exist: $filepath"
         write-output "Failed to restore $database"
         exit 2
     }
@@ -106,7 +106,7 @@ foreach ($database in $includeDatabases)
 
     if ($LASTEXITCODE -ne 0)
     {
-        write-output "Error restoring $database on $targetServer."
+        write-output "ERROR: Failed to restore $database on $targetServer."
         write-output "Manually log in to $targetServer and delete any remnants of the database that were left behind."
         exit $LASTEXITCODE
     }
@@ -118,8 +118,8 @@ foreach ($database in $includeDatabases)
 
     if ($LASTEXITCODE -ne 0)
     {
-        write-output "Error dropping $database from $targetServer after restoring."
-        write-output "Manually log in to $targetServer and delete any remnants of the database that were left behind."
+        write-output "ERROR: Failed to drop $database from $targetServer after restoring."
+        write-output "Manually log in to $targetServer and drop the database."
         exit $LASTEXITCODE
     }
     write-output "Database $database was successfully restored to $targetServer and dropped."
