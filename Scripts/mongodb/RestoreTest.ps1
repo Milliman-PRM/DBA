@@ -62,7 +62,8 @@ $includeDatabases | format-table
 write-output ""
 
 # Query target server for a list of databases
-$databaseJSON = c:\mongodb\bin\mongo.exe admin --host $targetServer --eval "db.adminCommand( { listDatabases: 1 } )" --quiet
+$command = "c:\mongodb\bin\mongo.exe admin --host $targetServer --eval `"db.adminCommand( { listDatabases: 1 } )`" --quiet"
+$databaseJSON = invoke-expression $command
 $databases = $databaseJSON | ConvertFrom-Json
 
 # Count databases currently on target server
@@ -89,7 +90,8 @@ foreach ($database in $includeDatabases)
     write-output "Restoring $database from $filepath"
 
     # Restore database
-    C:\mongodb\bin\mongorestore.exe --gzip --host $targetServer --db $database --archive=$filepath    
+    $command = "C:\mongodb\bin\mongorestore.exe --gzip --host $targetServer --db $database --archive=$filepath"
+    Invoke-Expression $command
 
     if ($LASTEXITCODE -ne 0)
     {
@@ -100,7 +102,8 @@ foreach ($database in $includeDatabases)
 
     # Drop database
     write-output "Restore complete. Dropping database..."
-    C:\mongodb\bin\mongo.exe $database --host $targetServer --eval "db.dropDatabase()" --quiet
+    $command = "C:\mongodb\bin\mongo.exe $database --host $targetServer --eval `"db.dropDatabase()`" --quiet"
+    Invoke-Expression $command
 
     if ($LASTEXITCODE -ne 0)
     {
