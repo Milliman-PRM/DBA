@@ -193,6 +193,10 @@ CREATE ROLE ldap_groups;
 ALTER ROLE ldap_groups WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS VALID UNTIL 'infinity';
 CREATE ROLE ldap_users;
 ALTER ROLE ldap_users WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS VALID UNTIL 'infinity';
+CREATE ROLE luigi_admins;
+ALTER ROLE luigi_admins WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE luigi_prod_svc;
+ALTER ROLE luigi_prod_svc WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md58a23bdfce5490784d62c0bbfa89e1219';
 CREATE ROLE "michael.reisz";
 ALTER ROLE "michael.reisz" WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "nicholas.zenobi";
@@ -555,6 +559,7 @@ GRANT ldap_users TO "steve.gredell" GRANTED BY postgres;
 GRANT ldap_users TO "surjit.malhi" GRANTED BY postgres;
 GRANT ldap_users TO "tom.puckett" GRANTED BY postgres;
 GRANT ldap_users TO "van.nanney" GRANTED BY postgres;
+GRANT luigi_admins TO luigi_prod_svc GRANTED BY "ben.wyatt";
 GRANT roche_users TO "afsheen.khan" GRANTED BY "steve.gredell";
 GRANT roche_users TO "brad.teach" GRANTED BY "steve.gredell";
 GRANT roche_users TO "michael.reisz" GRANTED BY "steve.gredell";
@@ -571,6 +576,7 @@ REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement" FROM PUBLIC;
 REVOKE ALL ON DATABASE "Roche_Medicare_Reimbursement" FROM roche_users;
 GRANT ALL ON DATABASE "Roche_Medicare_Reimbursement" TO roche_users;
 GRANT CONNECT,TEMPORARY ON DATABASE "Roche_Medicare_Reimbursement" TO PUBLIC;
+CREATE DATABASE luigi WITH TEMPLATE = template0 OWNER = luigi_admins;
 CREATE DATABASE systemreporting WITH TEMPLATE = template0 OWNER = "indy_ePHI_SystemReporting";
 REVOKE ALL ON DATABASE systemreporting FROM PUBLIC;
 REVOKE ALL ON DATABASE systemreporting FROM "indy_ePHI_SystemReporting";
@@ -5629,6 +5635,53 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 GRANT A
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 REVOKE ALL ON TABLES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 REVOKE ALL ON TABLES  FROM "brad.teach";
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170214 GRANT ALL ON TABLES  TO roche_users;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\connect luigi
+
+SET default_transaction_read_only = off;
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
