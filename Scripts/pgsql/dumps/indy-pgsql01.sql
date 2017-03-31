@@ -5674,6 +5674,175 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+SET search_path = public, pg_catalog;
+
+SET default_with_oids = false;
+
+--
+-- Name: task_events; Type: TABLE; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE TABLE task_events (
+    id integer NOT NULL,
+    task_id integer,
+    event_name character varying(20),
+    ts timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE task_events OWNER TO luigi_prod_svc;
+
+--
+-- Name: task_events_id_seq; Type: SEQUENCE; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE SEQUENCE task_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE task_events_id_seq OWNER TO luigi_prod_svc;
+
+--
+-- Name: task_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER SEQUENCE task_events_id_seq OWNED BY task_events.id;
+
+
+--
+-- Name: task_parameters; Type: TABLE; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE TABLE task_parameters (
+    task_id integer NOT NULL,
+    name character varying(128) NOT NULL,
+    value character varying(256)
+);
+
+
+ALTER TABLE task_parameters OWNER TO luigi_prod_svc;
+
+--
+-- Name: tasks; Type: TABLE; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE TABLE tasks (
+    id integer NOT NULL,
+    task_id character varying(200),
+    name character varying(128),
+    host character varying(128)
+);
+
+
+ALTER TABLE tasks OWNER TO luigi_prod_svc;
+
+--
+-- Name: tasks_id_seq; Type: SEQUENCE; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE SEQUENCE tasks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tasks_id_seq OWNER TO luigi_prod_svc;
+
+--
+-- Name: tasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER SEQUENCE tasks_id_seq OWNED BY tasks.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER TABLE ONLY task_events ALTER COLUMN id SET DEFAULT nextval('task_events_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER TABLE ONLY tasks ALTER COLUMN id SET DEFAULT nextval('tasks_id_seq'::regclass);
+
+
+--
+-- Name: task_events_pkey; Type: CONSTRAINT; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER TABLE ONLY task_events
+    ADD CONSTRAINT task_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: task_parameters_pkey; Type: CONSTRAINT; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER TABLE ONLY task_parameters
+    ADD CONSTRAINT task_parameters_pkey PRIMARY KEY (task_id, name);
+
+
+--
+-- Name: tasks_pkey; Type: CONSTRAINT; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER TABLE ONLY tasks
+    ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ix_task_events_task_id; Type: INDEX; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE INDEX ix_task_events_task_id ON task_events USING btree (task_id);
+
+
+--
+-- Name: ix_task_events_ts; Type: INDEX; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE INDEX ix_task_events_ts ON task_events USING btree (ts);
+
+
+--
+-- Name: ix_tasks_name; Type: INDEX; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE INDEX ix_tasks_name ON tasks USING btree (name);
+
+
+--
+-- Name: ix_tasks_task_id; Type: INDEX; Schema: public; Owner: luigi_prod_svc
+--
+
+CREATE INDEX ix_tasks_task_id ON tasks USING btree (task_id);
+
+
+--
+-- Name: task_events_task_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER TABLE ONLY task_events
+    ADD CONSTRAINT task_events_task_id_fkey FOREIGN KEY (task_id) REFERENCES tasks(id);
+
+
+--
+-- Name: task_parameters_task_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: luigi_prod_svc
+--
+
+ALTER TABLE ONLY task_parameters
+    ADD CONSTRAINT task_parameters_task_id_fkey FOREIGN KEY (task_id) REFERENCES tasks(id);
+
+
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
