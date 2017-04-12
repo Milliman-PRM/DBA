@@ -51,7 +51,7 @@ BEGIN
 		SELECT @ServerName = cast(SERVERPROPERTY('ServerName') as varchar(80))
 
 		-- Handle special-case filenames and set defaults otherwise
-		IF @ServerName = 'Indy-SQL02' AND @databasename = 'SSS_HCG_2014'
+		IF @ServerName = 'Indy-SQL02'
 		BEGIN
 			IF @databasename = 'SSS_HCG_2014'
 			BEGIN
