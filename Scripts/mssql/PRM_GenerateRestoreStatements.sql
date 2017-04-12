@@ -73,6 +73,11 @@ BEGIN
 				SET @DataFileName = @databasename + '_data'
 				SET @LogFileName = @databasename + '_log'
 			END
+			ELSE
+			BEGIN
+				SET @DataFileName = @databasename
+				SET @LogFileName = @databasename + '_log'
+			END
 		END
 		ELSE IF @ServerName = 'indy-ss01\sqlexpress' and @databasename = 'NewPortalDB'
 		BEGIN
@@ -84,6 +89,7 @@ BEGIN
 			SET @DataFileName = @databasename
 			SET @LogFileName = @databasename + '_log'
 		END
+
 
 		IF OBJECT_ID('tempdb..#BackupInfo') IS NOT NULL DROP TABLE #BackupInfo
 		IF OBJECT_ID('tempdb..#BackupCommands') IS NOT NULL DROP TABLE #BackupCommands
