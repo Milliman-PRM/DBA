@@ -51,20 +51,33 @@ BEGIN
 		SELECT @ServerName = cast(SERVERPROPERTY('ServerName') as varchar(80))
 
 		-- Handle special-case filenames and set defaults otherwise
-		IF @ServerName = 'Indy-SQL02' AND @databasename = 'SSS_HCG_2014'
+		IF @ServerName = 'Indy-SQL02'
 		BEGIN
-			SET @DataFileName = 'SSC_HCG_2014'
-			SET @LogFileName = 'SSC_HCG_2014_log'
-		END
-		ELSE IF @ServerName = 'Indy-SQL02' AND @databasename = 'SSC_CORE'
-		BEGIN
-			SET @DataFileName = 'ICD10_SSC_CORE'
-			SET @LogFileName = 'ICD10_SSC_CORE_log'
-		END
-		ELSE IF @ServerName = 'Indy-SQL02' AND @databasename = 'SSC_SOURCE'
-		BEGIN
-			SET @DataFileName = 'ICD10_SSC_SOURCE'
-			SET @LogFileName = 'ICD10_SSC_SOURCE_log'
+			IF @databasename = 'SSS_HCG_2014'
+			BEGIN
+				SET @DataFileName = 'SSC_HCG_2014'
+				SET @LogFileName = 'SSC_HCG_2014_log'
+			END
+			ELSE IF @databasename = 'SSC_CORE'
+			BEGIN
+				SET @DataFileName = 'ICD10_SSC_CORE'
+				SET @LogFileName = 'ICD10_SSC_CORE_log'
+			END
+			ELSE IF @databasename = 'SSC_SOURCE'
+			BEGIN
+				SET @DataFileName = 'ICD10_SSC_SOURCE'
+				SET @LogFileName = 'ICD10_SSC_SOURCE_log'
+			END
+			ELSE IF @databasename IN ('rgsconfig', 'rgsdyn', 'rtcab', 'rtcshared', 'rtcxds', 'cpsdyn')
+			BEGIN
+				SET @DataFileName = @databasename + '_data'
+				SET @LogFileName = @databasename + '_log'
+			END
+			ELSE
+			BEGIN
+				SET @DataFileName = @databasename
+				SET @LogFileName = @databasename + '_log'
+			END
 		END
 		ELSE IF @ServerName = 'indy-ss01\sqlexpress' and @databasename = 'NewPortalDB'
 		BEGIN
@@ -76,6 +89,7 @@ BEGIN
 			SET @DataFileName = @databasename
 			SET @LogFileName = @databasename + '_log'
 		END
+
 
 		IF OBJECT_ID('tempdb..#BackupInfo') IS NOT NULL DROP TABLE #BackupInfo
 		IF OBJECT_ID('tempdb..#BackupCommands') IS NOT NULL DROP TABLE #BackupCommands
@@ -127,7 +141,7 @@ BEGIN
 		select 
 			-- Include file moves for the full backup
 			CASE WHEN Backup_Type = 'FULL' THEN
-				'RESTORE ' + Restore_Type + ' [' + DatabaseName + '] FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @DataFileName + ''' TO ''' + @data_file_path + @databasename + '.mdf'', MOVE ''' + @LogFileName + ''' TO ''' + @log_file_path + @databasename + '_log.ldf'', REPLACE, NORECOVERY;' 
+				'RESTORE ' + Restore_Type + ' [' + DatabaseName + '] FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @DataFileName + ''' TO ''' + @data_file_path + @DataFileName + '.mdf'', MOVE ''' + @LogFileName + ''' TO ''' + @log_file_path + @LogFileName + '.ldf'', REPLACE, NORECOVERY;' 
 			ELSE
 				'RESTORE ' + Restore_Type + ' [' + DatabaseName + '] FROM DISK = ''' + FilePath + ''' WITH NORECOVERY;'
 			END as Restore_command, StartTime
