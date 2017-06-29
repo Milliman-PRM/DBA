@@ -6066,7 +6066,7 @@ $$;
 ALTER FUNCTION public.report_type_update() OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: test_iislog_updated(); Type: FUNCTION; Schema: public; Owner: michael.reisz
+-- Name: test_iislog_updated(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 CREATE FUNCTION test_iislog_updated() RETURNS boolean
@@ -6075,17 +6075,17 @@ CREATE FUNCTION test_iislog_updated() RETURNS boolean
             		from iislog$$;
 
 
-ALTER FUNCTION public.test_iislog_updated() OWNER TO "michael.reisz";
+ALTER FUNCTION public.test_iislog_updated() OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: FUNCTION test_iislog_updated(); Type: COMMENT; Schema: public; Owner: michael.reisz
+-- Name: FUNCTION test_iislog_updated(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 COMMENT ON FUNCTION test_iislog_updated() IS 'Returns true if iislog contains records added within the last 2 days';
 
 
 --
--- Name: test_qvauditlog_updated(); Type: FUNCTION; Schema: public; Owner: michael.reisz
+-- Name: test_qvauditlog_updated(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 CREATE FUNCTION test_qvauditlog_updated() RETURNS boolean
@@ -6094,17 +6094,17 @@ CREATE FUNCTION test_qvauditlog_updated() RETURNS boolean
             		from qvauditlog$$;
 
 
-ALTER FUNCTION public.test_qvauditlog_updated() OWNER TO "michael.reisz";
+ALTER FUNCTION public.test_qvauditlog_updated() OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: FUNCTION test_qvauditlog_updated(); Type: COMMENT; Schema: public; Owner: michael.reisz
+-- Name: FUNCTION test_qvauditlog_updated(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 COMMENT ON FUNCTION test_qvauditlog_updated() IS 'Returns true if qvauditlog contains records added within the last 2 days';
 
 
 --
--- Name: test_qvsessionlog_updated(); Type: FUNCTION; Schema: public; Owner: michael.reisz
+-- Name: test_qvsessionlog_updated(); Type: FUNCTION; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 CREATE FUNCTION test_qvsessionlog_updated() RETURNS boolean
@@ -6113,10 +6113,10 @@ CREATE FUNCTION test_qvsessionlog_updated() RETURNS boolean
             		from qvsessionlog$$;
 
 
-ALTER FUNCTION public.test_qvsessionlog_updated() OWNER TO "michael.reisz";
+ALTER FUNCTION public.test_qvsessionlog_updated() OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: FUNCTION test_qvsessionlog_updated(); Type: COMMENT; Schema: public; Owner: michael.reisz
+-- Name: FUNCTION test_qvsessionlog_updated(); Type: COMMENT; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 COMMENT ON FUNCTION test_qvsessionlog_updated() IS 'Returns true if qvsessionlog contains records added within the last 2 days';
