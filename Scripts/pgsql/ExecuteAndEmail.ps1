@@ -107,4 +107,9 @@ if ($LASTEXITCODE -ne 0)
     exit $LASTEXITCODE
 }
 
-Send-MailMessage -To $recipients -From $sender -Attachments "$outputFile" -Subject $queryName -SmtpServer "smtp.milliman.com"
+$recipientList = $recipients -split ";"
+
+$recipientList | format-table
+
+
+Send-MailMessage -To $recipientList -From $sender -Attachments "$outputFile" -Subject $queryName -SmtpServer "smtp.milliman.com"
