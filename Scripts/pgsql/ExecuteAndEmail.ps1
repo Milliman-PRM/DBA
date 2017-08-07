@@ -69,7 +69,7 @@ Param(
    [Parameter(Mandatory=$True)]
    [string]$queryPath,
 
-   [Parameter(Mandatory=True)]
+   [Parameter(Mandatory=$True)]
    [string]$hotwarePath
 )
 
