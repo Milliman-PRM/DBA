@@ -85,8 +85,8 @@ else
 }
 
 $outputFile = $queryName + ".csv"
-
 $exe = $hotwarePath + "psql.exe"
+$queryPath = $queryPath.TrimStart(".")
 
 $command = "$exe --dbname=$targetDatabase --username=$username -A -F ',' --host=$targetServer --file=`"$queryPath`"  --echo-errors --output=`"$outputFile`""
 Invoke-Expression '$command'
