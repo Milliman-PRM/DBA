@@ -69,22 +69,10 @@ Param(
    [Parameter(Mandatory=$True)]
    [string]$queryPath,
 
-   [Parameter()]
+   [Parameter(Mandatory=True)]
    [string]$hotwarePath
 )
 
-# Configure Hotware Path
-if ($hotwarePath -eq $null -and $env:path_hotware -ne $null)
-{
-    $hotwarePath = $env:path_hotware
-}
-elseif ($hotwarePath -eq $null -and $env:path_hotware -eq $null)
-{
-    write-output "Hotware path could not be determined. You must specify it with the argument -hotwarePath or the environmental variable path_hotware"
-    exit 1
-}
-
-$hotwarePath = $hotwarePath + 'Postgresql\v9.6.2\'
 
 # Store username in a variable, in the format that PostgreSQL wants in our environment.
 if (test-path env:\ephi_username)
