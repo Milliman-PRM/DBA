@@ -86,8 +86,10 @@ else
 
 $outputFile = $queryName + ".csv"
 
-$command = $hotwarePath + "psql.exe --dbname=$targetDatabase --username=$username -A -F ',' --host=$targetServer --file=`"$queryPath`"  --echo-errors --output='$outputFile'"
-Invoke-Expression $command
+$exe = $hotwarePath + "psql.exe"
+
+$command = "$exe --dbname=$targetDatabase --username=$username -A -F ',' --host=$targetServer --file=`"$queryPath`"  --echo-errors --output='$outputFile'"
+Invoke-Expression '& $command'
 
 if ($LASTEXITCODE -ne 0)
 {
