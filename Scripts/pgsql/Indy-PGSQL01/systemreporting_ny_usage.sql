@@ -1,7 +1,7 @@
 select 	usr.username,
 		split_part(document, '\', 3) as ReportName,
         substring(message from '(\w*\.csv)') as FileName,
-		count(qvauditlog.id),
+		count(qvauditlog.id) as NumberOfExports,
        to_char(date_trunc('month', current_date - interval '1' month), 'MM/DD/YYYY') as StartDate,
   		 to_char((date_trunc('month', current_date) - interval '1' day), 'MM/DD/YYYY') as EndDate
 
