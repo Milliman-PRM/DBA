@@ -464,6 +464,7 @@ GRANT "indy_ePHI_SystemReporting" TO "afsheen.khan" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "kelsie.stevenson" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "michael.reisz" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "surjit.malhi" GRANTED BY "ben.wyatt";
+GRANT "indy_ePHI_SystemReporting" TO "tom.puckett" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "van.nanney" GRANTED BY "ben.wyatt";
 GRANT ldap_groups TO "INDY_Jenkins_All" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_0007FMC" GRANTED BY postgres;
