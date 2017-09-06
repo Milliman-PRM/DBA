@@ -84,6 +84,9 @@ BEGIN
 			set @DataFileName = 'dbMyCMS'
 			set @LogFileName = 'dbMyCMS_log'
 		END
+		ELSE IF @databasename = 'SSISDB'
+			set @DataFileName = 'SSISDB'
+			set @LogFileName = 'SSISDB'
 		ELSE
 		BEGIN
 			SET @DataFileName = @databasename
