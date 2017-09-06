@@ -8,7 +8,7 @@
     This is intended for scheduled usage, as a tool to aid with backup restore validation.
 
     ### PREREQUISITES:
-	This script assumes that default logical filenames are used everywhere. 
+	This script assumes that default logical filenames are used everywhere.
 		If this is found to not be true, the script can be adjusted later.
 
     This script assumes that backups are being done via Ola Hallengren's maintenance scripts,
@@ -53,7 +53,12 @@ BEGIN
 		-- Handle special-case filenames and set defaults otherwise
 		IF @ServerName = 'Indy-SQL02'
 		BEGIN
-			IF @databasename = 'SSS_HCG_2014'
+			IF @databasename = 'SSISDB'
+			BEGIN
+				set @DataFileName = 'SSISDB'
+				set @LogFileName = 'SSISDB'
+			END
+			ELSE IF @databasename = 'SSS_HCG_2014'
 			BEGIN
 				SET @DataFileName = 'SSC_HCG_2014'
 				SET @LogFileName = 'SSC_HCG_2014_log'
@@ -125,38 +130,38 @@ BEGIN
 		-- Prep commands, with timestamp for ordering
 		-- Block overwriting an existing datbase, for safety's sake
 		select 'If  exists (select name from master.sys.databases where name = ''' + @databasename + ''') RAISERROR(''Database %s already exists. Exiting to avoid data loss.'', 12, 42, ''' + @databasename + ''');'
-				 as Restore_Command, 
+				 as Restore_Command,
 				 cast('1/1/1900' as datetime) as StartTime -- Sentinel value. Yeah, I know.
 		into #BackupCommands
-		
+
 		UNION
 
 		select 'create database [' + @databasename + '];',
-				 
+
 				 cast('1/1/1901' as datetime)
 
 		UNION
-		
+
 		-- Get the commands for each relevant backup file
-		select 
+		select
 			-- Include file moves for the full backup
 			CASE WHEN Backup_Type = 'FULL' THEN
-				'RESTORE ' + Restore_Type + ' [' + DatabaseName + '] FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @DataFileName + ''' TO ''' + @data_file_path + @DataFileName + '.mdf'', MOVE ''' + @LogFileName + ''' TO ''' + @log_file_path + @LogFileName + '.ldf'', REPLACE, NORECOVERY;' 
+				'RESTORE ' + Restore_Type + ' [' + DatabaseName + '] FROM DISK = ''' + FilePath + ''' WITH MOVE ''' + @DataFileName + ''' TO ''' + @data_file_path + @DataFileName + '.mdf'', MOVE ''' + @LogFileName + ''' TO ''' + @log_file_path + @LogFileName + '.ldf'', REPLACE, NORECOVERY;'
 			ELSE
 				'RESTORE ' + Restore_Type + ' [' + DatabaseName + '] FROM DISK = ''' + FilePath + ''' WITH NORECOVERY;'
 			END as Restore_command, StartTime
-		
+
 		from #BackupInfo
 		where StartTime >= @LastFullDate -- We don't need to test anything older than the latest full backup
-				AND 
+				AND
 					(
-						ID = @LastFullID 
-						OR ID = @LastDiffID  
+						ID = @LastFullID
+						OR ID = @LastDiffID
 						OR (StartTime > @LastDiffDate AND Backup_Type = 'LOG') -- Only pull log backups that have happened since the last diff
 					)
-		
+
 		UNION
-		
+
 		-- Include a final statement to initiate recovery (complete backup cycle)
 		select 'RESTORE DATABASE [' + @DatabaseName + '] WITH RECOVERY;', getdate()
 
@@ -165,7 +170,7 @@ BEGIN
 		-- Add a drop database statement to the end, because we don't want to retain the database
 		select top 1 'drop database [' + @databasename + '];'
 			, cast('1/1/2100' as datetime) -- Sentinel value. Yeah, I know.
-		
+
 
 		-- Select out final set of restore commands, properly ordered
 		select Restore_command from #BackupCommands order by StartTime
