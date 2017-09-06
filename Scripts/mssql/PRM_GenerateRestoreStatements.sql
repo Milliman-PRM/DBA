@@ -53,7 +53,12 @@ BEGIN
 		-- Handle special-case filenames and set defaults otherwise
 		IF @ServerName = 'Indy-SQL02'
 		BEGIN
-			IF @databasename = 'SSS_HCG_2014'
+			IF @databasename = 'SSISDB'
+			BEGIN
+				set @DataFileName = 'SSISDB'
+				set @LogFileName = 'SSISDB'
+			END
+			ELSE IF @databasename = 'SSS_HCG_2014'
 			BEGIN
 				SET @DataFileName = 'SSC_HCG_2014'
 				SET @LogFileName = 'SSC_HCG_2014_log'
@@ -83,11 +88,6 @@ BEGIN
 		BEGIN
 			set @DataFileName = 'dbMyCMS'
 			set @LogFileName = 'dbMyCMS_log'
-		END
-		ELSE IF @databasename = 'SSISDB'
-		BEGIN
-			set @DataFileName = 'SSISDB'
-			set @LogFileName = 'SSISDB'
 		END
 		ELSE
 		BEGIN
