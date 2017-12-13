@@ -7947,13 +7947,14 @@ CREATE VIEW view_session_log AS
             WHEN (lastsession.document ~~ '%LIVE - OCM REPORTING%'::text) THEN 'Live - OCM Reporting'::text
             WHEN (lastsession.document ~~ '%OHIO FINANCIAL DASHBOARD%'::text) THEN 'Ohio Financial Dashboard'::text
             WHEN (lastsession.document ~~ '%CAPITATION DASHBOARD%'::text) THEN 'Capitation Dashboard'::text
-            WHEN (lastsession.document ~~ '%ENCOUNTER QUALITY DASHBOARD%'::text) THEN 'Encounter Quality Dashboard'::text
+            WHEN ((lastsession.document ~~ '%ENCOUNTER QUALITY DASHBOARD%'::text) OR (lastsession.document ~~ '%EQD'::text)) THEN 'Encounter Quality Dashboard'::text
             WHEN (lastsession.document ~~ '%DRIVE%'::text) THEN 'DRIVE'::text
             WHEN (lastsession.document ~~ '%PIHP SUBMITTED ENCOUNTER DASHBOARD%'::text) THEN 'PIHP Submitted Encounter Dashboard'::text
-            WHEN (lastsession.document ~~ '%GAP.QVW%'::text) THEN 'GAP'::text
+            WHEN (lastsession.document ~~ '%GAP%'::text) THEN 'GAP'::text
             WHEN (lastsession.document ~~ '%SOC WC%'::text) THEN 'SOC WC'::text
             WHEN (lastsession.document ~~ '%LOAD TABLES DVW.QVW'::text) THEN 'Load Tables DVW'::text
-            WHEN (lastsession.document ~~ '%VERMONT POC.QVW'::text) THEN 'Vermont PoC'::text
+            WHEN (lastsession.document ~~ '%VERMONT POC%'::text) THEN 'Vermont PoC'::text
+            WHEN ((lastsession.document ~~ '%ACO INSIGHT%'::text) OR (lastsession.document ~~ '%ACO INTELLIGENCE PLATFORM%'::text) OR (lastsession.document ~~ '%ACOI%'::text)) THEN 'ACO Insight'::text
             ELSE 'Other/Unknown'::text
         END AS document_type,
     lower(dataset.mergedrange) AS session_start_time,
@@ -8030,9 +8031,9 @@ CREATE VIEW view_group AS
  SELECT "group".id AS groupid,
         CASE
             WHEN ((("group".groupname)::text ~~ '%DEMO%'::text) OR (("group".groupname)::text ~~ '%TEST%'::text) OR (("group".groupname)::text ~~ '%PROTOTYPES%'::text)) THEN 'Other'::text
-            WHEN (("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) AND (substr(("group".groupname)::text, 5, 3) <> ALL (ARRAY['MMD'::text, 'ODM'::text, 'ILM'::text, 'IWM'::text, 'AKH'::text, 'ZCA'::text, '017'::text, 'IMP'::text, 'SCM'::text]))) THEN 'PRM Analytics'::text
+            WHEN (("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) AND (substr(("group".groupname)::text, 5, 3) <> ALL (ARRAY['MMD'::text, 'ODM'::text, 'ILM'::text, 'IWM'::text, 'AKH'::text, 'ZCA'::text, '017'::text, 'IMP'::text, 'SCM'::text, 'NYP'::text]))) THEN 'PRM Analytics'::text
             WHEN ("left"(("group".groupname)::text, 7) = ANY (ARRAY['0032MMD'::text, '0032ODM'::text, '0032ILM'::text, '0032IWM'::text, '0173AKH'::text, '0032ZCA'::text, '0032017'::text, '0032IMP'::text, '0032SCM'::text])) THEN 'Indianapolis Medicaid'::text
-            WHEN (("left"(("group".groupname)::text, 17) = '0000EXT01_NEWYORK'::text) OR ("left"(("group".groupname)::text, 9) = 'NY OFFICE'::text)) THEN 'New York'::text
+            WHEN (("left"(("group".groupname)::text, 17) = '0000EXT01_NEWYORK'::text) OR ("left"(("group".groupname)::text, 9) = 'NY OFFICE'::text) OR ("left"(("group".groupname)::text, 7) = '0273NYP'::text)) THEN 'New York'::text
             WHEN ("left"(("group".groupname)::text, 16) = '0000EXT01_BOSTON'::text) THEN 'Vermont'::text
             WHEN ("left"(("group".groupname)::text, 18) = '0000EXT01_HARTFORD'::text) THEN 'Hartford'::text
             WHEN ("left"(("group".groupname)::text, 17) = '0000EXT01_VERMONT'::text) THEN 'Vermont'::text
@@ -8043,10 +8044,10 @@ CREATE VIEW view_group AS
             WHEN ("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) THEN substr(("group".groupname)::text, 1, 7)
             WHEN ("left"(("group".groupname)::text, 9) = ANY (ARRAY['0000EXT01'::text, 'NY OFFICE'::text])) THEN
             CASE
-                WHEN (("group".groupname)::text ~~ '%PREMIER'::text) THEN 'Premier'::text
-                WHEN (("group".groupname)::text ~~ '%USPI'::text) THEN 'USPI'::text
-                WHEN (("group".groupname)::text ~~ '%CAM'::text) THEN 'CAM'::text
-                WHEN (("group".groupname)::text ~~ '%CJR'::text) THEN 'CJR'::text
+                WHEN (("group".groupname)::text ~~ '%PREMIER%'::text) THEN 'Premier'::text
+                WHEN (("group".groupname)::text ~~ '%USPI%'::text) THEN 'USPI'::text
+                WHEN (("group".groupname)::text ~~ '%CAM%'::text) THEN 'CAM'::text
+                WHEN (("group".groupname)::text ~~ '%CJR%'::text) THEN 'CJR'::text
                 WHEN (("group".groupname)::text ~~ '%OCM REPORTING%'::text) THEN 'OCM'::text
                 ELSE 'Other/Unknown'::text
             END
