@@ -7481,7 +7481,7 @@ CREATE FUNCTION test_view_qvauditlog_entries_included() RETURNS boolean
             			   and qvauditlog.useraccessdatetime >= session_start_time
                            and qvauditlog.useraccessdatetime <= session_start_time + session_duration
 
-            where view_session_log.sessionid is null) / (select count(*) * 1.0 as overall_count from qvauditlog) < 0.01 as portion_unmatched$$;
+            where view_session_log.sessionid is null) / (select count(*) * 1.0 as overall_count from qvauditlog) < 0.015 as portion_unmatched$$;
 
 
 ALTER FUNCTION public.test_view_qvauditlog_entries_included() OWNER TO "indy_ePHI_SystemReporting";
