@@ -8031,8 +8031,8 @@ CREATE VIEW view_group AS
  SELECT "group".id AS groupid,
         CASE
             WHEN ((("group".groupname)::text ~~ '%DEMO%'::text) OR (("group".groupname)::text ~~ '%TEST%'::text) OR (("group".groupname)::text ~~ '%PROTOTYPES%'::text)) THEN 'Other'::text
-            WHEN (("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) AND (substr(("group".groupname)::text, 5, 3) <> ALL (ARRAY['MMD'::text, 'ODM'::text, 'ILM'::text, 'IWM'::text, 'AKH'::text, 'ZCA'::text, '017'::text, 'IMP'::text, 'SCM'::text, 'NYP'::text]))) THEN 'PRM Analytics'::text
-            WHEN ("left"(("group".groupname)::text, 7) = ANY (ARRAY['0032MMD'::text, '0032ODM'::text, '0032ILM'::text, '0032IWM'::text, '0173AKH'::text, '0032ZCA'::text, '0032017'::text, '0032IMP'::text, '0032SCM'::text])) THEN 'Indianapolis Medicaid'::text
+            WHEN ((("group".groupname)::text ~~ '0273%'::text) OR (substr(("group".groupname)::text, 7) = ANY (ARRAY['0032CCS'::text, '0032SHA'::text, '0032SHN'::text, '0032UTH'::text]))) THEN 'PRM Analytics'::text
+            WHEN (("group".groupname)::text ~~ '0032%'::text) THEN 'Indianapolis Medicaid'::text
             WHEN (("left"(("group".groupname)::text, 17) = '0000EXT01_NEWYORK'::text) OR ("left"(("group".groupname)::text, 9) = 'NY OFFICE'::text) OR ("left"(("group".groupname)::text, 7) = '0273NYP'::text)) THEN 'New York'::text
             WHEN ("left"(("group".groupname)::text, 16) = '0000EXT01_BOSTON'::text) THEN 'Vermont'::text
             WHEN ("left"(("group".groupname)::text, 18) = '0000EXT01_HARTFORD'::text) THEN 'Hartford'::text
