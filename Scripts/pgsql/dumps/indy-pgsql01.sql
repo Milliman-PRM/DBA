@@ -7950,11 +7950,12 @@ CREATE VIEW view_session_log AS
             WHEN ((lastsession.document ~~ '%ENCOUNTER QUALITY DASHBOARD%'::text) OR (lastsession.document ~~ '%EQD'::text)) THEN 'Encounter Quality Dashboard'::text
             WHEN (lastsession.document ~~ '%DRIVE%'::text) THEN 'DRIVE'::text
             WHEN (lastsession.document ~~ '%PIHP SUBMITTED ENCOUNTER DASHBOARD%'::text) THEN 'PIHP Submitted Encounter Dashboard'::text
+            WHEN (lastsession.document ~~ '%CPC DASHBOARD%'::text) THEN 'CPC Dashboard'::text
             WHEN (lastsession.document ~~ '%GAP%'::text) THEN 'GAP'::text
             WHEN (lastsession.document ~~ '%SOC WC%'::text) THEN 'SOC WC'::text
             WHEN (lastsession.document ~~ '%LOAD TABLES DVW.QVW'::text) THEN 'Load Tables DVW'::text
             WHEN (lastsession.document ~~ '%VERMONT POC%'::text) THEN 'Vermont PoC'::text
-            WHEN ((lastsession.document ~~ '%ACO INSIGHT%'::text) OR (lastsession.document ~~ '%ACO INTELLIGENCE PLATFORM%'::text) OR (lastsession.document ~~ '%ACOI%'::text)) THEN 'ACO Insight'::text
+            WHEN ((lastsession.document ~~ '%ACO INSIGHT%'::text) OR (lastsession.document ~~ '%ACO INTELLIGENCE PLATFORM%'::text) OR (lastsession.document ~~ '%ACO INTELLIGENCE SOLUTION%'::text) OR (lastsession.document ~~ '%ACOI%'::text)) THEN 'ACO Insight'::text
             ELSE 'Other/Unknown'::text
         END AS document_type,
     lower(dataset.mergedrange) AS session_start_time,
@@ -8031,7 +8032,7 @@ CREATE VIEW view_group AS
  SELECT "group".id AS groupid,
         CASE
             WHEN ((("group".groupname)::text ~~ '%DEMO%'::text) OR (("group".groupname)::text ~~ '%TEST%'::text) OR (("group".groupname)::text ~~ '%PROTOTYPES%'::text)) THEN 'Other'::text
-            WHEN (("left"(("group".groupname)::text, 17) = '0000EXT01_NEWYORK'::text) OR ("left"(("group".groupname)::text, 9) = 'NY OFFICE'::text) OR ("left"(("group".groupname)::text, 7) = '0273NYP'::text)) THEN 'New York'::text
+            WHEN (("left"(("group".groupname)::text, 17) = '0000EXT01_NEWYORK'::text) OR ("left"(("group".groupname)::text, 9) = 'NY OFFICE'::text) OR ("left"(("group".groupname)::text, 7) = '0273NYP'::text) OR (("group".groupname)::text ~~ '1111%'::text)) THEN 'New York'::text
             WHEN ((("group".groupname)::text ~~ '0273%'::text) OR ("left"(("group".groupname)::text, 7) = ANY (ARRAY['0032AHN'::text, '0032AOH'::text, '0032APR'::text, '0032CCS'::text, '0032COV'::text, '0032FAI'::text, '0032ICW'::text, '0032MTH'::text, '0032SCH'::text, '0032SHA'::text, '0032SHN'::text, '0032UTH'::text, '0032ZSV'::text]))) THEN 'PRM Analytics'::text
             WHEN (("group".groupname)::text ~~ '0032%'::text) THEN 'Indianapolis Medicaid'::text
             WHEN ("left"(("group".groupname)::text, 16) = '0000EXT01_BOSTON'::text) THEN 'Vermont'::text
@@ -8041,7 +8042,7 @@ CREATE VIEW view_group AS
         END AS office,
         CASE
             WHEN ("left"(("group".groupname)::text, 11) = '00320173AKH'::text) THEN '0032AKH'::text
-            WHEN ("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text])) THEN substr(("group".groupname)::text, 1, 7)
+            WHEN ("left"(("group".groupname)::text, 4) = ANY (ARRAY['0032'::text, '0273'::text, '1111'::text])) THEN substr(("group".groupname)::text, 1, 7)
             WHEN ("left"(("group".groupname)::text, 9) = ANY (ARRAY['0000EXT01'::text, 'NY OFFICE'::text])) THEN
             CASE
                 WHEN (("group".groupname)::text ~~ '%PREMIER%'::text) THEN 'Premier'::text
