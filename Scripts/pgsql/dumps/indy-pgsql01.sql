@@ -195,12 +195,16 @@ CREATE ROLE roche_admin;
 ALTER ROLE roche_admin WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md59a51d692172b50cabd9f13901241ad27' VALID UNTIL 'infinity';
 CREATE ROLE roche_users;
 ALTER ROLE roche_users WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS VALID UNTIL 'infinity';
+CREATE ROLE "sarah.prusinski";
+ALTER ROLE "sarah.prusinski" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "shea.parkes";
 ALTER ROLE "shea.parkes" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "steve.gredell";
 ALTER ROLE "steve.gredell" WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION NOBYPASSRLS;
 CREATE ROLE "surjit.malhi";
 ALTER ROLE "surjit.malhi" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE systemreporting_reader;
+ALTER ROLE systemreporting_reader WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "tom.puckett";
 ALTER ROLE "tom.puckett" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "van.nanney";
@@ -438,6 +442,7 @@ GRANT ldap_users TO "kelsie.stevenson" GRANTED BY postgres;
 GRANT ldap_users TO "michael.reisz" GRANTED BY postgres;
 GRANT ldap_users TO "nicholas.zenobi" GRANTED BY postgres;
 GRANT ldap_users TO "oksana.owens" GRANTED BY "ben.wyatt";
+GRANT ldap_users TO "sarah.prusinski" GRANTED BY "ben.wyatt";
 GRANT ldap_users TO "shea.parkes" GRANTED BY postgres;
 GRANT ldap_users TO "steve.gredell" GRANTED BY postgres;
 GRANT ldap_users TO "surjit.malhi" GRANTED BY postgres;
@@ -450,6 +455,8 @@ GRANT roche_users TO "michael.reisz" GRANTED BY "steve.gredell";
 GRANT roche_users TO "oksana.owens" GRANTED BY "ben.wyatt";
 GRANT roche_users TO roche_admin GRANTED BY "steve.gredell";
 GRANT roche_users TO "van.nanney" GRANTED BY "steve.gredell";
+GRANT systemreporting_reader TO "jason.altieri" GRANTED BY "ben.wyatt";
+GRANT systemreporting_reader TO "sarah.prusinski" GRANTED BY "ben.wyatt";
 
 
 --
@@ -466,6 +473,7 @@ CREATE DATABASE systemreporting WITH TEMPLATE = template0 OWNER = "indy_ePHI_Sys
 REVOKE ALL ON DATABASE systemreporting FROM PUBLIC;
 REVOKE ALL ON DATABASE systemreporting FROM "indy_ePHI_SystemReporting";
 GRANT ALL ON DATABASE systemreporting TO "indy_ePHI_SystemReporting";
+GRANT CONNECT ON DATABASE systemreporting TO systemreporting_reader;
 REVOKE ALL ON DATABASE template1 FROM PUBLIC;
 REVOKE ALL ON DATABASE template1 FROM postgres;
 GRANT ALL ON DATABASE template1 TO postgres;
