@@ -145,6 +145,8 @@ CREATE ROLE "Indy_ePHI_NY_QVW";
 ALTER ROLE "Indy_ePHI_NY_QVW" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "Indy_ePHI_VT_QVW";
 ALTER ROLE "Indy_ePHI_VT_QVW" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "Melissa.Bruner";
+ALTER ROLE "Melissa.Bruner" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS VALID UNTIL 'infinity';
 CREATE ROLE "andy.barnes";
 ALTER ROLE "andy.barnes" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "ben.wyatt";
@@ -425,6 +427,7 @@ GRANT ldap_groups TO "Indy_ePHI_ATL_MILL" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_MW_MILL" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_NY_QVW" GRANTED BY postgres;
 GRANT ldap_groups TO "Indy_ePHI_VT_QVW" GRANTED BY postgres;
+GRANT ldap_users TO "Melissa.Bruner" GRANTED BY "michael.reisz";
 GRANT ldap_users TO "andy.barnes" GRANTED BY postgres;
 GRANT ldap_users TO "ben.wyatt" GRANTED BY postgres;
 GRANT ldap_users TO "brad.teach" GRANTED BY postgres;
@@ -449,6 +452,7 @@ GRANT ldap_users TO "surjit.malhi" GRANTED BY postgres;
 GRANT ldap_users TO "tom.puckett" GRANTED BY postgres;
 GRANT ldap_users TO "van.nanney" GRANTED BY postgres;
 GRANT luigi_admins TO luigi_prod_svc GRANTED BY "ben.wyatt";
+GRANT roche_users TO "Melissa.Bruner" GRANTED BY "michael.reisz";
 GRANT roche_users TO "brad.teach" GRANTED BY "steve.gredell";
 GRANT roche_users TO "ian.mcculla" GRANTED BY "ben.wyatt";
 GRANT roche_users TO "michael.reisz" GRANTED BY "steve.gredell";
@@ -589,6 +593,15 @@ CREATE SCHEMA rmrrdb_20170911;
 
 
 ALTER SCHEMA rmrrdb_20170911 OWNER TO "brad.teach";
+
+--
+-- Name: rmrrdb_20180321; Type: SCHEMA; Schema: -; Owner: Melissa.Bruner
+--
+
+CREATE SCHEMA rmrrdb_20180321;
+
+
+ALTER SCHEMA rmrrdb_20180321 OWNER TO "Melissa.Bruner";
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -3516,6 +3529,297 @@ ALTER TABLE weburl_id_seq OWNER TO "brad.teach";
 ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
 
 
+SET search_path = rmrrdb_20180321, pg_catalog;
+
+--
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE analyzers OWNER TO "Melissa.Bruner";
+
+--
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
+
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE analyzers_id_seq OWNER TO "Melissa.Bruner";
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
+
+
+--
+-- Name: code; Type: TABLE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(7),
+    description character varying
+);
+
+
+ALTER TABLE code OWNER TO "Melissa.Bruner";
+
+--
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
+
+
+--
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "Melissa.Bruner";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
+
+
+--
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "Melissa.Bruner";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "Melissa.Bruner";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "Melissa.Bruner";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "Melissa.Bruner";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "Melissa.Bruner";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "Melissa.Bruner";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "Melissa.Bruner";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "Melissa.Bruner";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "Melissa.Bruner";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "Melissa.Bruner";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
+
+
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
@@ -4021,6 +4325,57 @@ ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_
 
 --
 -- Name: id; Type: DEFAULT; Schema: rmrrdb_20170911; Owner: brad.teach
+--
+
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
+
+
+SET search_path = rmrrdb_20180321, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
 --
 
 ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
@@ -4926,6 +5281,96 @@ ALTER TABLE ONLY weburl
     ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
 
 
+SET search_path = rmrrdb_20180321, pg_catalog;
+
+--
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+
+
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
@@ -5266,6 +5711,40 @@ ALTER TABLE ONLY reimbursement_rates
     ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
 
 
+SET search_path = rmrrdb_20180321, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -5364,6 +5843,16 @@ REVOKE ALL ON SCHEMA rmrrdb_20170911 FROM PUBLIC;
 REVOKE ALL ON SCHEMA rmrrdb_20170911 FROM "brad.teach";
 GRANT ALL ON SCHEMA rmrrdb_20170911 TO "brad.teach";
 GRANT ALL ON SCHEMA rmrrdb_20170911 TO roche_users;
+
+
+--
+-- Name: rmrrdb_20180321; Type: ACL; Schema: -; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON SCHEMA rmrrdb_20180321 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20180321 FROM "Melissa.Bruner";
+GRANT ALL ON SCHEMA rmrrdb_20180321 TO "Melissa.Bruner";
+GRANT ALL ON SCHEMA rmrrdb_20180321 TO roche_users;
 
 
 SET search_path = rmrrdb_20160331, pg_catalog;
@@ -6644,6 +7133,148 @@ GRANT ALL ON SEQUENCE weburl_id_seq TO "brad.teach";
 GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
 
 
+SET search_path = rmrrdb_20180321, pg_catalog;
+
+--
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "Melissa.Bruner";
+GRANT ALL ON TABLE analyzers TO "Melissa.Bruner";
+GRANT ALL ON TABLE analyzers TO roche_users;
+
+
+--
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "Melissa.Bruner";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "Melissa.Bruner";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO roche_users;
+
+
+--
+-- Name: code; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "Melissa.Bruner";
+GRANT ALL ON TABLE code TO "Melissa.Bruner";
+GRANT ALL ON TABLE code TO roche_users;
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "Melissa.Bruner";
+GRANT ALL ON SEQUENCE code_id_seq TO "Melissa.Bruner";
+GRANT ALL ON SEQUENCE code_id_seq TO roche_users;
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "Melissa.Bruner";
+GRANT ALL ON TABLE footnotes TO "Melissa.Bruner";
+GRANT ALL ON TABLE footnotes TO roche_users;
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "Melissa.Bruner";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "Melissa.Bruner";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO roche_users;
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "Melissa.Bruner";
+GRANT ALL ON TABLE localities TO "Melissa.Bruner";
+GRANT ALL ON TABLE localities TO roche_users;
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "Melissa.Bruner";
+GRANT ALL ON SEQUENCE localities_id_seq TO "Melissa.Bruner";
+GRANT ALL ON SEQUENCE localities_id_seq TO roche_users;
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "Melissa.Bruner";
+GRANT ALL ON TABLE reimbursement_rates TO "Melissa.Bruner";
+GRANT ALL ON TABLE reimbursement_rates TO roche_users;
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "Melissa.Bruner";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "Melissa.Bruner";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO roche_users;
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "Melissa.Bruner";
+GRANT ALL ON TABLE search_terms TO "Melissa.Bruner";
+GRANT ALL ON TABLE search_terms TO roche_users;
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "Melissa.Bruner";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "Melissa.Bruner";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO roche_users;
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "Melissa.Bruner";
+GRANT ALL ON TABLE weburl TO "Melissa.Bruner";
+GRANT ALL ON TABLE weburl TO roche_users;
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "Melissa.Bruner";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "Melissa.Bruner";
+GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
+
+
 SET search_path = rmrrdb_20160331, pg_catalog;
 
 --
@@ -6822,6 +7453,26 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170911 GRANT A
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170911 REVOKE ALL ON TABLES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170911 REVOKE ALL ON TABLES  FROM "brad.teach";
 ALTER DEFAULT PRIVILEGES FOR ROLE "brad.teach" IN SCHEMA rmrrdb_20170911 GRANT ALL ON TABLES  TO roche_users;
+
+
+SET search_path = rmrrdb_20180321, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "Melissa.Bruner" IN SCHEMA rmrrdb_20180321 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "Melissa.Bruner" IN SCHEMA rmrrdb_20180321 REVOKE ALL ON SEQUENCES  FROM "Melissa.Bruner";
+ALTER DEFAULT PRIVILEGES FOR ROLE "Melissa.Bruner" IN SCHEMA rmrrdb_20180321 GRANT ALL ON SEQUENCES  TO roche_users;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20180321; Owner: Melissa.Bruner
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "Melissa.Bruner" IN SCHEMA rmrrdb_20180321 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "Melissa.Bruner" IN SCHEMA rmrrdb_20180321 REVOKE ALL ON TABLES  FROM "Melissa.Bruner";
+ALTER DEFAULT PRIVILEGES FOR ROLE "Melissa.Bruner" IN SCHEMA rmrrdb_20180321 GRANT ALL ON TABLES  TO roche_users;
 
 
 --
