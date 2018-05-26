@@ -9251,6 +9251,26 @@ CREATE VIEW view_group AS
 ALTER TABLE view_group OWNER TO "indy_ePHI_SystemReporting";
 
 --
+-- Name: view_client_aggregate; Type: VIEW; Schema: public; Owner: ben.wyatt
+--
+
+CREATE VIEW view_client_aggregate AS
+ SELECT count(log.sessionid) AS sessions,
+    sum(((date_part('epoch'::text, log.session_duration) / (60)::double precision))::integer) AS minutes,
+    count(DISTINCT log.userid) AS users,
+    client.client,
+    date_part('year'::text, log.session_start_time) AS year,
+    date_part('month'::text, log.session_start_time) AS month
+   FROM ((view_session_log log
+     JOIN view_group client ON ((log.groupid = client.groupid)))
+     JOIN "user" ON ((log.userid = "user".id)))
+  WHERE ((log.session_start_time > '2016-12-31 23:59:59-05'::timestamp with time zone) AND (client.office = 'PRM Analytics'::text) AND (("user".username)::text !~~ '*@milliman.com'::text))
+  GROUP BY client.client, (date_part('year'::text, log.session_start_time)), (date_part('month'::text, log.session_start_time));
+
+
+ALTER TABLE view_client_aggregate OWNER TO "ben.wyatt";
+
+--
 -- Name: view_user; Type: VIEW; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
@@ -9665,6 +9685,16 @@ REVOKE ALL ON TABLE view_group FROM PUBLIC;
 REVOKE ALL ON TABLE view_group FROM "indy_ePHI_SystemReporting";
 GRANT ALL ON TABLE view_group TO "indy_ePHI_SystemReporting";
 GRANT SELECT ON TABLE view_group TO PUBLIC;
+
+
+--
+-- Name: view_client_aggregate; Type: ACL; Schema: public; Owner: ben.wyatt
+--
+
+REVOKE ALL ON TABLE view_client_aggregate FROM PUBLIC;
+REVOKE ALL ON TABLE view_client_aggregate FROM "ben.wyatt";
+GRANT ALL ON TABLE view_client_aggregate TO "ben.wyatt";
+GRANT ALL ON TABLE view_client_aggregate TO "indy_ePHI_SystemReporting";
 
 
 --
