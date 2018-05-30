@@ -9251,7 +9251,7 @@ CREATE VIEW view_group AS
 ALTER TABLE view_group OWNER TO "indy_ePHI_SystemReporting";
 
 --
--- Name: view_client_aggregate; Type: VIEW; Schema: public; Owner: ben.wyatt
+-- Name: view_client_aggregate; Type: VIEW; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 CREATE VIEW view_client_aggregate AS
@@ -9268,7 +9268,7 @@ CREATE VIEW view_client_aggregate AS
   GROUP BY client.client, (date_part('year'::text, log.session_start_time)), (date_part('month'::text, log.session_start_time));
 
 
-ALTER TABLE view_client_aggregate OWNER TO "ben.wyatt";
+ALTER TABLE view_client_aggregate OWNER TO "indy_ePHI_SystemReporting";
 
 --
 -- Name: view_user; Type: VIEW; Schema: public; Owner: indy_ePHI_SystemReporting
@@ -9688,13 +9688,13 @@ GRANT SELECT ON TABLE view_group TO PUBLIC;
 
 
 --
--- Name: view_client_aggregate; Type: ACL; Schema: public; Owner: ben.wyatt
+-- Name: view_client_aggregate; Type: ACL; Schema: public; Owner: indy_ePHI_SystemReporting
 --
 
 REVOKE ALL ON TABLE view_client_aggregate FROM PUBLIC;
-REVOKE ALL ON TABLE view_client_aggregate FROM "ben.wyatt";
-GRANT ALL ON TABLE view_client_aggregate TO "ben.wyatt";
+REVOKE ALL ON TABLE view_client_aggregate FROM "indy_ePHI_SystemReporting";
 GRANT ALL ON TABLE view_client_aggregate TO "indy_ePHI_SystemReporting";
+GRANT SELECT ON TABLE view_client_aggregate TO PUBLIC;
 
 
 --
