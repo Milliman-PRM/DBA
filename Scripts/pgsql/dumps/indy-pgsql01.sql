@@ -11075,6 +11075,9 @@ CREATE VIEW view_session_log AS
             WHEN (lastsession.document ~~ '%LIVE BPCI - CJR%'::text) THEN 'Live BPCI - CJR'::text
             WHEN (lastsession.document ~~ '%LIVE BPCI - PREMIER%'::text) THEN 'Live BPCI - Premier'::text
             WHEN (lastsession.document ~~ '%LIVE BPCI - USPI%'::text) THEN 'Live BPCI - USPI'::text
+            WHEN (lastsession.document ~~ '%LIVE BPCI ADVANCED PREMIER'::text) THEN 'Live BPCI Advanced - Premier'::text
+            WHEN (lastsession.document ~~ '%LIVE - BPCI ADVANCED%'::text) THEN 'Live BPCI Advanced'::text
+            WHEN (lastsession.document ~~ 'GAINSHARING REPORTING'::text) THEN 'Gainshairing Reporting'::text
             WHEN (lastsession.document ~~ '%LIVE - OCM REPORTING%'::text) THEN 'Live - OCM Reporting'::text
             WHEN (lastsession.document ~~ '%OHIO FINANCIAL DASHBOARD%'::text) THEN 'Ohio Financial Dashboard'::text
             WHEN (lastsession.document ~~ '%CAPITATION DASHBOARD%'::text) THEN 'Capitation Dashboard'::text
