@@ -11184,6 +11184,7 @@ CREATE VIEW view_group AS
                 WHEN (("group".groupname)::text ~~ '%CAM%'::text) THEN 'CAM'::text
                 WHEN (("group".groupname)::text ~~ '%CJR%'::text) THEN 'CJR'::text
                 WHEN (("group".groupname)::text ~~ '%OCM REPORTING%'::text) THEN 'OCM'::text
+                WHEN (("group".groupname)::text ~~ '%LIVE - BPCI ADVANCED%'::text) THEN 'BPCI Advanced'::text
                 ELSE 'Other/Unknown'::text
             END
             ELSE 'Unknown'::text
