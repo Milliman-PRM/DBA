@@ -11079,9 +11079,10 @@ CREATE VIEW view_session_log AS
             WHEN (lastsession.document ~~ '%LIVE BPCI - CJR%'::text) THEN 'Live BPCI - CJR'::text
             WHEN (lastsession.document ~~ '%LIVE BPCI - PREMIER%'::text) THEN 'Live BPCI - Premier'::text
             WHEN (lastsession.document ~~ '%LIVE BPCI - USPI%'::text) THEN 'Live BPCI - USPI'::text
-            WHEN (lastsession.document ~~ '%LIVE BPCI ADVANCED PREMIER'::text) THEN 'Live BPCI Advanced - Premier'::text
+            WHEN (lastsession.document ~~ '%LIVE BPCI ADVANCED PREMIER%'::text) THEN 'Live BPCI Advanced - Premier'::text
+            WHEN (lastsession.document ~~ '%LIVE - BPCI ADVANCED BASELINE%'::text) THEN 'Live BPCI Advanced - Baseline'::text
             WHEN (lastsession.document ~~ '%LIVE - BPCI ADVANCED%'::text) THEN 'Live BPCI Advanced'::text
-            WHEN (lastsession.document ~~ 'GAINSHARING REPORTING'::text) THEN 'Gainshairing Reporting'::text
+            WHEN (lastsession.document ~~ '%GAINSHARING REPORTING%'::text) THEN 'Gainshairing Reporting'::text
             WHEN (lastsession.document ~~ '%LIVE - OCM REPORTING%'::text) THEN 'Live - OCM Reporting'::text
             WHEN (lastsession.document ~~ '%OHIO FINANCIAL DASHBOARD%'::text) THEN 'Ohio Financial Dashboard'::text
             WHEN (lastsession.document ~~ '%CAPITATION DASHBOARD%'::text) THEN 'Capitation Dashboard'::text
@@ -11094,6 +11095,8 @@ CREATE VIEW view_session_log AS
             WHEN (lastsession.document ~~ '%LOAD TABLES DVW.QVW'::text) THEN 'Load Tables DVW'::text
             WHEN (lastsession.document ~~ '%VERMONT POC%'::text) THEN 'Vermont PoC'::text
             WHEN ((lastsession.document ~~ '%ACO INSIGHT%'::text) OR (lastsession.document ~~ '%ACO INTELLIGENCE PLATFORM%'::text) OR (lastsession.document ~~ '%ACO INTELLIGENCE SOLUTION%'::text) OR (lastsession.document ~~ '%ACOI%'::text)) THEN 'ACO Insight'::text
+            WHEN (lastsession.document ~~ '%MEDICAID DASHBOARD%'::text) THEN 'Medicaid Dashboard'::text
+            WHEN ((lastsession.document ~~ '%RX DASHBOARD%'::text) OR (lastsession.document ~~ '%PHARMACY DASHBOARD%'::text)) THEN 'Rx Dashboard'::text
             ELSE 'Other/Unknown'::text
         END AS document_type,
     lower(dataset.mergedrange) AS session_start_time,
