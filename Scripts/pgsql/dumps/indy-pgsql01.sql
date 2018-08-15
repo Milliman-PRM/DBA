@@ -361,6 +361,7 @@ GRANT "Indy_ePHI_0273ZQL" TO "shea.parkes" GRANTED BY postgres;
 GRANT "indy_ePHI_SystemReporting" TO indy_qvwldr GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "kelsie.stevenson" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "michael.reisz" GRANTED BY "ben.wyatt";
+GRANT "indy_ePHI_SystemReporting" TO "steve.gredell" GRANTED BY "steve.gredell";
 GRANT "indy_ePHI_SystemReporting" TO "surjit.malhi" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "tom.puckett" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "van.nanney" GRANTED BY "ben.wyatt";
@@ -465,6 +466,7 @@ GRANT roche_users TO roche_admin GRANTED BY "steve.gredell";
 GRANT roche_users TO "van.nanney" GRANTED BY "steve.gredell";
 GRANT systemreporting_reader TO "jason.altieri" GRANTED BY "ben.wyatt";
 GRANT systemreporting_reader TO "sarah.prusinski" GRANTED BY "ben.wyatt";
+GRANT systemreporting_reader TO "steve.gredell" GRANTED BY "steve.gredell";
 
 
 --
