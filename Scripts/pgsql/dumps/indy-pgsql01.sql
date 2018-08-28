@@ -10152,7 +10152,7 @@ ALTER SEQUENCE task_events_id_seq OWNED BY task_events.id;
 CREATE TABLE task_parameters (
     task_id integer NOT NULL,
     name character varying(128) NOT NULL,
-    value character varying(256)
+    value text
 );
 
 
