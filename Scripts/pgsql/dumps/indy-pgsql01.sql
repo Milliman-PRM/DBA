@@ -11084,7 +11084,7 @@ CREATE VIEW view_session_log AS
             WHEN (lastsession.document ~~ '%LIVE BPCI ADVANCED PREMIER%'::text) THEN 'Live BPCI Advanced - Premier'::text
             WHEN (lastsession.document ~~ '%LIVE - BPCI ADVANCED BASELINE%'::text) THEN 'Live BPCI Advanced - Baseline'::text
             WHEN (lastsession.document ~~ '%LIVE - BPCI ADVANCED%'::text) THEN 'Live BPCI Advanced'::text
-            WHEN (lastsession.document ~~ '%GAINSHARING REPORTING%'::text) THEN 'Gainshairing Reporting'::text
+            WHEN (lastsession.document ~~ '%GAINSHARING REPORTING%'::text) THEN 'Gainsharing Reporting'::text
             WHEN (lastsession.document ~~ '%LIVE - OCM REPORTING%'::text) THEN 'Live - OCM Reporting'::text
             WHEN (lastsession.document ~~ '%OHIO FINANCIAL DASHBOARD%'::text) THEN 'Ohio Financial Dashboard'::text
             WHEN (lastsession.document ~~ '%CAPITATION DASHBOARD%'::text) THEN 'Capitation Dashboard'::text
@@ -11194,6 +11194,7 @@ CREATE VIEW view_group AS
                 WHEN (("group".groupname)::text ~~ '%CJR%'::text) THEN 'CJR'::text
                 WHEN (("group".groupname)::text ~~ '%OCM REPORTING%'::text) THEN 'OCM'::text
                 WHEN (("group".groupname)::text ~~ '%LIVE - BPCI ADVANCED%'::text) THEN 'BPCI Advanced'::text
+                WHEN (("group".groupname)::text ~~ '%GAINSHARING%'::text) THEN 'Gainsharing'::text
                 ELSE 'Other/Unknown'::text
             END
             ELSE 'Unknown'::text
