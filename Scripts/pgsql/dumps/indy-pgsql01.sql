@@ -681,6 +681,15 @@ CREATE SCHEMA rmrrdb_20200528;
 ALTER SCHEMA rmrrdb_20200528 OWNER TO "jim.mallers";
 
 --
+-- Name: rmrrdb_20200529; Type: SCHEMA; Schema: -; Owner: jim.mallers
+--
+
+CREATE SCHEMA rmrrdb_20200529;
+
+
+ALTER SCHEMA rmrrdb_20200529 OWNER TO "jim.mallers";
+
+--
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -6681,6 +6690,297 @@ ALTER TABLE weburl_id_seq OWNER TO "jim.mallers";
 ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
 
 
+SET search_path = rmrrdb_20200529, pg_catalog;
+
+--
+-- Name: analyzers; Type: TABLE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE TABLE analyzers (
+    id integer NOT NULL,
+    analyzer_name character varying,
+    notes character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE analyzers OWNER TO "jim.mallers";
+
+--
+-- Name: TABLE analyzers; Type: COMMENT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+COMMENT ON TABLE analyzers IS 'This table holds information on which tests are available for a given analyzer';
+
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE SEQUENCE analyzers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE analyzers_id_seq OWNER TO "jim.mallers";
+
+--
+-- Name: analyzers_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER SEQUENCE analyzers_id_seq OWNED BY analyzers.id;
+
+
+--
+-- Name: code; Type: TABLE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE TABLE code (
+    id integer NOT NULL,
+    code character(7),
+    description character varying
+);
+
+
+ALTER TABLE code OWNER TO "jim.mallers";
+
+--
+-- Name: TABLE code; Type: COMMENT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+COMMENT ON TABLE code IS 'This table holds the lookup value for the code id';
+
+
+--
+-- Name: code_id_seq; Type: SEQUENCE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE SEQUENCE code_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE code_id_seq OWNER TO "jim.mallers";
+
+--
+-- Name: code_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER SEQUENCE code_id_seq OWNED BY code.id;
+
+
+--
+-- Name: footnotes; Type: TABLE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE TABLE footnotes (
+    id integer NOT NULL,
+    footnote text
+);
+
+
+ALTER TABLE footnotes OWNER TO "jim.mallers";
+
+--
+-- Name: TABLE footnotes; Type: COMMENT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+COMMENT ON TABLE footnotes IS 'This table holds information on the necessary footnotes';
+
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE SEQUENCE footnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE footnotes_id_seq OWNER TO "jim.mallers";
+
+--
+-- Name: footnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER SEQUENCE footnotes_id_seq OWNED BY footnotes.id;
+
+
+--
+-- Name: localities; Type: TABLE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE TABLE localities (
+    id integer NOT NULL,
+    locality character varying,
+    locality_description character varying
+);
+
+
+ALTER TABLE localities OWNER TO "jim.mallers";
+
+--
+-- Name: TABLE localities; Type: COMMENT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+COMMENT ON TABLE localities IS 'This table holds information on the Roche Localities';
+
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE SEQUENCE localities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE localities_id_seq OWNER TO "jim.mallers";
+
+--
+-- Name: localities_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER SEQUENCE localities_id_seq OWNED BY localities.id;
+
+
+--
+-- Name: reimbursement_rates; Type: TABLE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE TABLE reimbursement_rates (
+    id integer NOT NULL,
+    fk_code_id integer,
+    year integer,
+    rate double precision,
+    fk_locality_id integer
+);
+
+
+ALTER TABLE reimbursement_rates OWNER TO "jim.mallers";
+
+--
+-- Name: TABLE reimbursement_rates; Type: COMMENT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+COMMENT ON TABLE reimbursement_rates IS 'This table holds information on the Medicare reimbursement rates for each test by locality';
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE SEQUENCE reimbursement_rates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE reimbursement_rates_id_seq OWNER TO "jim.mallers";
+
+--
+-- Name: reimbursement_rates_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER SEQUENCE reimbursement_rates_id_seq OWNED BY reimbursement_rates.id;
+
+
+--
+-- Name: search_terms; Type: TABLE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE TABLE search_terms (
+    id integer NOT NULL,
+    search_desc character varying,
+    fk_code_id integer
+);
+
+
+ALTER TABLE search_terms OWNER TO "jim.mallers";
+
+--
+-- Name: TABLE search_terms; Type: COMMENT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+COMMENT ON TABLE search_terms IS 'This table holds information on the available search terms for the given tests';
+
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE SEQUENCE search_terms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE search_terms_id_seq OWNER TO "jim.mallers";
+
+--
+-- Name: search_terms_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER SEQUENCE search_terms_id_seq OWNED BY search_terms.id;
+
+
+--
+-- Name: weburl; Type: TABLE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE TABLE weburl (
+    id integer NOT NULL,
+    displaytext character varying,
+    webaddressurl character varying
+);
+
+
+ALTER TABLE weburl OWNER TO "jim.mallers";
+
+--
+-- Name: TABLE weburl; Type: COMMENT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+COMMENT ON TABLE weburl IS 'This table holds the url of the CMS website where this data is available';
+
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+CREATE SEQUENCE weburl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE weburl_id_seq OWNER TO "jim.mallers";
+
+--
+-- Name: weburl_id_seq; Type: SEQUENCE OWNED BY; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER SEQUENCE weburl_id_seq OWNED BY weburl.id;
+
+
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
@@ -7726,6 +8026,57 @@ ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_s
 
 --
 -- Name: id; Type: DEFAULT; Schema: rmrrdb_20200528; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
+
+
+SET search_path = rmrrdb_20200529, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY analyzers ALTER COLUMN id SET DEFAULT nextval('analyzers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY code ALTER COLUMN id SET DEFAULT nextval('code_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY footnotes ALTER COLUMN id SET DEFAULT nextval('footnotes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY localities ALTER COLUMN id SET DEFAULT nextval('localities_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY reimbursement_rates ALTER COLUMN id SET DEFAULT nextval('reimbursement_rates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY search_terms ALTER COLUMN id SET DEFAULT nextval('search_terms_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: rmrrdb_20200529; Owner: jim.mallers
 --
 
 ALTER TABLE ONLY weburl ALTER COLUMN id SET DEFAULT nextval('weburl_id_seq'::regclass);
@@ -9597,6 +9948,96 @@ ALTER TABLE ONLY weburl
     ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
 
 
+SET search_path = rmrrdb_20200529, pg_catalog;
+
+--
+-- Name: pk_analyzers_id; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT pk_analyzers_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_code_id; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT pk_code_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_localities_id; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT pk_localities_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_notes_id; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT pk_notes_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_reimbursement_rates_id; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT pk_reimbursement_rates_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_search_terms_id; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT pk_search_terms_id PRIMARY KEY (id);
+
+
+--
+-- Name: pk_weburl_id; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT pk_weburl_id PRIMARY KEY (id);
+
+
+--
+-- Name: uq_code_code; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY code
+    ADD CONSTRAINT uq_code_code UNIQUE (code);
+
+
+--
+-- Name: uq_footnotes_footnote; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY footnotes
+    ADD CONSTRAINT uq_footnotes_footnote UNIQUE (footnote);
+
+
+--
+-- Name: uq_localities_locality; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY localities
+    ADD CONSTRAINT uq_localities_locality UNIQUE (locality);
+
+
+--
+-- Name: uq_weburl_webaddressurl; Type: CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY weburl
+    ADD CONSTRAINT uq_weburl_webaddressurl UNIQUE (webaddressurl);
+
+
 SET search_path = rmrrdb_20160322, pg_catalog;
 
 --
@@ -10277,6 +10718,40 @@ ALTER TABLE ONLY reimbursement_rates
     ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
 
 
+SET search_path = rmrrdb_20200529, pg_catalog;
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY analyzers
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_code_id; Type: FK CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY search_terms
+    ADD CONSTRAINT fk_code_id FOREIGN KEY (fk_code_id) REFERENCES code(id);
+
+
+--
+-- Name: fk_locality_id; Type: FK CONSTRAINT; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER TABLE ONLY reimbursement_rates
+    ADD CONSTRAINT fk_locality_id FOREIGN KEY (fk_locality_id) REFERENCES localities(id);
+
+
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
@@ -10485,6 +10960,16 @@ REVOKE ALL ON SCHEMA rmrrdb_20200528 FROM PUBLIC;
 REVOKE ALL ON SCHEMA rmrrdb_20200528 FROM "jim.mallers";
 GRANT ALL ON SCHEMA rmrrdb_20200528 TO "jim.mallers";
 GRANT ALL ON SCHEMA rmrrdb_20200528 TO roche_users;
+
+
+--
+-- Name: rmrrdb_20200529; Type: ACL; Schema: -; Owner: jim.mallers
+--
+
+REVOKE ALL ON SCHEMA rmrrdb_20200529 FROM PUBLIC;
+REVOKE ALL ON SCHEMA rmrrdb_20200529 FROM "jim.mallers";
+GRANT ALL ON SCHEMA rmrrdb_20200529 TO "jim.mallers";
+GRANT ALL ON SCHEMA rmrrdb_20200529 TO roche_users;
 
 
 SET search_path = rmrrdb_20160331, pg_catalog;
@@ -13267,6 +13752,148 @@ GRANT ALL ON SEQUENCE weburl_id_seq TO "jim.mallers";
 GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
 
 
+SET search_path = rmrrdb_20200529, pg_catalog;
+
+--
+-- Name: analyzers; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON TABLE analyzers FROM PUBLIC;
+REVOKE ALL ON TABLE analyzers FROM "jim.mallers";
+GRANT ALL ON TABLE analyzers TO "jim.mallers";
+GRANT ALL ON TABLE analyzers TO roche_users;
+
+
+--
+-- Name: analyzers_id_seq; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE analyzers_id_seq FROM "jim.mallers";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO "jim.mallers";
+GRANT ALL ON SEQUENCE analyzers_id_seq TO roche_users;
+
+
+--
+-- Name: code; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON TABLE code FROM PUBLIC;
+REVOKE ALL ON TABLE code FROM "jim.mallers";
+GRANT ALL ON TABLE code TO "jim.mallers";
+GRANT ALL ON TABLE code TO roche_users;
+
+
+--
+-- Name: code_id_seq; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON SEQUENCE code_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE code_id_seq FROM "jim.mallers";
+GRANT ALL ON SEQUENCE code_id_seq TO "jim.mallers";
+GRANT ALL ON SEQUENCE code_id_seq TO roche_users;
+
+
+--
+-- Name: footnotes; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON TABLE footnotes FROM PUBLIC;
+REVOKE ALL ON TABLE footnotes FROM "jim.mallers";
+GRANT ALL ON TABLE footnotes TO "jim.mallers";
+GRANT ALL ON TABLE footnotes TO roche_users;
+
+
+--
+-- Name: footnotes_id_seq; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE footnotes_id_seq FROM "jim.mallers";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO "jim.mallers";
+GRANT ALL ON SEQUENCE footnotes_id_seq TO roche_users;
+
+
+--
+-- Name: localities; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON TABLE localities FROM PUBLIC;
+REVOKE ALL ON TABLE localities FROM "jim.mallers";
+GRANT ALL ON TABLE localities TO "jim.mallers";
+GRANT ALL ON TABLE localities TO roche_users;
+
+
+--
+-- Name: localities_id_seq; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON SEQUENCE localities_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE localities_id_seq FROM "jim.mallers";
+GRANT ALL ON SEQUENCE localities_id_seq TO "jim.mallers";
+GRANT ALL ON SEQUENCE localities_id_seq TO roche_users;
+
+
+--
+-- Name: reimbursement_rates; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON TABLE reimbursement_rates FROM PUBLIC;
+REVOKE ALL ON TABLE reimbursement_rates FROM "jim.mallers";
+GRANT ALL ON TABLE reimbursement_rates TO "jim.mallers";
+GRANT ALL ON TABLE reimbursement_rates TO roche_users;
+
+
+--
+-- Name: reimbursement_rates_id_seq; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE reimbursement_rates_id_seq FROM "jim.mallers";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO "jim.mallers";
+GRANT ALL ON SEQUENCE reimbursement_rates_id_seq TO roche_users;
+
+
+--
+-- Name: search_terms; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON TABLE search_terms FROM PUBLIC;
+REVOKE ALL ON TABLE search_terms FROM "jim.mallers";
+GRANT ALL ON TABLE search_terms TO "jim.mallers";
+GRANT ALL ON TABLE search_terms TO roche_users;
+
+
+--
+-- Name: search_terms_id_seq; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE search_terms_id_seq FROM "jim.mallers";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO "jim.mallers";
+GRANT ALL ON SEQUENCE search_terms_id_seq TO roche_users;
+
+
+--
+-- Name: weburl; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON TABLE weburl FROM PUBLIC;
+REVOKE ALL ON TABLE weburl FROM "jim.mallers";
+GRANT ALL ON TABLE weburl TO "jim.mallers";
+GRANT ALL ON TABLE weburl TO roche_users;
+
+
+--
+-- Name: weburl_id_seq; Type: ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE weburl_id_seq FROM "jim.mallers";
+GRANT ALL ON SEQUENCE weburl_id_seq TO "jim.mallers";
+GRANT ALL ON SEQUENCE weburl_id_seq TO roche_users;
+
+
 SET search_path = rmrrdb_20160331, pg_catalog;
 
 --
@@ -13665,6 +14292,26 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200528 GRANT 
 ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200528 REVOKE ALL ON TABLES  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200528 REVOKE ALL ON TABLES  FROM "jim.mallers";
 ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200528 GRANT ALL ON TABLES  TO roche_users;
+
+
+SET search_path = rmrrdb_20200529, pg_catalog;
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200529 REVOKE ALL ON SEQUENCES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200529 REVOKE ALL ON SEQUENCES  FROM "jim.mallers";
+ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200529 GRANT ALL ON SEQUENCES  TO roche_users;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: rmrrdb_20200529; Owner: jim.mallers
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200529 REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200529 REVOKE ALL ON TABLES  FROM "jim.mallers";
+ALTER DEFAULT PRIVILEGES FOR ROLE "jim.mallers" IN SCHEMA rmrrdb_20200529 GRANT ALL ON TABLES  TO roche_users;
 
 
 --
