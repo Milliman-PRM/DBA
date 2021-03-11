@@ -149,6 +149,8 @@ CREATE ROLE "Melissa.Bruner";
 ALTER ROLE "Melissa.Bruner" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS VALID UNTIL 'infinity';
 CREATE ROLE "andy.barnes";
 ALTER ROLE "andy.barnes" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "ben.copeland";
+ALTER ROLE "ben.copeland" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "ben.wyatt";
 ALTER ROLE "ben.wyatt" WITH SUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "brad.teach";
@@ -189,8 +191,12 @@ CREATE ROLE luigi_admins;
 ALTER ROLE luigi_admins WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE luigi_prod_svc;
 ALTER ROLE luigi_prod_svc WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'md58a23bdfce5490784d62c0bbfa89e1219';
+CREATE ROLE luigi_reader;
+ALTER ROLE luigi_reader WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB NOLOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "michael.reisz";
 ALTER ROLE "michael.reisz" WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
+CREATE ROLE "nathan.merz";
+ALTER ROLE "nathan.merz" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "nicholas.zenobi";
 ALTER ROLE "nicholas.zenobi" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "oksana.owens";
@@ -206,7 +212,7 @@ ALTER ROLE "sarah.prusinski" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LO
 CREATE ROLE "shea.parkes";
 ALTER ROLE "shea.parkes" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "steve.gredell";
-ALTER ROLE "steve.gredell" WITH NOSUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION NOBYPASSRLS;
+ALTER ROLE "steve.gredell" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE "surjit.malhi";
 ALTER ROLE "surjit.malhi" WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS;
 CREATE ROLE systemreporting_reader;
@@ -232,10 +238,8 @@ GRANT "Indy_ePHI_0032MMD" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032ODM" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032ODM" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032SHA" TO "michael.reisz" GRANTED BY postgres;
-GRANT "Indy_ePHI_0032SHA" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032SHN" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0032UTH" TO "michael.reisz" GRANTED BY postgres;
-GRANT "Indy_ePHI_0032UTH" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ACO" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273APR" TO "michael.reisz" GRANTED BY postgres;
@@ -246,11 +250,9 @@ GRANT "Indy_ePHI_0273CHI" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CHI" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273CRR" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273EVH" TO "michael.reisz" GRANTED BY postgres;
-GRANT "Indy_ePHI_0273EVH" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAI" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAL" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAL" TO "shea.parkes" GRANTED BY postgres;
-GRANT "Indy_ePHI_0273FAL" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273FAL" TO "tom.puckett" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ICC" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ICW" TO "michael.reisz" GRANTED BY postgres;
@@ -262,7 +264,6 @@ GRANT "Indy_ePHI_0273NJH" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NXG" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NYP" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273NYP" TO "shea.parkes" GRANTED BY postgres;
-GRANT "Indy_ePHI_0273NYP" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273OCV" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273OCV" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273PCH" TO "michael.reisz" GRANTED BY postgres;
@@ -279,16 +280,13 @@ GRANT "Indy_ePHI_0273WOH" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "shea.parkes" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273WOH" TO "tom.puckett" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZAC" TO "michael.reisz" GRANTED BY postgres;
-GRANT "Indy_ePHI_0273ZAC" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZDM" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZDM" TO "shea.parkes" GRANTED BY postgres;
-GRANT "Indy_ePHI_0273ZDM" TO "steve.gredell" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZQL" TO "michael.reisz" GRANTED BY postgres;
 GRANT "Indy_ePHI_0273ZQL" TO "shea.parkes" GRANTED BY postgres;
 GRANT "indy_ePHI_SystemReporting" TO indy_qvwldr GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "kelsie.stevenson" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "michael.reisz" GRANTED BY "ben.wyatt";
-GRANT "indy_ePHI_SystemReporting" TO "steve.gredell" GRANTED BY "steve.gredell";
 GRANT "indy_ePHI_SystemReporting" TO "surjit.malhi" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "tom.puckett" GRANTED BY "ben.wyatt";
 GRANT "indy_ePHI_SystemReporting" TO "van.nanney" GRANTED BY "ben.wyatt";
@@ -380,22 +378,25 @@ GRANT ldap_users TO "nicholas.zenobi" GRANTED BY postgres;
 GRANT ldap_users TO "oksana.owens" GRANTED BY "ben.wyatt";
 GRANT ldap_users TO "sarah.prusinski" GRANTED BY "ben.wyatt";
 GRANT ldap_users TO "shea.parkes" GRANTED BY postgres;
-GRANT ldap_users TO "steve.gredell" GRANTED BY postgres;
 GRANT ldap_users TO "surjit.malhi" GRANTED BY postgres;
 GRANT ldap_users TO "tom.puckett" GRANTED BY postgres;
 GRANT ldap_users TO "van.nanney" GRANTED BY postgres;
 GRANT luigi_admins TO luigi_prod_svc GRANTED BY "ben.wyatt";
+GRANT luigi_reader TO "ben.copeland" GRANTED BY "ben.wyatt";
+GRANT luigi_reader TO "ben.wyatt" GRANTED BY "ben.wyatt";
+GRANT luigi_reader TO "nathan.merz" GRANTED BY "ben.wyatt";
+GRANT luigi_reader TO "shea.parkes" GRANTED BY "ben.wyatt";
+GRANT luigi_reader TO "steve.gredell" GRANTED BY "ben.wyatt";
 GRANT roche_users TO "Melissa.Bruner" GRANTED BY "michael.reisz";
-GRANT roche_users TO "brad.teach" GRANTED BY "steve.gredell";
+GRANT roche_users TO "brad.teach";
 GRANT roche_users TO "ian.mcculla" GRANTED BY "ben.wyatt";
 GRANT roche_users TO "jim.mallers" GRANTED BY "ben.wyatt";
-GRANT roche_users TO "michael.reisz" GRANTED BY "steve.gredell";
+GRANT roche_users TO "michael.reisz";
 GRANT roche_users TO "oksana.owens" GRANTED BY "ben.wyatt";
-GRANT roche_users TO roche_admin GRANTED BY "steve.gredell";
-GRANT roche_users TO "van.nanney" GRANTED BY "steve.gredell";
+GRANT roche_users TO roche_admin;
+GRANT roche_users TO "van.nanney";
 GRANT systemreporting_reader TO "jason.altieri" GRANTED BY "ben.wyatt";
 GRANT systemreporting_reader TO "sarah.prusinski" GRANTED BY "ben.wyatt";
-GRANT systemreporting_reader TO "steve.gredell" GRANTED BY "steve.gredell";
 
 
 --
@@ -15123,6 +15124,57 @@ REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
+GRANT USAGE ON SCHEMA public TO luigi_reader;
+
+
+--
+-- Name: task_events; Type: ACL; Schema: public; Owner: luigi_prod_svc
+--
+
+REVOKE ALL ON TABLE task_events FROM PUBLIC;
+REVOKE ALL ON TABLE task_events FROM luigi_prod_svc;
+GRANT ALL ON TABLE task_events TO luigi_prod_svc;
+GRANT SELECT ON TABLE task_events TO luigi_reader;
+
+
+--
+-- Name: task_events_id_seq; Type: ACL; Schema: public; Owner: luigi_prod_svc
+--
+
+REVOKE ALL ON SEQUENCE task_events_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE task_events_id_seq FROM luigi_prod_svc;
+GRANT ALL ON SEQUENCE task_events_id_seq TO luigi_prod_svc;
+GRANT SELECT,USAGE ON SEQUENCE task_events_id_seq TO luigi_reader;
+
+
+--
+-- Name: task_parameters; Type: ACL; Schema: public; Owner: luigi_prod_svc
+--
+
+REVOKE ALL ON TABLE task_parameters FROM PUBLIC;
+REVOKE ALL ON TABLE task_parameters FROM luigi_prod_svc;
+GRANT ALL ON TABLE task_parameters TO luigi_prod_svc;
+GRANT SELECT ON TABLE task_parameters TO luigi_reader;
+
+
+--
+-- Name: tasks; Type: ACL; Schema: public; Owner: luigi_prod_svc
+--
+
+REVOKE ALL ON TABLE tasks FROM PUBLIC;
+REVOKE ALL ON TABLE tasks FROM luigi_prod_svc;
+GRANT ALL ON TABLE tasks TO luigi_prod_svc;
+GRANT SELECT ON TABLE tasks TO luigi_reader;
+
+
+--
+-- Name: tasks_id_seq; Type: ACL; Schema: public; Owner: luigi_prod_svc
+--
+
+REVOKE ALL ON SEQUENCE tasks_id_seq FROM PUBLIC;
+REVOKE ALL ON SEQUENCE tasks_id_seq FROM luigi_prod_svc;
+GRANT ALL ON SEQUENCE tasks_id_seq TO luigi_prod_svc;
+GRANT SELECT,USAGE ON SEQUENCE tasks_id_seq TO luigi_reader;
 
 
 --
